@@ -1,22 +1,18 @@
-package com.neoflex.conveyor.dto;
+package com.neoflex.conveyor.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Builder
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class PaymentScheduleElement {
+@NoArgsConstructor
+@Builder
+public class PaymentSchedule {
 
     private Integer number;
     private LocalDate date;

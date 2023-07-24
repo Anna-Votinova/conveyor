@@ -1,9 +1,9 @@
 package com.neoflex.conveyor.controller.api;
 
-import com.neoflex.conveyor.dto.CreditDTO;
-import com.neoflex.conveyor.dto.LoanApplicationRequestDTO;
-import com.neoflex.conveyor.dto.LoanOfferDTO;
-import com.neoflex.conveyor.dto.ScoringDataDTO;
+import com.neoflex.conveyor.model.dto.CreditDTO;
+import com.neoflex.conveyor.model.dto.LoanApplicationRequestDTO;
+import com.neoflex.conveyor.model.dto.LoanOfferDTO;
+import com.neoflex.conveyor.model.dto.ScoringDataDTO;
 import com.neoflex.conveyor.service.CreditConveyorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

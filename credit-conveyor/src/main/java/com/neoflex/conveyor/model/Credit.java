@@ -1,22 +1,19 @@
-package com.neoflex.conveyor.dto;
+package com.neoflex.conveyor.model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Builder
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class CreditDTO {
+@NoArgsConstructor
+@Builder
+public class Credit {
 
     private BigDecimal amount;
     private Integer term;
@@ -25,6 +22,5 @@ public class CreditDTO {
     private BigDecimal psk;
     private Boolean isInsuranceEnabled;
     private Boolean isSalaryClient;
-    List<PaymentScheduleElement> paymentSchedule;
-
+    List<PaymentSchedule> paymentSchedule;
 }

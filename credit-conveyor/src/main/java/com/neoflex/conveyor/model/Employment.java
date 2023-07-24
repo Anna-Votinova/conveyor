@@ -1,23 +1,19 @@
-package com.neoflex.conveyor.dto;
+package com.neoflex.conveyor.model;
 
-import com.neoflex.conveyor.util.EmploymentStatus;
-import com.neoflex.conveyor.util.Position;
+import com.neoflex.conveyor.model.util.EmploymentStatus;
+import com.neoflex.conveyor.model.util.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 
-@Builder
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class EmploymentDTO {
+@NoArgsConstructor
+@Builder
+public class Employment {
 
     private EmploymentStatus employmentStatus;
     private String employerINN;

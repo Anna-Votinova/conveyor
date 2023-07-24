@@ -1,9 +1,7 @@
-package com.neoflex.conveyor.dto;
+package com.neoflex.conveyor.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.neoflex.conveyor.util.Gender;
-import com.neoflex.conveyor.util.MaritalStatus;
-import com.neoflex.conveyor.util.ValidateDate;
+import com.neoflex.conveyor.controller.advice.ValidateDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,17 +12,16 @@ import lombok.ToString;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.neoflex.conveyor.util.GlobalVariables.ACCOUNT_FORMAT;
-import static com.neoflex.conveyor.util.GlobalVariables.DATE_FORMAT;
-import static com.neoflex.conveyor.util.GlobalVariables.LATIN_LANG;
-import static com.neoflex.conveyor.util.GlobalVariables.PASSPORT_NUMBER_FORMAT;
-import static com.neoflex.conveyor.util.GlobalVariables.PASSPORT_SERIES_FORMAT;
+import static com.neoflex.conveyor.utility.GlobalVariables.DATE_FORMAT;
+import static com.neoflex.conveyor.utility.GlobalVariables.EMAIL_FORMAT;
+import static com.neoflex.conveyor.utility.GlobalVariables.LATIN_LANG;
+import static com.neoflex.conveyor.utility.GlobalVariables.PASSPORT_NUMBER_FORMAT;
+import static com.neoflex.conveyor.utility.GlobalVariables.PASSPORT_SERIES_FORMAT;
 
 @Builder
 @Getter
@@ -32,7 +29,7 @@ import static com.neoflex.conveyor.util.GlobalVariables.PASSPORT_SERIES_FORMAT;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScoringDataDTO {
+public class LoanApplicationRequestDTO {
 
     @NotNull
     @Min(10000)
@@ -51,8 +48,10 @@ public class ScoringDataDTO {
     @Size(min = 2, max = 30, message = "Длина отчества не может быть меньше 2 и больше 30 символов")
     @Pattern(regexp = LATIN_LANG, message = "Отчество должно быть написано латинскими буквами")
     private String middleName;
-    @NotNull
-    private Gender gender;
+    @NotBlank
+    @Pattern(regexp = EMAIL_FORMAT, message = "Емаил должен содержать до знака @ от 2 до 50 букв, цифр, " +
+            "знаков подчеркивания или символов и после от 2 до 20 букв, цифр, знаков подчеркивания или символов")
+    private String email;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @ValidateDate
@@ -63,24 +62,5 @@ public class ScoringDataDTO {
     @NotBlank
     @Pattern(regexp = PASSPORT_NUMBER_FORMAT, message = "Номер паспорта должен содержать 6 цифр")
     private String passportNumber;
-    @NotNull
-    @Past
-    private LocalDate passportIssueDate;
-    @NotNull
-    private String passportIssueBranch;
-    @NotNull
-    private MaritalStatus maritalStatus;
-    @Builder.Default
-    private Integer dependentAmount = 0;
-    @NotNull
-    private EmploymentDTO employment;
-    @NotNull
-    @Pattern(regexp = ACCOUNT_FORMAT, message = "Счет должен содержать 20 цифр")
-    private String account;
-    @Builder.Default
-    private Boolean isInsuranceEnabled = false;
-    @Builder.Default
-    private Boolean isSalaryClient = false;
-
 
 }

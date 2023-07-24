@@ -1,4 +1,4 @@
-package com.neoflex.conveyor.dto;
+package com.neoflex.conveyor.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
