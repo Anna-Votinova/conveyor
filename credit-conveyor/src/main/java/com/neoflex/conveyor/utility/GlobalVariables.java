@@ -1,5 +1,9 @@
 package com.neoflex.conveyor.utility;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GlobalVariables {
 
     public static final String LATIN_LANG = "\\p{IsLatin}";
@@ -13,9 +17,5 @@ public final class GlobalVariables {
     public static final String PASSPORT_NUMBER_FORMAT = "[\\d]{6}";
 
     public static final String ACCOUNT_FORMAT = "[\\d]{20}";
-
-    private GlobalVariables() {
-        throw new IllegalStateException("Utility class");
-    }
 
 }

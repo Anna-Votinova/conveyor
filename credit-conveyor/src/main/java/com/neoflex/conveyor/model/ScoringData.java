@@ -1,6 +1,5 @@
 package com.neoflex.conveyor.model;
 
-import com.neoflex.conveyor.model.dto.EmploymentDTO;
 import com.neoflex.conveyor.model.util.Gender;
 import com.neoflex.conveyor.model.util.MaritalStatus;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,7 @@ public class ScoringData {
     private String passportIssueBranch;
     private MaritalStatus maritalStatus;
     private Integer dependentAmount;
-    private EmploymentDTO employment;
+    private Employment employment;
     private String account;
     private Boolean isInsuranceEnabled;
     private Boolean isSalaryClient;
