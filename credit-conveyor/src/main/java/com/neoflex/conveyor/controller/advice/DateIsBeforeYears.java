@@ -14,23 +14,31 @@ import java.time.LocalDate;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ValidateDate.DateValidator.class)
-public @interface ValidateDate {
+@Constraint(validatedBy = DateIsBeforeYears.DateValidator.class)
+public @interface DateIsBeforeYears {
 
-    String message() default "{message.key}";
+    String message() default "{validation.validateDate}";
+
+    int years();
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
+    class DateValidator implements ConstraintValidator<DateIsBeforeYears, LocalDate> {
 
-    class DateValidator implements ConstraintValidator<ValidateDate, LocalDate> {
+        private int years;
 
-        private final LocalDate startDate = LocalDate.now().minusYears(18L);
-
+        @Override
+        public void initialize(DateIsBeforeYears constraintAnnotation) {
+            this.years = constraintAnnotation.years();
+        }
 
         @Override
         public boolean isValid(LocalDate date, ConstraintValidatorContext constraintValidatorContext) {
+
+            LocalDate startDate = LocalDate.now().minusYears(years);
+
             return date.isBefore(startDate);
         }
     }

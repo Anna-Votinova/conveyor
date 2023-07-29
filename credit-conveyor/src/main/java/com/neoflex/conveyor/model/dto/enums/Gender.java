@@ -1,4 +1,4 @@
-package com.neoflex.conveyor.model.util;
+package com.neoflex.conveyor.model.dto.enums;
 
 public enum Gender {
 

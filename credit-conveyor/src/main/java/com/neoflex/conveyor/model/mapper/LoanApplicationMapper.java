@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LoanApplicationMapper {
 
-    public static LoanApplication fromDto(LoanApplicationRequestDTO dto) {
+    public static LoanApplication toApplication(LoanApplicationRequestDTO dto) {
         return LoanApplication.builder()
                 .amount(dto.getAmount())
                 .term(dto.getTerm())

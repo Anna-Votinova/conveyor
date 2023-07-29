@@ -1,7 +1,8 @@
 package com.neoflex.conveyor.model.dto;
 
-import com.neoflex.conveyor.model.util.EmploymentStatus;
-import com.neoflex.conveyor.model.util.Position;
+import com.neoflex.conveyor.model.dto.enums.EmploymentStatus;
+import com.neoflex.conveyor.model.dto.enums.Position;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,20 +20,24 @@ import java.math.BigDecimal;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Сведения о работе")
 public class EmploymentDTO {
 
     @NotNull
+    @Schema(description = "Статус")
     private EmploymentStatus employmentStatus;
+    @Schema(description = "ИНН работодателя")
     private String employerINN;
     @PositiveOrZero
-    @Builder.Default
-    private BigDecimal salary = new BigDecimal("00.00");
+    @Schema(description = "Размер зарплаты")
+    private BigDecimal salary;
+    @Schema(description = "Должность")
     private Position position;
     @PositiveOrZero
-    @Builder.Default
-    private Integer workExperienceTotal = 0;
+    @Schema(description = "Общий стаж работы (в месяцах)")
+    private Integer workExperienceTotal;
     @PositiveOrZero
-    @Builder.Default
-    private Integer workExperienceCurrent = 0;
+    @Schema(description = "Общий стаж работы на текущем месте (в месяцах)")
+    private Integer workExperienceCurrent;
 
 }

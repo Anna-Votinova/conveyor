@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class PaymentSchedule {
 
+
     private Integer number;
     private LocalDate date;
     private BigDecimal totalPayment;

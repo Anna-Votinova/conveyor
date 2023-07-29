@@ -5,10 +5,12 @@ import com.neoflex.conveyor.model.dto.ScoringDataDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ScoringDataMapper {
 
-    public static ScoringData fromDto(ScoringDataDTO dto) {
+    public static ScoringData toData(ScoringDataDTO dto) {
         return ScoringData.builder()
                 .amount(dto.getAmount())
                 .term(dto.getTerm())
@@ -22,8 +24,9 @@ public final class ScoringDataMapper {
                 .passportIssueDate(dto.getPassportIssueDate())
                 .passportIssueBranch(dto.getPassportIssueBranch())
                 .maritalStatus(dto.getMaritalStatus())
-                .dependentAmount(dto.getDependentAmount())
-                .employment(EmploymentMapper.fromDto(dto.getEmployment()))
+                .dependentAmount(dto.getDependentAmount() != null ?
+                                dto.getDependentAmount() : INTEGER_ZERO)
+                .employment(EmploymentMapper.toModel(dto.getEmployment()))
                 .account(dto.getAccount())
                 .isInsuranceEnabled(dto.getIsInsuranceEnabled())
                 .isSalaryClient(dto.getIsSalaryClient())

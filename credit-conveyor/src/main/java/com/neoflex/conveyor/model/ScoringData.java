@@ -1,7 +1,7 @@
 package com.neoflex.conveyor.model;
 
-import com.neoflex.conveyor.model.util.Gender;
-import com.neoflex.conveyor.model.util.MaritalStatus;
+import com.neoflex.conveyor.model.dto.enums.Gender;
+import com.neoflex.conveyor.model.dto.enums.MaritalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

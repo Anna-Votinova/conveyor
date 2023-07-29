@@ -1,7 +1,7 @@
 package com.neoflex.conveyor.model;
 
-import com.neoflex.conveyor.model.util.EmploymentStatus;
-import com.neoflex.conveyor.model.util.Position;
+import com.neoflex.conveyor.model.dto.enums.EmploymentStatus;
+import com.neoflex.conveyor.model.dto.enums.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

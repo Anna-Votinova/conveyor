@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GlobalVariables {
 
-    public static final String LATIN_LANG = "\\p{IsLatin}";
+    public static final String LATIN_LANG = "[a-zA-Z]+";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -17,5 +17,8 @@ public final class GlobalVariables {
     public static final String PASSPORT_NUMBER_FORMAT = "[\\d]{6}";
 
     public static final String ACCOUNT_FORMAT = "[\\d]{20}";
+
+
+
 
 }
