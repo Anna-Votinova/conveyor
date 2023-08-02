@@ -18,11 +18,11 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.neoflex.conveyor.utility.GlobalVariables.DATE_FORMAT;
-import static com.neoflex.conveyor.utility.GlobalVariables.EMAIL_FORMAT;
-import static com.neoflex.conveyor.utility.GlobalVariables.LATIN_LANG;
-import static com.neoflex.conveyor.utility.GlobalVariables.PASSPORT_NUMBER_FORMAT;
-import static com.neoflex.conveyor.utility.GlobalVariables.PASSPORT_SERIES_FORMAT;
+import static com.neoflex.conveyor.config.GlobalVariables.DATE_FORMAT;
+import static com.neoflex.conveyor.config.GlobalVariables.EMAIL_FORMAT;
+import static com.neoflex.conveyor.config.GlobalVariables.LATIN_LANG;
+import static com.neoflex.conveyor.config.GlobalVariables.PASSPORT_NUMBER_FORMAT;
+import static com.neoflex.conveyor.config.GlobalVariables.PASSPORT_SERIES_FORMAT;
 
 @Builder
 @Getter

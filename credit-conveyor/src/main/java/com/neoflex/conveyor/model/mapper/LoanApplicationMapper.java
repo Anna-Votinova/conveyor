@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LoanApplicationMapper {
+public class LoanApplicationMapper {
 
     public static LoanApplication toApplication(LoanApplicationRequestDTO dto) {
         return LoanApplication.builder()

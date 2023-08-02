@@ -29,15 +29,15 @@ public class EmploymentDTO {
     @Schema(description = "ИНН работодателя")
     private String employerINN;
     @PositiveOrZero
-    @Schema(description = "Размер зарплаты")
+    @Schema(description = "Размер зарплаты", example = "70000")
     private BigDecimal salary;
     @Schema(description = "Должность")
     private Position position;
     @PositiveOrZero
-    @Schema(description = "Общий стаж работы (в месяцах)")
+    @Schema(description = "Общий стаж работы (в месяцах)", example = "144")
     private Integer workExperienceTotal;
     @PositiveOrZero
-    @Schema(description = "Общий стаж работы на текущем месте (в месяцах)")
+    @Schema(description = "Общий стаж работы на текущем месте (в месяцах)", example = "110")
     private Integer workExperienceCurrent;
 
 }
