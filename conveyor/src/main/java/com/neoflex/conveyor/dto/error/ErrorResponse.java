@@ -1,4 +1,4 @@
-package com.neoflex.conveyor.controller.advice;
+package com.neoflex.conveyor.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

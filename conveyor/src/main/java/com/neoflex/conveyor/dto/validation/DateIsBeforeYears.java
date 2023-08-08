@@ -1,4 +1,4 @@
-package com.neoflex.conveyor.controller.advice;
+package com.neoflex.conveyor.dto.validation;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

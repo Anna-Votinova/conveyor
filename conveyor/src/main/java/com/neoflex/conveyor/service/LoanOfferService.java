@@ -79,7 +79,9 @@ public class LoanOfferService {
         clientOfferWithInsurance.setIsSalaryClient(true);
         log.info("Offer with insurance for client equals: {}", clientOfferWithInsurance);
 
-        List<LoanOfferServiceDTO> preOffers = List.of(plainOffer, clientOffer, offerWithInsurance, clientOfferWithInsurance);
+        List<LoanOfferServiceDTO> preOffers = List.of(
+                plainOffer, clientOffer, offerWithInsurance, clientOfferWithInsurance
+        );
         log.info("List offers size: {}", preOffers.size());
 
         return preOffers.stream()

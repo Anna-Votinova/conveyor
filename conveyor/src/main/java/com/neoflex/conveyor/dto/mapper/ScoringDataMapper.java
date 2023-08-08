@@ -26,8 +26,8 @@ public class ScoringDataMapper {
                                     .passportIssueDate(dto.getPassportIssueDate())
                                     .passportIssueBranch(dto.getPassportIssueBranch())
                                     .maritalStatus(dto.getMaritalStatus())
-                                    .dependentAmount(dto.getDependentAmount() != null ?
-                                dto.getDependentAmount() : NumberUtils.INTEGER_ZERO)
+                                    .dependentAmount(dto.getDependentAmount()
+                                            != null ? dto.getDependentAmount() : NumberUtils.INTEGER_ZERO)
                                     .employmentServiceDTO(employmentMapper.toModel(dto.getEmployment()))
                                     .account(dto.getAccount())
                                     .isInsuranceEnabled(dto.getIsInsuranceEnabled())

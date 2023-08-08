@@ -100,7 +100,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -114,7 +114,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -128,7 +128,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -144,7 +144,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -158,7 +158,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -172,7 +172,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -186,7 +186,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 
@@ -200,7 +200,7 @@ class CreditConveyorControllerTest {
                    .content(mapper.writeValueAsString(loanApplicationRequestDTO))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().is4xxClientError());
+           .andExpect(status().isBadRequest());
 
     }
 

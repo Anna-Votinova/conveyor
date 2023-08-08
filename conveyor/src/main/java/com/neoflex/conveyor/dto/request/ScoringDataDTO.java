@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.conveyor.config.GlobalVariables;
 import com.neoflex.conveyor.dto.enums.Gender;
 import com.neoflex.conveyor.dto.enums.MaritalStatus;
-import com.neoflex.conveyor.controller.advice.DateIsBeforeYears;
+import com.neoflex.conveyor.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 
 @Builder
 @Getter
@@ -86,7 +85,8 @@ public class ScoringDataDTO {
     private LocalDate passportIssueDate;
 
     @NotBlank
-    @Schema(description = "Ведомство, выдавшее паспорт", example = "The main Directorate of the MIA of the Voronezh region")
+    @Schema(description = "Ведомство, выдавшее паспорт",
+            example = "The main Directorate of the MIA of the Voronezh region")
     private String passportIssueBranch;
 
     @NotNull

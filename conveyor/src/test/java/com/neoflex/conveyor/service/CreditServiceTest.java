@@ -113,7 +113,9 @@ class CreditServiceTest {
         assertEquals(creditServiceDTO.getIsInsuranceEnabled(), creditServiceResponseDTO.getIsInsuranceEnabled());
         assertEquals(creditServiceDTO.getIsSalaryClient(), creditServiceResponseDTO.getIsSalaryClient());
 
-        assertEquals(scoringDataServiceDTO.getTerm(), creditServiceResponseDTO.getPaymentScheduleServiceElement().size());
+        assertEquals(
+                scoringDataServiceDTO.getTerm(), creditServiceResponseDTO.getPaymentScheduleServiceElement().size()
+        );
 
         for (int i = 0; i < 24; i++) {
 

@@ -1,7 +1,10 @@
 package com.neoflex.conveyor.service.enums;
 
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Getter
 public enum CalculationFormulaConstants {
 
     MONTHS_IN_YEAR("12"),
@@ -10,12 +13,4 @@ public enum CalculationFormulaConstants {
     RATIO_HUNDRED("100");
 
     private final String value;
-
-    CalculationFormulaConstants(String value) {
-        this.value = value;
-    }
-
-    public BigDecimal getValue() {
-        return new BigDecimal(value);
-    }
 }

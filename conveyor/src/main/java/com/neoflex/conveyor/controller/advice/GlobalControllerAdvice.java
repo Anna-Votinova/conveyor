@@ -1,5 +1,8 @@
 package com.neoflex.conveyor.controller.advice;
 
+import com.neoflex.conveyor.dto.error.ErrorResponse;
+import com.neoflex.conveyor.dto.error.ValidationErrorResponse;
+import com.neoflex.conveyor.dto.error.Violation;
 import com.neoflex.conveyor.exception.NotProperClientCategoryException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -43,8 +46,8 @@ public class GlobalControllerAdvice {
     public ValidationErrorResponse onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
         List<Violation> violations = e.getBindingResult().getFieldErrors().stream()
-                                            .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
-                                            .toList();
+                                      .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
+                                      .toList();
         return new ValidationErrorResponse(violations);
     }
 }
