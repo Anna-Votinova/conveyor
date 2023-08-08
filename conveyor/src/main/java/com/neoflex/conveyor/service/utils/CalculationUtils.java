@@ -25,20 +25,24 @@ public class CalculationUtils {
     public BigDecimal calculateMonthlyPayment(BigDecimal rate, Integer term, BigDecimal amount) {
         log.info("Calculate monthly payment with parameters: rate = {}, term = {}, amount = {}", rate, term, amount);
 
-        BigDecimal ratePerMonth = rate.divide(CalculationFormulaConstants.MONTHS_IN_YEAR.getValue(), 5, RoundingMode.HALF_UP);
+        BigDecimal ratePerMonth = rate.divide(
+                new BigDecimal(CalculationFormulaConstants.MONTHS_IN_YEAR.getValue()), 5, RoundingMode.HALF_UP
+        );
         log.debug("Rate per month equals: {}", ratePerMonth);
 
-        BigDecimal numericRatePerMonth = ratePerMonth.multiply(CalculationFormulaConstants.NUMBER_PERCENTAGE.getValue());
+        BigDecimal numericRatePerMonth = ratePerMonth.multiply(
+                new BigDecimal(CalculationFormulaConstants.NUMBER_PERCENTAGE.getValue())
+        );
         log.debug("Numeric rate per month equals: {}", numericRatePerMonth);
 
         BigDecimal annuityRate = numericRatePerMonth
-                .multiply((CalculationFormulaConstants.ONE_RATIO.getValue()
+                .multiply((new BigDecimal(CalculationFormulaConstants.ONE_RATIO.getValue())
                         .add(numericRatePerMonth))
                         .pow(term))
-                .divide(((CalculationFormulaConstants.ONE_RATIO.getValue()
+                .divide(((new BigDecimal(CalculationFormulaConstants.ONE_RATIO.getValue())
                                 .add(numericRatePerMonth))
                                 .pow(term)
-                                .subtract(CalculationFormulaConstants.ONE_RATIO.getValue())),
+                                .subtract(new BigDecimal(CalculationFormulaConstants.ONE_RATIO.getValue()))),
                         5, RoundingMode.HALF_UP
                 );
         log.debug("Annuity rate equals: {}", annuityRate);

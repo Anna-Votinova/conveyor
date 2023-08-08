@@ -2,7 +2,7 @@ package com.neoflex.conveyor.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.conveyor.config.GlobalVariables;
-import com.neoflex.conveyor.controller.advice.DateIsBeforeYears;
+import com.neoflex.conveyor.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

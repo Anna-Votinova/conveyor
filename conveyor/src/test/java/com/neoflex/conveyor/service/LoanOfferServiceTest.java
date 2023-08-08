@@ -63,28 +63,28 @@ class LoanOfferServiceTest {
     @Test
     void shouldReturnLoanOffersList_WhenValidLoanApplication() {
 
-        List<LoanOfferServiceDTO> expectedOffersList = getExpectedOffers();
+        List<LoanOfferServiceDTO> expectedOffers = getExpectedOffers();
         BigDecimal globalRate = new BigDecimal("15");
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(
-                expectedOffersList.get(0).getMonthlyPayment(), expectedOffersList.get(1).getMonthlyPayment(),
-                expectedOffersList.get(2).getMonthlyPayment(), expectedOffersList.get(3).getMonthlyPayment()
+                expectedOffers.get(0).getMonthlyPayment(), expectedOffers.get(1).getMonthlyPayment(),
+                expectedOffers.get(2).getMonthlyPayment(), expectedOffers.get(3).getMonthlyPayment()
         );
 
-        List<LoanOfferServiceDTO> loanOfferServiceDTOList = loanOfferService.preCalculateLoan(
+        List<LoanOfferServiceDTO> receivedOffers = loanOfferService.preCalculateLoan(
                 loanApplicationServiceDTO);
 
         for (int i = 0; i < 4; i++) {
 
-            assertNotNull(loanOfferServiceDTOList.get(i).getApplicationId());
-            assertEquals(expectedOffersList.get(i).getRequestedAmount(), loanOfferServiceDTOList.get(i).getRequestedAmount());
-            assertEquals(expectedOffersList.get(i).getTotalAmount(), loanOfferServiceDTOList.get(i).getTotalAmount());
-            assertEquals(expectedOffersList.get(i).getTerm(), loanOfferServiceDTOList.get(i).getTerm());
-            assertEquals(expectedOffersList.get(i).getMonthlyPayment(), loanOfferServiceDTOList.get(i).getMonthlyPayment());
-            assertEquals(expectedOffersList.get(i).getRate(), loanOfferServiceDTOList.get(i).getRate());
-            assertEquals(expectedOffersList.get(i).getIsInsuranceEnabled(), loanOfferServiceDTOList.get(i).getIsInsuranceEnabled());
-            assertEquals(expectedOffersList.get(i).getIsSalaryClient(), loanOfferServiceDTOList.get(i).getIsSalaryClient());
+            assertNotNull(receivedOffers.get(i).getApplicationId());
+            assertEquals(expectedOffers.get(i).getRequestedAmount(), receivedOffers.get(i).getRequestedAmount());
+            assertEquals(expectedOffers.get(i).getTotalAmount(), receivedOffers.get(i).getTotalAmount());
+            assertEquals(expectedOffers.get(i).getTerm(), receivedOffers.get(i).getTerm());
+            assertEquals(expectedOffers.get(i).getMonthlyPayment(), receivedOffers.get(i).getMonthlyPayment());
+            assertEquals(expectedOffers.get(i).getRate(), receivedOffers.get(i).getRate());
+            assertEquals(expectedOffers.get(i).getIsInsuranceEnabled(), receivedOffers.get(i).getIsInsuranceEnabled());
+            assertEquals(expectedOffers.get(i).getIsSalaryClient(), receivedOffers.get(i).getIsSalaryClient());
 
         }
 
@@ -95,27 +95,29 @@ class LoanOfferServiceTest {
     @Test
     void shouldReturnNotExpectedLoanOffersList_WhenSortOrderChanged() {
 
-        List<LoanOfferServiceDTO> expectedOffersList = getExpectedOffers();
+        List<LoanOfferServiceDTO> expectedOffers = getExpectedOffers();
         BigDecimal globalRate = new BigDecimal("15");
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(
-                expectedOffersList.get(0).getMonthlyPayment(), expectedOffersList.get(1).getMonthlyPayment(),
-                expectedOffersList.get(2).getMonthlyPayment(), expectedOffersList.get(3).getMonthlyPayment()
+                expectedOffers.get(0).getMonthlyPayment(), expectedOffers.get(1).getMonthlyPayment(),
+                expectedOffers.get(2).getMonthlyPayment(), expectedOffers.get(3).getMonthlyPayment()
         );
 
-        List<LoanOfferServiceDTO> loanOfferServiceDTOList = loanOfferService.preCalculateLoan(
+        List<LoanOfferServiceDTO> receivedOffers = loanOfferService.preCalculateLoan(
                 loanApplicationServiceDTO).stream().sorted(Comparator.comparing(LoanOfferServiceDTO::getRate))
                                                                             .toList();
 
         for (int i = 0; i < 4; i++) {
 
-            assertNotEquals(expectedOffersList.get(i).getRequestedAmount(), loanOfferServiceDTOList.get(i).getRequestedAmount());
-            assertNotEquals(expectedOffersList.get(i).getTotalAmount(), loanOfferServiceDTOList.get(i).getTotalAmount());
-            assertNotEquals(expectedOffersList.get(i).getMonthlyPayment(), loanOfferServiceDTOList.get(i).getMonthlyPayment());
-            assertNotEquals(expectedOffersList.get(i).getRate(), loanOfferServiceDTOList.get(i).getRate());
-            assertNotEquals(expectedOffersList.get(i).getIsInsuranceEnabled(), loanOfferServiceDTOList.get(i).getIsInsuranceEnabled());
-            assertNotEquals(expectedOffersList.get(i).getIsSalaryClient(), loanOfferServiceDTOList.get(i).getIsSalaryClient());
+            assertNotEquals(expectedOffers.get(i).getRequestedAmount(), receivedOffers.get(i).getRequestedAmount());
+            assertNotEquals(expectedOffers.get(i).getTotalAmount(), receivedOffers.get(i).getTotalAmount());
+            assertNotEquals(expectedOffers.get(i).getMonthlyPayment(), receivedOffers.get(i).getMonthlyPayment());
+            assertNotEquals(expectedOffers.get(i).getRate(), receivedOffers.get(i).getRate());
+            assertNotEquals(expectedOffers.get(i).getIsSalaryClient(), receivedOffers.get(i).getIsSalaryClient());
+            assertNotEquals(
+                    expectedOffers.get(i).getIsInsuranceEnabled(), receivedOffers.get(i).getIsInsuranceEnabled()
+            );
 
         }
 
@@ -126,7 +128,9 @@ class LoanOfferServiceTest {
 
         LoanApplicationServiceDTO emptyLoanApplicationServiceDTO = new LoanApplicationServiceDTO();
 
-        assertThrows(NullPointerException.class, () -> loanOfferService.preCalculateLoan(emptyLoanApplicationServiceDTO));
+        assertThrows(
+                NullPointerException.class, () -> loanOfferService.preCalculateLoan(emptyLoanApplicationServiceDTO)
+        );
 
     }
 
