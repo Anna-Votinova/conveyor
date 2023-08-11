@@ -7,10 +7,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/deal
     username: root
     password: root
+    tomcat:
+      connection-properties: useUnicode=true;characterEncoding=UTF-8
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         show_sql: false
+        ddl-auto: validate
         temp:
           use_jdbc_metadata_defaults: false

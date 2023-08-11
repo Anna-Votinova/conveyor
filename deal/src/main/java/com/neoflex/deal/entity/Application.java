@@ -22,14 +22,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "application ", schema = "public")
+@Table(name = "application", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -73,8 +72,8 @@ public class Application {
     private String sesCode;
 
     @Type(type = "json")
-    @JoinColumn(name = "status_history_id", nullable = false, columnDefinition = "jsonb")
-    @OneToMany(fetch = FetchType.LAZY)
+    @Column(name = "status_history", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<StatusHistory> statusHistory;
 

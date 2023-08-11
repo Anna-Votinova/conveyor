@@ -1,5 +1,114 @@
 databaseChangeLog:
   - changeSet:
+      id: passport-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: passport
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_passport_id
+                    nullable: false
+              - column:
+                  name: series
+                  type: varchar(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: varchar(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issue_branch
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issue_date
+                  type: date
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: employment-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: employment
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_employment_id
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(14)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: employer_inn
+                  type: varchar(12)
+              - column:
+                  name: salary
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: position
+                  type: varchar(11)
+              - column:
+                  name: work_experience_total
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: work_experience_current
+                  type: int
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: status_history-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: status_history
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_status_history_id
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(17)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: change_type
+                  type: varchar(9)
+                  constraints:
+                    nullable: false
+  - changeSet:
       id: client-table-1
       author: ponomareva
       context: dev
@@ -13,7 +122,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: clientIdPk
+                    primaryKeyName: pk_client_id
                     nullable: false
               - column:
                   name: last_name
@@ -54,9 +163,137 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: passport_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_passport_id
+                    references: passport(id)
+              - column:
+                  name: employment_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_employment_id
+                    references: employment(id)
+              - column:
                   name: account
                   type: varchar(20)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: credit-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: credit
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_credit_id
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: term
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: monthly_payment
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: psk
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_schedule
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: insurance_enable
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: salary_client
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credit_status
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: application-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: application
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_application_id
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_client_id
+                    references: client(id)
+                    nullable: false
+              - column:
+                  name: credit_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_credit_id
+                    references: credit(id)
+              - column:
+                  name: status
+                  type: varchar(17)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: applied_offer
+                  type: jsonb
+              - column:
+                  name: sign_date
+                  type: timestamp without time zone
+              - column:
+                  name: ses_code
+                  type: varchar(30)
+              - column:
+                  name: status_history
+                  type: jsonb
+
+
+
 
 
