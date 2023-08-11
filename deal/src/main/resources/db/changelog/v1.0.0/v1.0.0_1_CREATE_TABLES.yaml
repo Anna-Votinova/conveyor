@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: client-table-1
+      author: ponomareva
+      context: dev
+      changes:
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: clientIdPk
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  type: varchar(30)
+              - column:
+                  name: birth_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: marital_status
+                  type: varchar(13)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dependent_amount
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+

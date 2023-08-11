@@ -138,7 +138,7 @@ public class CreditService {
             rate = rate.add(new BigDecimal("3"));
         }
 
-        if (clientInfo.getEmploymentServiceDTO().getPosition().equals(Position.MANAGER)) {
+        if (clientInfo.getEmploymentServiceDTO().getPosition().equals(Position.MID_MANAGER)) {
             log.info("Subtract ratio 2 for managers");
             rate = rate.subtract(new BigDecimal("2"));
         }

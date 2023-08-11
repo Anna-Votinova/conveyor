@@ -357,8 +357,8 @@ class CreditServiceTest {
     @ParameterizedTest
     @CsvSource({
             "NON_BINARY, DIVORCED, BUSINESS_OWNER, TOP_MANAGER, 1, 0, 15",
-            "FEMALE, NOT_MARRIED, SELF_EMPLOYED, WORKER, 0, 20, 10",
-            "MALE, MARRIED, EMPLOYED, MANAGER, 2, 20, 5"
+            "FEMALE, SINGLE, SELF_EMPLOYED, WORKER, 0, 20, 10",
+            "MALE, MARRIED, EMPLOYED, MID_MANAGER, 2, 20, 5"
     })
     void shouldReturnExpectedRate_WhenGivenParametersForGettingDiscount(
             String gender, String maritalStatus, String employmentStatus, String position,

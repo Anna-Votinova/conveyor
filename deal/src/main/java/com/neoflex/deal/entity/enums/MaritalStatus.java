@@ -1,4 +1,4 @@
-package com.neoflex.conveyor.dto.enums;
+package com.neoflex.deal.entity.enums;
 
 public enum MaritalStatus {
 

@@ -1,8 +1,8 @@
-package com.neoflex.conveyor.dto.request;
+package com.neoflex.deal.entity.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.neoflex.conveyor.config.GlobalVariables;
-import com.neoflex.conveyor.dto.validation.DateIsBeforeYears;
+import com.neoflex.deal.config.GlobalVariables;
+import com.neoflex.deal.entity.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
