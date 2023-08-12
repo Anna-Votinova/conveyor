@@ -18,12 +18,15 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "История статусов заявки")
-public final class ApplicationStatusHistoryDTO {
+@Schema(description = "Сущность для ведения истории статусов заявки")
+public class ApplicationStatusHistoryDTO {
 
+    @Schema(description = "Статус заявки", example = "PREAPPROVAL")
     private ApplicationStatus status;
 
+    @Schema(description = "Дата присваивания заявке нового статуса", example = "2023-10-12")
     private LocalDateTime time;
 
+    @Schema(description = "Каким образом был изменен статус заявки", example = "AUTOMATIC")
     private ChangeType changeType;
 }

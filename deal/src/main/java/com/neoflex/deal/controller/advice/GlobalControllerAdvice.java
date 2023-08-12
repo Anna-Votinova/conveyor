@@ -3,7 +3,7 @@ package com.neoflex.deal.controller.advice;
 import com.neoflex.deal.entity.dto.error.ErrorResponse;
 import com.neoflex.deal.entity.dto.error.ValidationErrorResponse;
 import com.neoflex.deal.entity.dto.error.Violation;
-import com.neoflex.deal.exception.JsonParseSqlException;
+import com.neoflex.deal.exception.NotCompletedComponentImplementation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.List;
 
@@ -33,11 +34,11 @@ public class GlobalControllerAdvice {
         return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
     }
 
-    @ExceptionHandler(JsonParseSqlException.class)
+    @ExceptionHandler(NotCompletedComponentImplementation.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse notProperClientCategoryException(JsonParseSqlException e) {
+    public ErrorResponse notCompletedComponentImplementation(NotCompletedComponentImplementation e) {
         log.error(e.getMessage(), e);
-        return new ErrorResponse("Введенные данные не соответствуют требованиям: ", e.getMessage());
+        return new ErrorResponse("Реализация не завершена: ", e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,4 +51,17 @@ public class GlobalControllerAdvice {
                                       .toList();
         return new ValidationErrorResponse(violations);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
+        log.error(e.getMessage(), e);
+        List<Violation> violations = e.getConstraintViolations().stream()
+                                            .map(violation -> new Violation(violation.getPropertyPath().toString(),
+                                                    violation.getMessage()))
+                                            .toList();
+        return new ValidationErrorResponse(violations);
+    }
+
 }
