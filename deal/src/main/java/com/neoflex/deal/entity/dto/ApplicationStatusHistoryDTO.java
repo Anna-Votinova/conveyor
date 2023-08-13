@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Builder
 @Getter
@@ -21,11 +21,14 @@ import java.time.LocalDateTime;
 @Schema(description = "Сущность для ведения истории статусов заявки")
 public class ApplicationStatusHistoryDTO {
 
+    @Schema(description = "Идентификатор статуса заявки", example = "1")
+    private Long id;
+
     @Schema(description = "Статус заявки", example = "PREAPPROVAL")
     private ApplicationStatus status;
 
     @Schema(description = "Дата присваивания заявке нового статуса", example = "2023-10-12")
-    private LocalDateTime time;
+    private Timestamp time;
 
     @Schema(description = "Каким образом был изменен статус заявки", example = "AUTOMATIC")
     private ChangeType changeType;

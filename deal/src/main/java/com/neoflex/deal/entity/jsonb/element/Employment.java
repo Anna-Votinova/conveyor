@@ -40,18 +40,15 @@ public class Employment {
     @Column(name = "employer_inn")
     private String employerINN;
 
-    @Builder.Default
     @Column(nullable = false)
-    private BigDecimal salary = new BigDecimal("0");
+    private BigDecimal salary;
 
     @Enumerated(EnumType.STRING)
     private EmploymentPosition position;
 
-    @Builder.Default
     @Column(name = "work_experience_total", nullable = false)
-    private Integer workExperienceTotal = 0;
+    private Integer workExperienceTotal;
 
-    @Builder.Default
     @Column(name = "work_experience_current", nullable = false)
-    private Integer workExperienceCurrent = 0;
+    private Integer workExperienceCurrent;
 }

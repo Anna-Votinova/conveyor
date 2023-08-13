@@ -51,10 +51,8 @@ public class Application {
     @ToString.Exclude
     private Credit credit;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private ApplicationStatus status = ApplicationStatus.PREAPPROVAL;
+    private ApplicationStatus status;
 
     @Column(name = "creation_date", nullable = false)
     private Timestamp creationDate;

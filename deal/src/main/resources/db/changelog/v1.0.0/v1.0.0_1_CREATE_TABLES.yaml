@@ -28,13 +28,9 @@ databaseChangeLog:
               - column:
                   name: issue_branch
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: issue_date
                   type: date
-                  constraints:
-                    nullable: false
   - changeSet:
       id: employment-table-1
       author: ponomareva
@@ -150,13 +146,9 @@ databaseChangeLog:
               - column:
                   name: gender
                   type: varchar(10)
-                  constraints:
-                    nullable: false
               - column:
                   name: marital_status
                   type: varchar(13)
-                  constraints:
-                    nullable: false
               - column:
                   name: dependent_amount
                   type: int
@@ -178,8 +170,6 @@ databaseChangeLog:
               - column:
                   name: account
                   type: varchar(20)
-                  constraints:
-                    nullable: false
   - changeSet:
       id: credit-table-1
       author: ponomareva
@@ -273,8 +263,6 @@ databaseChangeLog:
               - column:
                   name: status
                   type: varchar(17)
-                  constraints:
-                    nullable: false
               - column:
                   name: creation_date
                   type: timestamp without time zone

@@ -1,7 +1,7 @@
 package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.CreditStatus;
-import com.neoflex.deal.entity.jsonb.element.PaymentSchedule;
+import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,7 +54,7 @@ public class Credit {
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
     @Column(name = "payment_schedule", nullable = false, columnDefinition = "jsonb")
-    private List<PaymentSchedule> paymentSchedule;
+    private List<PaymentScheduleElement> paymentSchedule;
 
     @Column(name = "insurance_enable", nullable = false)
     private Boolean insuranceEnable;

@@ -35,10 +35,10 @@ public class Passport {
     @Column(nullable = false)
     private String number;
 
-    @Column(name = "issue_branch", nullable = false)
+    @Column(name = "issue_branch")
     private String issueBranch;
 
-    @Column(name = "issue_date", nullable = false)
+    @Column(name = "issue_date")
     private LocalDate issueDate;
 
     @Override

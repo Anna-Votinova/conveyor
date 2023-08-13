@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentSchedule {
+public class PaymentScheduleElement {
 
     private Integer number;
 
@@ -34,8 +34,8 @@ public class PaymentSchedule {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PaymentSchedule)) return false;
-        return number != null && number.equals(((PaymentSchedule) o).getNumber());
+        if (!(o instanceof PaymentScheduleElement)) return false;
+        return number != null && number.equals(((PaymentScheduleElement) o).getNumber());
     }
 
     @Override

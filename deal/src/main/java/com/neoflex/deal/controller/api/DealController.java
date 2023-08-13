@@ -1,8 +1,11 @@
 package com.neoflex.deal.controller.api;
 
+import com.neoflex.deal.client.ConveyorClient;
 import com.neoflex.deal.entity.dto.LoanOfferDTO;
 import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
 import com.neoflex.deal.entity.dto.request.LoanApplicationRequestDTO;
+import com.neoflex.deal.entity.dto.response.CreditDTO;
+import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
 import com.neoflex.deal.service.DealService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,6 +33,8 @@ import java.util.List;
      description="Хранит информацию о клиентах, их заявках и одобренных кредитах")
 public class DealController {
 
+    private final ConveyorClient conveyorClient;
+
     private final DealService dealService;
 
     @Operation(
@@ -40,7 +45,12 @@ public class DealController {
     )
     @PostMapping("/application")
     public List<LoanOfferDTO> calculateOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
-        return dealService.calculateOffers(requestDTO);
+        log.info("Got the request for starting registration {}", requestDTO);
+
+        LoanApplicationRequestDTO fullLoanApplicationRequestDTO = dealService.startRegistration(requestDTO);
+        log.info("Got full request dto to prepare loan offers {}", fullLoanApplicationRequestDTO);
+
+        return conveyorClient.preCalculateLoan(fullLoanApplicationRequestDTO);
     }
 
     @Operation(
@@ -61,9 +71,13 @@ public class DealController {
     )
     @PutMapping("calculate/{applicationId}")
     public void calculateCredit(@Valid @RequestBody FinishRegistrationRequestDTO requestDTO,
-                                @Valid @Positive @PathVariable
-                                @Parameter(description = "Идентификатор заявки", example = "1") Long applicationId) {
-        dealService.calculateCredit(requestDTO, applicationId);
+                                @Positive @PathVariable @Parameter(
+                                        description = "Идентификатор заявки", example = "1") Long applicationId
+    ) {
+        dealService.finishRegistration(requestDTO, applicationId);
+        //отладка
+        ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
+        CreditDTO creditDTO = conveyorClient.calculateLoan(scoringDataDTO);
 
     }
 

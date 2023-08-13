@@ -16,8 +16,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "status_history", schema = "public")
@@ -43,6 +45,10 @@ public class StatusHistory {
     @Enumerated(EnumType.STRING)
     @Column(name = "change_type", nullable = false)
     private ChangeType changeType;
+    @PrePersist
+    public void setTime() {
+        this.time = Timestamp.from(Instant.now());
+    }
 
     @Override
     public boolean equals(Object o) {

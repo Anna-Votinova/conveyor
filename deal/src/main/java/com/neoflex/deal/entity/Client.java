@@ -54,11 +54,10 @@ public class Client {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "marital_status", nullable = false)
+    @Column(name = "marital_status")
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
 
@@ -74,11 +73,10 @@ public class Client {
 
     @Type(type = "json")
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employment_id", nullable = false, columnDefinition = "jsonb")
+    @JoinColumn(name = "employment_id", columnDefinition = "jsonb")
     @ToString.Exclude
     private Employment employment;
 
-    @Column(nullable = false)
     private String account;
 
     @Override
