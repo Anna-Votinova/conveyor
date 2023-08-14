@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @Builder
 public class LoanApplicationServiceDTO {
 
+    private Long id;
+
     private BigDecimal amount;
 
     private Integer term;

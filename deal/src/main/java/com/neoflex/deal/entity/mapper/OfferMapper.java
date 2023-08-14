@@ -14,7 +14,7 @@ public class OfferMapper {
         appliedOffer.setApplicationId(loanOfferDTO.getApplicationId());
         appliedOffer.setRequestedAmount(loanOfferDTO.getRequestedAmount());
         appliedOffer.setTotalAmount(loanOfferDTO.getTotalAmount());
-        appliedOffer.setTerm(appliedOffer.getTerm());
+        appliedOffer.setTerm(loanOfferDTO.getTerm());
         appliedOffer.setMonthlyPayment(loanOfferDTO.getMonthlyPayment());
         appliedOffer.setRate(loanOfferDTO.getRate());
         appliedOffer.setIsInsuranceEnabled(loanOfferDTO.getIsInsuranceEnabled());

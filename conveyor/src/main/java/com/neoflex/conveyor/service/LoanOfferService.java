@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +22,6 @@ public class LoanOfferService {
     private final ApplicationConfig applicationConfig;
 
     private final CalculationUtils calculationUtils;
-
-    private Long generateId() {
-        long id;
-
-        do {
-            id = UUID.randomUUID().getMostSignificantBits();
-        } while (id < 0);
-
-        return id;
-    }
 
     /**
      *<p>Creates four loan offers with different rates, final amounts, monthly payments and totals
@@ -44,36 +33,32 @@ public class LoanOfferService {
             LoanApplicationServiceDTO loanApplicationServiceDTO) {
 
         LoanOfferServiceDTO plainOffer = createPreOffers(
-                loanApplicationServiceDTO.getAmount(),
-                loanApplicationServiceDTO.getTerm(),
-                applicationConfig.getGlobalRate()
+                loanApplicationServiceDTO.getId(), loanApplicationServiceDTO.getAmount(),
+                loanApplicationServiceDTO.getTerm(), applicationConfig.getGlobalRate()
         );
         plainOffer.setIsInsuranceEnabled(false);
         plainOffer.setIsSalaryClient(false);
         log.info("Plain offer equals: {}", plainOffer);
 
         LoanOfferServiceDTO clientOffer = createPreOffers(
-                loanApplicationServiceDTO.getAmount(),
-                loanApplicationServiceDTO.getTerm(),
-                calculateClientRate()
+                loanApplicationServiceDTO.getId(), loanApplicationServiceDTO.getAmount(),
+                loanApplicationServiceDTO.getTerm(), calculateClientRate()
         );
         clientOffer.setIsInsuranceEnabled(false);
         clientOffer.setIsSalaryClient(true);
         log.info("Offer for client equals: {}", clientOffer);
 
-        LoanOfferServiceDTO offerWithInsurance = createPreOffers(
+        LoanOfferServiceDTO offerWithInsurance = createPreOffers(loanApplicationServiceDTO.getId(),
                 calculateAmountWithInsurance(loanApplicationServiceDTO.getAmount()),
-                loanApplicationServiceDTO.getTerm(),
-                calculateRateWithInsurance()
+                loanApplicationServiceDTO.getTerm(), calculateRateWithInsurance()
         );
         offerWithInsurance.setIsInsuranceEnabled(true);
         offerWithInsurance.setIsSalaryClient(false);
         log.info("Offer with insurance equals: {}", offerWithInsurance);
 
-        LoanOfferServiceDTO clientOfferWithInsurance = createPreOffers(
+        LoanOfferServiceDTO clientOfferWithInsurance = createPreOffers(loanApplicationServiceDTO.getId(),
                 calculateAmountWithInsurance(loanApplicationServiceDTO.getAmount()),
-                loanApplicationServiceDTO.getTerm(),
-                calculateClientRateWithInsurance()
+                loanApplicationServiceDTO.getTerm(), calculateClientRateWithInsurance()
         );
         clientOfferWithInsurance.setIsInsuranceEnabled(true);
         clientOfferWithInsurance.setIsSalaryClient(true);
@@ -89,19 +74,18 @@ public class LoanOfferService {
                         .toList();
     }
 
-    private LoanOfferServiceDTO createPreOffers(BigDecimal amount, Integer term, BigDecimal rate) {
-        log.info("Preparing offer with parameters: requestedAmount = {}, term = {}, rate = {},", amount, term, rate);
-
-        Long applicationId = generateId();
+    private LoanOfferServiceDTO createPreOffers(Long id, BigDecimal amount, Integer term, BigDecimal rate) {
+        log.info("Preparing offer with parameters: id = {}, requestedAmount = {}, term = {}, rate = {},",
+                id, amount, term, rate);
 
         BigDecimal monthlyPayment = calculationUtils.calculateMonthlyPayment(rate, term, amount);
-        log.info("Monthly payment for application with id {}: {}", applicationId, monthlyPayment);
+        log.info("Monthly payment for application: {}",  monthlyPayment);
 
         BigDecimal totalAmount = calculateTotalAmount(monthlyPayment, term);
-        log.info("Total amount for application with id {}: {}", applicationId, totalAmount);
+        log.info("Total amount for application: {}", totalAmount);
 
         return LoanOfferServiceDTO.builder()
-                .applicationId(applicationId)
+                .applicationId(id)
                 .requestedAmount(amount)
                 .totalAmount(totalAmount)
                 .term(term)

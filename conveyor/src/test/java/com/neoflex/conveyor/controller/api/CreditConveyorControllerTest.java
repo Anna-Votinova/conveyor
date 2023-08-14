@@ -63,6 +63,7 @@ class CreditConveyorControllerTest {
     @BeforeEach
     void setUp() {
         loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                1L,
                 new BigDecimal("10000"),
                 6,
                 "Anna",

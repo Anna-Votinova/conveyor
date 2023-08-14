@@ -24,7 +24,7 @@ public class LoanOfferDTO {
 
     @NotNull
     @Positive
-    @Schema(description = "Номер предложения", example = "208340162356398400")
+    @Schema(description = "Номер предложения", example = "1")
     private Long applicationId;
 
     @Min(10000)

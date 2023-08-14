@@ -48,6 +48,7 @@ class LoanOfferServiceTest {
     @BeforeEach
     void setUp() {
         loanApplicationServiceDTO = new LoanApplicationServiceDTO(
+                1L,
                 new BigDecimal("10000"),
                 6,
                 "Anna",
@@ -148,7 +149,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO clientOffer = new LoanOfferServiceDTO(
-                2L,
+                1L,
                 new BigDecimal("10000"),
                 new BigDecimal("10412.40"),
                 6,
@@ -159,7 +160,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO offerWithInsurance = new LoanOfferServiceDTO(
-                3L,
+                1L,
                 new BigDecimal("11000.0"),
                 new BigDecimal("11420.64"),
                 6,
@@ -170,7 +171,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO clientOfferWithInsurance = new LoanOfferServiceDTO(
-                4L,
+                1L,
                 new BigDecimal("11000.0"),
                 new BigDecimal("11388.30"),
                 6,

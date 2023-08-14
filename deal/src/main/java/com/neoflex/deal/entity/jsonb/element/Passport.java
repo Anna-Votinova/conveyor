@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @Builder
-public class Passport {
+public class Passport implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

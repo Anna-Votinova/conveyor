@@ -1,6 +1,7 @@
 package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.ApplicationStatus;
+import com.neoflex.deal.entity.jsonb.BaseEntity;
 import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
 import com.neoflex.deal.entity.jsonb.element.StatusHistory;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -35,7 +38,7 @@ import java.util.List;
 @Getter
 @ToString
 @Builder
-public class Application {
+public class Application extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,6 +77,11 @@ public class Application {
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<StatusHistory> statusHistory;
+
+    @PrePersist
+    public void setCreationDate() {
+        this.creationDate = Timestamp.from(Instant.now());
+    }
 
     @Override
     public boolean equals(Object o) {

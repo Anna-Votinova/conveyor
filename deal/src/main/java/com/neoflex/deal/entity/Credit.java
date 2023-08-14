@@ -1,6 +1,7 @@
 package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.CreditStatus;
+import com.neoflex.deal.entity.jsonb.BaseEntity;
 import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,7 @@ import java.util.List;
 @Getter
 @ToString
 @Builder
-public class Credit {
+public class Credit extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

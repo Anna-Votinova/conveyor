@@ -29,6 +29,9 @@ import java.time.LocalDate;
 @Schema(description = "Анкета пользователя")
 public class LoanApplicationRequestDTO {
 
+    @Schema(description = "Идентификатор анкеты")
+    private Long id;
+
     @NotNull
     @Min(10000)
     @Schema(description = "Запрашиваемая сумма займа", example = "100000")

@@ -3,6 +3,7 @@ package com.neoflex.deal.controller.advice;
 import com.neoflex.deal.entity.dto.error.ErrorResponse;
 import com.neoflex.deal.entity.dto.error.ValidationErrorResponse;
 import com.neoflex.deal.entity.dto.error.Violation;
+import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.exception.NotCompletedComponentImplementation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.util.List;
 
 @Slf4j
@@ -27,9 +27,9 @@ public class GlobalControllerAdvice {
         return new ErrorResponse("Непредвиденная ошибка: ", e.getMessage());
     }
 
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(ValidationException e) {
+    @ExceptionHandler(ApplicationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleApplicationNotFoundException(ApplicationNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
     }

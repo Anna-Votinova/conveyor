@@ -60,6 +60,7 @@ public class DealController {
     )
     @PutMapping("/offer")
     public void chooseOffer(@Valid @RequestBody LoanOfferDTO requestDTO) {
+        log.info("Got the request to save the chosen offer {}", requestDTO);
         dealService.chooseOffer(requestDTO);
     }
 
@@ -74,10 +75,13 @@ public class DealController {
                                 @Positive @PathVariable @Parameter(
                                         description = "Идентификатор заявки", example = "1") Long applicationId
     ) {
-        dealService.finishRegistration(requestDTO, applicationId);
-        //отладка
-        ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
+        log.info("Got the request for full registration and calculation loan. Parameters: requestDTO = {}, " +
+                        "applicationId = {}", requestDTO, applicationId);
+
+        ScoringDataDTO scoringDataDTO = dealService.finishRegistration(requestDTO, applicationId);
+
         CreditDTO creditDTO = conveyorClient.calculateLoan(scoringDataDTO);
+        log.info("Received calculated credit: {}", creditDTO);
 
     }
 

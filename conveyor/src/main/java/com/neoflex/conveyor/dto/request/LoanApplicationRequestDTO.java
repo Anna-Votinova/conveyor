@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +29,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Schema(description = "Анкета пользователя")
 public class LoanApplicationRequestDTO {
+
+    @NotNull
+    @Positive
+    @Schema(description = "Идентификатор анкеты", example = "1")
+    private Long id;
 
     @NotNull
     @Min(10000)

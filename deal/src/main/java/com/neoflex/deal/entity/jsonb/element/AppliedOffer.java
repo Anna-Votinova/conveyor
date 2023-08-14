@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Setter
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AppliedOffer {
+public class AppliedOffer implements Serializable {
 
     private Long applicationId;
 
@@ -32,7 +33,6 @@ public class AppliedOffer {
     private Boolean isInsuranceEnabled;
 
     private Boolean isSalaryClient;
-
 
     @Override
     public boolean equals(Object o) {
