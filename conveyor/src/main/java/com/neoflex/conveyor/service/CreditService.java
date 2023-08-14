@@ -79,7 +79,7 @@ public class CreditService {
         BigDecimal finalRate = calculateFinalRate(fullInfoAboutClient);
         log.info("Final rate equals: {}", finalRate);
 
-        BigDecimal amount = calculateAmount(fullInfoAboutClient);
+        BigDecimal amount = fullInfoAboutClient.getAmount();
         log.info("Amount equals: {}", amount);
 
         BigDecimal monthlyPayment = calculationUtils.calculateMonthlyPayment(finalRate, fullInfoAboutClient.getTerm(),
@@ -110,7 +110,7 @@ public class CreditService {
                 fullInfoAboutClient.getIsSalaryClient(),
                 paymentScheduleServiceElements
         );
-        log.info("Credit calculated: {}", creditServiceDTO);
+        log.debug("Credit calculated: {}", creditServiceDTO);
 
         return creditServiceDTO;
     }
@@ -187,24 +187,6 @@ public class CreditService {
 
         return rate;
     }
-
-    private BigDecimal calculateAmount(ScoringDataServiceDTO fullInfoAboutClient) {
-        log.info("Calculate amount with parameters: requestedAmount = {}, isInsuranceEnabled = {}",
-                fullInfoAboutClient.getAmount(), fullInfoAboutClient.getIsInsuranceEnabled());
-
-        BigDecimal amount = fullInfoAboutClient.getAmount();
-        BigDecimal insuranceCost = BigDecimal.ZERO;
-
-        if (Boolean.TRUE.equals(fullInfoAboutClient.getIsInsuranceEnabled())) {
-            insuranceCost = fullInfoAboutClient.getAmount().multiply(GlobalVariables.INSURANCE_RATIO);
-            amount = amount.add(insuranceCost);
-        }
-
-        log.info("Insurance cost: {}", insuranceCost);
-        return amount;
-
-    }
-
 
     private List<PaymentScheduleServiceElement> preparePaymentSchedule(
             Integer term, BigDecimal amount, BigDecimal finalRate, BigDecimal monthlyPayment

@@ -14,6 +14,8 @@ import org.hibernate.annotations.Type;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -64,7 +66,9 @@ public class Credit extends BaseEntity {
     private Boolean salaryClient;
 
     @Column(name = "credit_status", nullable = false)
-    private CreditStatus creditStatus;
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private CreditStatus creditStatus = CreditStatus.CALCULATED;
 
     @Override
     public boolean equals(Object o) {

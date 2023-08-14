@@ -19,6 +19,7 @@ spring:
     password: root
     tomcat:
       connection-properties: useUnicode=true;characterEncoding=UTF-8
+
   jpa:
     properties:
       hibernate:

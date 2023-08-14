@@ -61,7 +61,7 @@ class CreditServiceTest {
         );
 
         scoringDataServiceDTO = new ScoringDataServiceDTO(
-                new BigDecimal("70000"),
+                new BigDecimal("77000.0"),
                 24,
                 "Anna",
                 "Black",

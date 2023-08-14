@@ -12,7 +12,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,10 +23,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,7 +56,8 @@ public class Application extends BaseEntity {
     private ApplicationStatus status;
 
     @Column(name = "creation_date", nullable = false)
-    private Timestamp creationDate;
+    @Builder.Default
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     @Type(type = "json")
     @Column(name = "applied_offer", columnDefinition = "jsonb")
@@ -67,7 +66,7 @@ public class Application extends BaseEntity {
     private AppliedOffer appliedOffer;
 
     @Column(name = "sign_date")
-    private Timestamp signDate;
+    private LocalDateTime signDate;
 
     @Column(name = "ses_code")
     private String sesCode;
@@ -76,12 +75,8 @@ public class Application extends BaseEntity {
     @Column(name = "status_history", columnDefinition = "jsonb")
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<StatusHistory> statusHistory;
-
-    @PrePersist
-    public void setCreationDate() {
-        this.creationDate = Timestamp.from(Instant.now());
-    }
+    @Builder.Default
+    private List<StatusHistory> statusHistory = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

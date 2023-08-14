@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.jsonb.element;
+package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.EmploymentPosition;
 import com.neoflex.deal.entity.enums.EmploymentStatus;
@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
@@ -28,7 +27,7 @@ import java.math.BigDecimal;
 @Getter
 @ToString
 @Builder
-public class Employment implements Serializable {
+public class Employment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

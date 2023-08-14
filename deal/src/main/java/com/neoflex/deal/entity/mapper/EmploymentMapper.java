@@ -1,7 +1,7 @@
 package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.dto.request.EmploymentDTO;
-import com.neoflex.deal.entity.jsonb.element.Employment;
+import com.neoflex.deal.entity.Employment;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 

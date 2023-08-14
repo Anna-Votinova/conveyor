@@ -9,53 +9,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "status_history", schema = "public")
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class StatusHistory implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ApplicationStatus status;
 
-    @Column(nullable = false)
-    private Timestamp time;
+    @Builder.Default
+    private LocalDateTime time = LocalDateTime.now();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "change_type", nullable = false)
     private ChangeType changeType;
-    @PrePersist
-    public void setTime() {
-        this.time = Timestamp.from(Instant.now());
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof StatusHistory)) return false;
-        return id != null && id.equals(((StatusHistory) o).getId());
+        return time != null && time.equals(((StatusHistory) o).getTime());
     }
 
     @Override

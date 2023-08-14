@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: passport-table-1
+      id: create-passport
       author: ponomareva
       context: dev
       changes:
@@ -32,7 +32,7 @@ databaseChangeLog:
                   name: issue_date
                   type: date
   - changeSet:
-      id: employment-table-1
+      id: create-employment
       author: ponomareva
       context: dev
       changes:
@@ -74,38 +74,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
-      id: status_history-table-1
-      author: ponomareva
-      context: dev
-      changes:
-        - createTable:
-            tableName: status_history
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: pk_status_history_id
-                    nullable: false
-              - column:
-                  name: status
-                  type: varchar(17)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: time
-                  type: timestamp without time zone
-                  constraints:
-                    nullable: false
-              - column:
-                  name: change_type
-                  type: varchar(9)
-                  constraints:
-                    nullable: false
-  - changeSet:
-      id: client-table-1
+      id: create-client
       author: ponomareva
       context: dev
       changes:
@@ -158,7 +127,6 @@ databaseChangeLog:
                   name: passport_id
                   type: BIGINT
                   constraints:
-                    nullable: false
                     foreignKeyName: fk_passport_id
                     references: passport(id)
               - column:
@@ -171,7 +139,7 @@ databaseChangeLog:
                   name: account
                   type: varchar(20)
   - changeSet:
-      id: credit-table-1
+      id: create-credit
       author: ponomareva
       context: dev
       changes:
@@ -228,11 +196,11 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: credit_status
-                  type: varchar(10)
+                  type: varchar(15)
                   constraints:
                     nullable: false
   - changeSet:
-      id: application-table-1
+      id: create-application
       author: ponomareva
       context: dev
       changes:

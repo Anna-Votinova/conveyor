@@ -2,17 +2,14 @@ package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.Gender;
 import com.neoflex.deal.entity.enums.MaritalStatus;
-import com.neoflex.deal.entity.jsonb.BaseEntity;
-import com.neoflex.deal.entity.jsonb.element.Employment;
-import com.neoflex.deal.entity.jsonb.element.Passport;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,7 +31,7 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @Builder
-public class Client extends BaseEntity {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,15 +63,13 @@ public class Client extends BaseEntity {
     @Column(name = "dependent_amount", nullable = false)
     private Integer dependentAmount = 0;
 
-    @Type(type = "json")
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "passport_id", nullable = false, columnDefinition = "jsonb")
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "passport_id", nullable = false)
     @ToString.Exclude
     private Passport passport;
 
-    @Type(type = "json")
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employment_id", columnDefinition = "jsonb")
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employment_id")
     @ToString.Exclude
     private Employment employment;
 

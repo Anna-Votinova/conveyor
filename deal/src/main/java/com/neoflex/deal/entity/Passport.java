@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.jsonb.element;
+package com.neoflex.deal.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -24,7 +23,7 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @Builder
-public class Passport implements Serializable {
+public class Passport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

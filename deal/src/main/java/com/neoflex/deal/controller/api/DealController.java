@@ -81,7 +81,9 @@ public class DealController {
         ScoringDataDTO scoringDataDTO = dealService.finishRegistration(requestDTO, applicationId);
 
         CreditDTO creditDTO = conveyorClient.calculateLoan(scoringDataDTO);
-        log.info("Received calculated credit: {}", creditDTO);
+        log.debug("Received calculated credit: {}", creditDTO);
+
+        dealService.saveCredit(creditDTO, applicationId);
 
     }
 
