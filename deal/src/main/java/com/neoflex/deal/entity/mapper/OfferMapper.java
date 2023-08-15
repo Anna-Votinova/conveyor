@@ -1,6 +1,6 @@
 package com.neoflex.deal.entity.mapper;
 
-import com.neoflex.deal.entity.dto.LoanOfferDTO;
+import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
 import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
 import org.springframework.stereotype.Service;
 

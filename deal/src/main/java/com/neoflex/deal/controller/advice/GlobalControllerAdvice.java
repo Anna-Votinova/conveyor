@@ -4,6 +4,7 @@ import com.neoflex.deal.entity.dto.error.ErrorResponse;
 import com.neoflex.deal.entity.dto.error.ValidationErrorResponse;
 import com.neoflex.deal.entity.dto.error.Violation;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
+import com.neoflex.deal.exception.BadRequestException;
 import com.neoflex.deal.exception.NotCompletedComponentImplementation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,13 @@ public class GlobalControllerAdvice {
         return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(BadRequestException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
+    }
+
     @ExceptionHandler(NotCompletedComponentImplementation.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse notCompletedComponentImplementation(NotCompletedComponentImplementation e) {
@@ -53,7 +61,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
         log.error(e.getMessage(), e);

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -98,6 +99,7 @@ public class ScoringDataDTO {
 
     @NotNull
     @Schema(description = "Сведения о работе")
+    @Valid
     private EmploymentDTO employment;
 
     @NotBlank

@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.response;
+package com.neoflex.deal.entity.dto.request;
 
 import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import io.swagger.v3.oas.annotations.media.Schema;

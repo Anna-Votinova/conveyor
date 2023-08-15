@@ -1,7 +1,7 @@
 package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.Credit;
-import com.neoflex.deal.entity.dto.response.CreditDTO;
+import com.neoflex.deal.entity.dto.request.CreditDTO;
 import org.springframework.stereotype.Service;
 
 @Service

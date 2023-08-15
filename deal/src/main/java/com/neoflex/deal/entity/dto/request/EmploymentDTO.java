@@ -23,25 +23,26 @@ import java.math.BigDecimal;
 @Schema(description = "Сведения о работе")
 public class EmploymentDTO {
 
-    @NotNull
+    @NotNull(message = "Необходимо указать рабочий статус")
     @Schema(description = "Статус", example = "EMPLOYED")
     private EmploymentStatus employmentStatus;
 
     @Schema(description = "ИНН работодателя", example = "325507450247")
     private String employerINN;
 
-    @PositiveOrZero
+    @NotNull(message = "Необходимо заполнить поле запрлаты")
+    @PositiveOrZero(message = "Зарплата не может быть отрицательным числом")
     @Schema(description = "Размер зарплаты", example = "70000")
     private BigDecimal salary;
 
     @Schema(description = "Должность", example = "WORKER")
     private EmploymentPosition position;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "Общий стаж не может быть отрицательным числом")
     @Schema(description = "Общий стаж работы (в месяцах)", example = "144")
     private Integer workExperienceTotal;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "Текущий стаж не может быть отрицательным числом")
     @Schema(description = "Общий стаж работы на текущем месте (в месяцах)", example = "110")
     private Integer workExperienceCurrent;
 

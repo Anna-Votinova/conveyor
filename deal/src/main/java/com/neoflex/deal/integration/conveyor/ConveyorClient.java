@@ -1,9 +1,9 @@
-package com.neoflex.deal.client;
+package com.neoflex.deal.integration.conveyor;
 
 import com.neoflex.deal.config.ClientConfiguration;
-import com.neoflex.deal.entity.dto.LoanOfferDTO;
-import com.neoflex.deal.entity.dto.request.LoanApplicationRequestDTO;
-import com.neoflex.deal.entity.dto.response.CreditDTO;
+import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
+import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
+import com.neoflex.deal.entity.dto.request.CreditDTO;
 import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

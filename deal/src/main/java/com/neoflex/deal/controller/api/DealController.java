@@ -1,10 +1,10 @@
 package com.neoflex.deal.controller.api;
 
-import com.neoflex.deal.client.ConveyorClient;
-import com.neoflex.deal.entity.dto.LoanOfferDTO;
+import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
 import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.request.LoanApplicationRequestDTO;
-import com.neoflex.deal.entity.dto.response.CreditDTO;
+import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
+import com.neoflex.deal.entity.dto.request.CreditDTO;
 import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
 import com.neoflex.deal.service.DealService;
 import io.swagger.v3.oas.annotations.Operation;

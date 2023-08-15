@@ -2,7 +2,7 @@ package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.Client;
 import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.request.LoanApplicationRequestDTO;
+import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
 import com.neoflex.deal.entity.Employment;
 import com.neoflex.deal.entity.Passport;
 import lombok.RequiredArgsConstructor;

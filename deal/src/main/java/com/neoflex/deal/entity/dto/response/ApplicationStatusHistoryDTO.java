@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto;
+package com.neoflex.deal.entity.dto.response;
 
 import com.neoflex.deal.entity.enums.ApplicationStatus;
 import com.neoflex.deal.entity.enums.ChangeType;
@@ -32,4 +32,5 @@ public class ApplicationStatusHistoryDTO {
 
     @Schema(description = "Каким образом был изменен статус заявки", example = "AUTOMATIC")
     private ChangeType changeType;
+
 }

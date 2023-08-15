@@ -9,7 +9,8 @@ logging:
     com:
     neoflex:
     deal:
-    client: DEBUG
+    integration:
+    conveyor: DEBUG
 
 spring:
   datasource:

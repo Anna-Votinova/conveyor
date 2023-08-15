@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto;
+package com.neoflex.deal.entity.dto.request_responce;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

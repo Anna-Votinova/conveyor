@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 @Builder
@@ -35,6 +37,7 @@ public class FinishRegistrationRequestDTO {
     private MaritalStatus maritalStatus;
 
     @Schema(description = "Число иждивенцев", example = "0")
+    @PositiveOrZero
     private Integer dependentAmount;
 
     @NotNull
@@ -50,12 +53,12 @@ public class FinishRegistrationRequestDTO {
 
     @NotNull
     @Schema(description = "Сведения о работе")
+    @Valid
     private EmploymentDTO employment;
 
     @NotBlank
     @Pattern(regexp = "[\\d]{20}", message = "Счет должен содержать 20 цифр")
     @Schema(description = "Номер счета в банке", example = "70846273218496606511")
     private String account;
-
 
 }

@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.request;
+package com.neoflex.deal.entity.dto.request_responce;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.deal.config.GlobalVariables;
@@ -64,7 +64,6 @@ public class LoanApplicationRequestDTO {
     @Schema(description = "Электронный почтовый ящик", example = "kotova@yandex.ru")
     private String email;
 
-    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateIsBeforeYears(years = 18, message = "Заемщик должен быть совершеннолетним")
     @Schema(description = "Дата рождения заемщика", example = "1990-01-12")
