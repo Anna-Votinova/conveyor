@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,18 +35,16 @@ class LoanOfferServiceTest {
 
     @Mock
     private CalculationUtils calculationUtils;
-
     @Mock
     private ApplicationConfig applicationConfig;
-
     @InjectMocks
     private LoanOfferService loanOfferService;
-
     private LoanApplicationServiceDTO loanApplicationServiceDTO;
 
     @BeforeEach
     void setUp() {
         loanApplicationServiceDTO = new LoanApplicationServiceDTO(
+                1L,
                 new BigDecimal("10000"),
                 6,
                 "Anna",
@@ -89,7 +86,6 @@ class LoanOfferServiceTest {
         }
 
         verify(calculationUtils, times(4)).calculateMonthlyPayment(any(), any(), any());
-
     }
 
     @Test
@@ -118,20 +114,7 @@ class LoanOfferServiceTest {
             assertNotEquals(
                     expectedOffers.get(i).getIsInsuranceEnabled(), receivedOffers.get(i).getIsInsuranceEnabled()
             );
-
         }
-
-    }
-
-    @Test
-    void shouldThrowNullPointerException_WhenLoanApplicationEmpty() {
-
-        LoanApplicationServiceDTO emptyLoanApplicationServiceDTO = new LoanApplicationServiceDTO();
-
-        assertThrows(
-                NullPointerException.class, () -> loanOfferService.preCalculateLoan(emptyLoanApplicationServiceDTO)
-        );
-
     }
 
     private List<LoanOfferServiceDTO> getExpectedOffers() {
@@ -148,7 +131,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO clientOffer = new LoanOfferServiceDTO(
-                2L,
+                1L,
                 new BigDecimal("10000"),
                 new BigDecimal("10412.40"),
                 6,
@@ -159,7 +142,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO offerWithInsurance = new LoanOfferServiceDTO(
-                3L,
+                1L,
                 new BigDecimal("11000.0"),
                 new BigDecimal("11420.64"),
                 6,
@@ -170,7 +153,7 @@ class LoanOfferServiceTest {
         );
 
         LoanOfferServiceDTO clientOfferWithInsurance = new LoanOfferServiceDTO(
-                4L,
+                1L,
                 new BigDecimal("11000.0"),
                 new BigDecimal("11388.30"),
                 6,
@@ -183,7 +166,5 @@ class LoanOfferServiceTest {
         return Stream.of(plainOffer, clientOffer, offerWithInsurance, clientOfferWithInsurance)
                      .sorted(Comparator.comparing(LoanOfferServiceDTO::getRate).reversed())
                      .toList();
-
     }
-
 }

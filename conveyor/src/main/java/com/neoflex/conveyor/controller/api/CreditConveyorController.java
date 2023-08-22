@@ -35,15 +35,10 @@ import java.util.List;
 public class CreditConveyorController {
 
     private final LoanOfferService loanOfferService;
-
     private final CreditService creditService;
-
     private final CreditMapper creditMapper;
-
     private final ScoringDataMapper scoringDataMapper;
-
     private final LoanApplicationMapper loanApplicationMapper;
-
     private final LoanOfferMapper loanOfferMapper;
 
     @Operation(
@@ -78,5 +73,4 @@ public class CreditConveyorController {
 
         return creditMapper.toDto(creditServiceDTO);
     }
-
 }

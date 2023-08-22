@@ -1,0 +1,19 @@
+DB:
+  URL: jdbc:postgresql://localhost:5432/deal
+  USERNAME: root
+  PASSWORD: root
+
+CONVEYOR:
+  URL: http://localhost:8081/conveyor
+
+logging:
+  level:
+    com.neoflex.deal.integration.conveyor: DEBUG
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        temp:
+          use_jdbc_metadata_defaults: false

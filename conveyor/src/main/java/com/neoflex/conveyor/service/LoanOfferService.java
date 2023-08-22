@@ -1,7 +1,6 @@
 package com.neoflex.conveyor.service;
 
 import com.neoflex.conveyor.config.ApplicationConfig;
-import com.neoflex.conveyor.config.GlobalVariables;
 import com.neoflex.conveyor.dto.request.LoanApplicationServiceDTO;
 import com.neoflex.conveyor.dto.response.LoanOfferServiceDTO;
 import com.neoflex.conveyor.service.utils.CalculationUtils;
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,22 +19,12 @@ import java.util.UUID;
 public class LoanOfferService {
 
     private final ApplicationConfig applicationConfig;
-
     private final CalculationUtils calculationUtils;
-
-    private Long generateId() {
-        long id;
-
-        do {
-            id = UUID.randomUUID().getMostSignificantBits();
-        } while (id < 0);
-
-        return id;
-    }
+    public static final BigDecimal INSURANCE_RATIO = new BigDecimal("0.1");
 
     /**
-     *<p>Creates four loan offers with different rates, final amounts, monthly payments and totals
-     *</p>
+     * <p>Creates four loan offers with different rates, final amounts, monthly payments and totals
+     * </p>
      * @param loanApplicationServiceDTO an application with minimum info about the client
      * @return a list with four loan offers sorted from worst to best depending on the rate
      * */
@@ -44,36 +32,32 @@ public class LoanOfferService {
             LoanApplicationServiceDTO loanApplicationServiceDTO) {
 
         LoanOfferServiceDTO plainOffer = createPreOffers(
-                loanApplicationServiceDTO.getAmount(),
-                loanApplicationServiceDTO.getTerm(),
-                applicationConfig.getGlobalRate()
+                loanApplicationServiceDTO.getId(), loanApplicationServiceDTO.getAmount(),
+                loanApplicationServiceDTO.getTerm(), applicationConfig.getGlobalRate()
         );
         plainOffer.setIsInsuranceEnabled(false);
         plainOffer.setIsSalaryClient(false);
         log.info("Plain offer equals: {}", plainOffer);
 
         LoanOfferServiceDTO clientOffer = createPreOffers(
-                loanApplicationServiceDTO.getAmount(),
-                loanApplicationServiceDTO.getTerm(),
-                calculateClientRate()
+                loanApplicationServiceDTO.getId(), loanApplicationServiceDTO.getAmount(),
+                loanApplicationServiceDTO.getTerm(), calculateClientRate()
         );
         clientOffer.setIsInsuranceEnabled(false);
         clientOffer.setIsSalaryClient(true);
         log.info("Offer for client equals: {}", clientOffer);
 
-        LoanOfferServiceDTO offerWithInsurance = createPreOffers(
+        LoanOfferServiceDTO offerWithInsurance = createPreOffers(loanApplicationServiceDTO.getId(),
                 calculateAmountWithInsurance(loanApplicationServiceDTO.getAmount()),
-                loanApplicationServiceDTO.getTerm(),
-                calculateRateWithInsurance()
+                loanApplicationServiceDTO.getTerm(), calculateRateWithInsurance()
         );
         offerWithInsurance.setIsInsuranceEnabled(true);
         offerWithInsurance.setIsSalaryClient(false);
         log.info("Offer with insurance equals: {}", offerWithInsurance);
 
-        LoanOfferServiceDTO clientOfferWithInsurance = createPreOffers(
+        LoanOfferServiceDTO clientOfferWithInsurance = createPreOffers(loanApplicationServiceDTO.getId(),
                 calculateAmountWithInsurance(loanApplicationServiceDTO.getAmount()),
-                loanApplicationServiceDTO.getTerm(),
-                calculateClientRateWithInsurance()
+                loanApplicationServiceDTO.getTerm(), calculateClientRateWithInsurance()
         );
         clientOfferWithInsurance.setIsInsuranceEnabled(true);
         clientOfferWithInsurance.setIsSalaryClient(true);
@@ -89,19 +73,18 @@ public class LoanOfferService {
                         .toList();
     }
 
-    private LoanOfferServiceDTO createPreOffers(BigDecimal amount, Integer term, BigDecimal rate) {
-        log.info("Preparing offer with parameters: requestedAmount = {}, term = {}, rate = {},", amount, term, rate);
-
-        Long applicationId = generateId();
+    private LoanOfferServiceDTO createPreOffers(Long id, BigDecimal amount, Integer term, BigDecimal rate) {
+        log.info("Preparing offer with parameters: id = {}, requestedAmount = {}, term = {}, rate = {},",
+                id, amount, term, rate);
 
         BigDecimal monthlyPayment = calculationUtils.calculateMonthlyPayment(rate, term, amount);
-        log.info("Monthly payment for application with id {}: {}", applicationId, monthlyPayment);
+        log.info("Monthly payment for application: {}",  monthlyPayment);
 
         BigDecimal totalAmount = calculateTotalAmount(monthlyPayment, term);
-        log.info("Total amount for application with id {}: {}", applicationId, totalAmount);
+        log.info("Total amount for application: {}", totalAmount);
 
         return LoanOfferServiceDTO.builder()
-                .applicationId(applicationId)
+                .applicationId(id)
                 .requestedAmount(amount)
                 .totalAmount(totalAmount)
                 .term(term)
@@ -111,7 +94,7 @@ public class LoanOfferService {
     }
 
     private BigDecimal calculateAmountWithInsurance(BigDecimal requestedAmount) {
-        return requestedAmount.add(requestedAmount.multiply(GlobalVariables.INSURANCE_RATIO));
+        return requestedAmount.add(requestedAmount.multiply(INSURANCE_RATIO));
     }
 
     private BigDecimal calculateRateWithInsurance() {
@@ -126,7 +109,6 @@ public class LoanOfferService {
         return applicationConfig.getGlobalRate()
                                 .subtract(BigDecimal.ONE)
                                 .subtract(new BigDecimal("2"));
-
     }
 
     private BigDecimal calculateTotalAmount(BigDecimal monthlyPayment, Integer term) {
@@ -134,5 +116,4 @@ public class LoanOfferService {
 
         return monthlyPayment.multiply(new BigDecimal(term)).setScale(2, RoundingMode.HALF_EVEN);
     }
-
 }

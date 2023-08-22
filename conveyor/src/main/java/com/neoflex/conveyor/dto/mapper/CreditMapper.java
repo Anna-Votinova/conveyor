@@ -25,5 +25,4 @@ public class CreditMapper {
                                                  .toList())
                 .build();
     }
-
 }

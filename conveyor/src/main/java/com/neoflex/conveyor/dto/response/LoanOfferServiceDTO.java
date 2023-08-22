@@ -28,5 +28,4 @@ public class LoanOfferServiceDTO {
     private Boolean isInsuranceEnabled;
 
     private Boolean isSalaryClient;
-
 }

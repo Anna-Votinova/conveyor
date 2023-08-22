@@ -36,33 +36,26 @@ class CreditConveyorControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private MockMvc mvc;
-
     @MockBean
     private LoanOfferService loanOfferService;
-
     @MockBean
     private CreditService creditService;
-
     @MockBean
     private CreditMapper creditMapper;
-
     @MockBean
     private ScoringDataMapper scoringDataMapper;
-
     @MockBean
     private LoanApplicationMapper loanApplicationMapper;
-
     @MockBean
     private LoanOfferMapper loanOfferMapper;
-
     private LoanApplicationRequestDTO loanApplicationRequestDTO;
 
     @BeforeEach
     void setUp() {
         loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                1L,
                 new BigDecimal("10000"),
                 6,
                 "Anna",
@@ -73,7 +66,6 @@ class CreditConveyorControllerTest {
                 "1111",
                 "111111"
         );
-
     }
 
     @Test
@@ -87,7 +79,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isOk());
-
     }
 
     @Test
@@ -101,7 +92,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -115,7 +105,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -129,7 +118,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -145,7 +133,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -159,7 +146,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -173,7 +159,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -187,7 +172,6 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -201,7 +185,5 @@ class CreditConveyorControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
-
 }

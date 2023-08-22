@@ -25,5 +25,4 @@ public class PaymentScheduleServiceElement {
     private BigDecimal debtPayment;
 
     private BigDecimal remainingDebt;
-
 }

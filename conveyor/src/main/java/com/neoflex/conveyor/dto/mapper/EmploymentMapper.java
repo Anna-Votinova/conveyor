@@ -14,14 +14,16 @@ public class EmploymentMapper {
         return EmploymentServiceDTO.builder()
                                    .employmentStatus(dto.getEmploymentStatus())
                                    .employerINN(dto.getEmployerINN())
-                                   .salary(dto.getSalary()
-                                           != null ? dto.getSalary() : BigDecimal.ZERO)
+                                   .salary(dto.getSalary() != null
+                                           ? dto.getSalary()
+                                           : BigDecimal.ZERO)
                                    .position(dto.getPosition())
-                                   .workExperienceTotal(dto.getWorkExperienceTotal()
-                                           != null ? dto.getWorkExperienceTotal() : NumberUtils.INTEGER_ZERO)
-                                   .workExperienceCurrent(dto.getWorkExperienceCurrent()
-                                           != null ? dto.getWorkExperienceCurrent() : NumberUtils.INTEGER_ZERO)
+                                   .workExperienceTotal(dto.getWorkExperienceTotal() != null
+                                           ? dto.getWorkExperienceTotal()
+                                           : NumberUtils.INTEGER_ZERO)
+                                   .workExperienceCurrent(dto.getWorkExperienceCurrent() != null
+                                           ? dto.getWorkExperienceCurrent()
+                                           : NumberUtils.INTEGER_ZERO)
                                    .build();
     }
-
 }

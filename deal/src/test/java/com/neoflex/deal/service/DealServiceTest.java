@@ -1,0 +1,199 @@
+package com.neoflex.deal.service;
+
+import com.neoflex.deal.entity.Application;
+import com.neoflex.deal.entity.Client;
+import com.neoflex.deal.entity.Credit;
+import com.neoflex.deal.entity.Employment;
+import com.neoflex.deal.dto.LoanOfferDTO;
+import com.neoflex.deal.dto.request.CreditDTO;
+import com.neoflex.deal.dto.request.EmploymentDTO;
+import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
+import com.neoflex.deal.dto.LoanApplicationRequestDTO;
+import com.neoflex.deal.dto.response.ScoringDataDTO;
+import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
+import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
+import com.neoflex.deal.entity.mapper.ClientMapper;
+import com.neoflex.deal.entity.mapper.CreditMapper;
+import com.neoflex.deal.entity.mapper.EmploymentMapper;
+import com.neoflex.deal.entity.mapper.OfferMapper;
+import com.neoflex.deal.entity.mapper.ScoringDataMapper;
+import com.neoflex.deal.exception.ApplicationNotFoundException;
+import com.neoflex.deal.exception.BadRequestException;
+import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.repository.ApplicationRepository;
+import com.neoflex.deal.repository.ClientRepository;
+import com.neoflex.deal.repository.CreditRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class DealServiceTest {
+
+    @Mock
+    private ClientRepository clientRepository;
+    @Mock
+    private ApplicationRepository applicationRepository;
+    @Mock
+    private CreditRepository creditRepository;
+    @Mock
+    private ConveyorClient conveyorClient;
+    @Mock
+    private EmploymentMapper employmentMapper;
+    @Mock
+    private ClientMapper clientMapper;
+    @Mock
+    private OfferMapper offerMapper;
+    @Mock
+    private ScoringDataMapper scoringDataMapper;
+    @Mock
+    private CreditMapper creditMapper;
+    @InjectMocks
+    private DealService dealService;
+
+    @AfterEach
+    public void verifyInteractions() {
+        verifyNoMoreInteractions(
+                clientRepository,
+                applicationRepository,
+                creditRepository
+        );
+    }
+
+    @Test
+    void shouldSaveApplication_WhenValidInput() {
+        LoanApplicationRequestDTO requestDTO = new LoanApplicationRequestDTO();
+        Client client = new Client();
+        Application application = Application.builder()
+                .id(1L).build();
+
+        when(clientMapper.toClientShort(requestDTO)).thenReturn(client);
+        when(applicationRepository.save(any())).thenReturn(application);
+        when(conveyorClient.preCalculateLoan(any())).thenReturn(Collections.emptyList());
+
+        dealService.startRegistration(requestDTO);
+
+        verify(applicationRepository).save(any());
+        verify(conveyorClient).preCalculateLoan(any());
+    }
+
+    @Test
+    void shouldThrowException_WhenConveyorGeneratesException() {
+        LoanApplicationRequestDTO requestDTO = new LoanApplicationRequestDTO();
+        Client client = new Client();
+        Application application = Application.builder()
+                                             .id(1L).build();
+
+        when(clientMapper.toClientShort(requestDTO)).thenReturn(client);
+        when(applicationRepository.save(any())).thenReturn(application);
+        when(conveyorClient.preCalculateLoan(any())).thenThrow(BadRequestException.class);
+
+        assertThrows(BadRequestException.class,
+                () -> dealService.startRegistration(requestDTO));
+    }
+
+    @Test
+    void shouldSaveOffer_WhenValidApplicationId() {
+        LoanOfferDTO requestDto = LoanOfferDTO.builder()
+                 .applicationId(1L).build();
+        Application application = new Application();
+        AppliedOffer appliedOffer = new AppliedOffer();
+
+        when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
+        when(offerMapper.toAppliedOffer(requestDto)).thenReturn(appliedOffer);
+        when(applicationRepository.save(any())).thenReturn(application);
+
+        dealService.chooseOffer(requestDto);
+
+        verify(applicationRepository).findById(anyLong());
+        verify(applicationRepository).save(any());
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidApplicationId() {
+        LoanOfferDTO requestDto = LoanOfferDTO.builder().applicationId(-1L).build();
+
+        when(applicationRepository.findById(anyLong())).thenThrow(ApplicationNotFoundException.class);
+
+        assertThrows(ApplicationNotFoundException.class, () -> dealService.chooseOffer(requestDto));
+    }
+
+    @Test
+    void shouldFinishRegistration_WhenValidApplicationIdAndAdditionalClientInfo() {
+        Application application = new Application();
+        FinishRegistrationRequestDTO clientInfo = FinishRegistrationRequestDTO.builder()
+                .employment(new EmploymentDTO()).build();
+        ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
+        Employment employment = new Employment();
+        Client client = new Client();
+        Credit credit = new Credit();
+        CreditDTO creditDTO = new CreditDTO();
+        creditDTO.setPaymentSchedule(List.of(new PaymentScheduleElement()));
+        Long applicationId = 1L;
+
+        when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
+        when(scoringDataMapper.toScoringDataDTO(application, clientInfo)).thenReturn(scoringDataDTO);
+        when(employmentMapper.toEmployment(any())).thenReturn(employment);
+        when(clientMapper.fillAdditionalClientInfo(any(), any(), any())).thenReturn(client);
+        when(clientRepository.save(any())).thenReturn(client);
+        when(conveyorClient.calculateLoan(any())).thenReturn(creditDTO);
+        when(creditMapper.toCredit(creditDTO)).thenReturn(credit);
+        when(applicationRepository.save(any())).thenReturn(application);
+
+        dealService.finishRegistration(clientInfo, applicationId);
+
+        verify(applicationRepository).findById(anyLong());
+        verify(clientRepository).save(any());
+        verify(conveyorClient).calculateLoan(any());
+        verify(applicationRepository).save(any());
+    }
+
+    @Test
+    void shouldThrowException_WhenFinishRegistrationWithInvalidApplicationId() {
+        Long applicationId = -1L;
+        FinishRegistrationRequestDTO clientInfo = new FinishRegistrationRequestDTO();
+
+        when(applicationRepository.findById(anyLong())).thenThrow(ApplicationNotFoundException.class);
+
+        assertThrows(ApplicationNotFoundException.class,
+                () -> dealService.finishRegistration(clientInfo, applicationId));
+    }
+
+    @Test
+    void shouldThrowException_WhenConveyorGeneratesValidException() {
+        Application application = new Application();
+        FinishRegistrationRequestDTO clientInfo = FinishRegistrationRequestDTO.builder()
+                .employment(new EmploymentDTO()).build();
+        ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
+        Employment employment = new Employment();
+        Client client = new Client();
+        Long applicationId = 1L;
+
+        when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
+        when(scoringDataMapper.toScoringDataDTO(application, clientInfo)).thenReturn(scoringDataDTO);
+        when(employmentMapper.toEmployment(any())).thenReturn(employment);
+        when(clientMapper.fillAdditionalClientInfo(any(), any(), any())).thenReturn(client);
+        when(clientRepository.save(any())).thenReturn(client);
+        when(conveyorClient.calculateLoan(any())).thenThrow(BadRequestException.class);
+
+        assertThrows(BadRequestException.class,
+                () -> dealService.finishRegistration(clientInfo, applicationId));
+    }
+}

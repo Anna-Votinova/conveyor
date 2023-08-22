@@ -50,5 +50,4 @@ public class ScoringDataServiceDTO {
     private Boolean isInsuranceEnabled;
 
     private Boolean isSalaryClient;
-
 }

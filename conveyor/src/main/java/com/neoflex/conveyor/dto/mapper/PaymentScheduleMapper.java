@@ -17,5 +17,4 @@ public class PaymentScheduleMapper {
                 .remainingDebt(paymentScheduleServiceElement.getRemainingDebt())
                 .build();
     }
-
 }

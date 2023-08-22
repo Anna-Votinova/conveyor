@@ -1,7 +1,6 @@
 package com.neoflex.conveyor.service;
 
 import com.neoflex.conveyor.config.ApplicationConfig;
-import com.neoflex.conveyor.config.GlobalVariables;
 import com.neoflex.conveyor.exception.NotProperClientCategoryException;
 import com.neoflex.conveyor.dto.response.CreditServiceDTO;
 import com.neoflex.conveyor.dto.response.PaymentScheduleServiceElement;
@@ -33,34 +32,22 @@ import java.util.List;
 public class CreditService {
 
     private final CalculationUtils calculationUtils;
-
     private final ApplicationConfig applicationConfig;
-
     private static final long MIN_CLIENT_AGE = 20L;
-
     private static final long MAX_CLIENT_AGE = 60L;
-
     private static final Integer MIN_COMMON_WORK_EXPERIENCE = 12;
-
     private static final Integer MIN_CURRENT_WORK_EXPERIENCE = 3;
-
     private static final BigDecimal SALARY_QUANTITY = new BigDecimal("20");
-
     private static final long MIN_WOMAN_AGE_FOR_SPECIAL_RATE = 35L;
-
     private static final long MAX_WOMAN_AGE_FOR_SPECIAL_RATE = 60L;
-
     private static final long MIN_MAN_AGE_FOR_SPECIAL_RATE = 30L;
-
     private static final long MAX_MAN_AGE_FOR_SPECIAL_RATE = 55L;
-
     private static final int MONTHLY_PAYMENT_START_DAY = 12;
-
     private static final String REJECT_APPLICATION = "Отказ";
 
     /**
-     *<p>Validates client info and creates a final loan offer
-     *</p>
+     * <p>Validates client info and creates a final loan offer
+     * </p>
      * @param fullInfoAboutClient comprehensive information about the client
      * @return a final loan offer with info about the final loan amount, final rate, monthly payment, interest payment,
      * psk, payment schedule
@@ -79,7 +66,7 @@ public class CreditService {
         BigDecimal finalRate = calculateFinalRate(fullInfoAboutClient);
         log.info("Final rate equals: {}", finalRate);
 
-        BigDecimal amount = calculateAmount(fullInfoAboutClient);
+        BigDecimal amount = fullInfoAboutClient.getAmount();
         log.info("Amount equals: {}", amount);
 
         BigDecimal monthlyPayment = calculationUtils.calculateMonthlyPayment(finalRate, fullInfoAboutClient.getTerm(),
@@ -110,7 +97,7 @@ public class CreditService {
                 fullInfoAboutClient.getIsSalaryClient(),
                 paymentScheduleServiceElements
         );
-        log.info("Credit calculated: {}", creditServiceDTO);
+        log.debug("Credit calculated: {}", creditServiceDTO);
 
         return creditServiceDTO;
     }
@@ -128,32 +115,32 @@ public class CreditService {
             rate = rate.subtract(BigDecimal.ONE);
         }
 
-        if (clientInfo.getEmploymentServiceDTO().getEmploymentStatus().equals(EmploymentStatus.SELF_EMPLOYED)) {
+        if (EmploymentStatus.SELF_EMPLOYED.equals(clientInfo.getEmploymentServiceDTO().getEmploymentStatus())) {
             log.info("Add ratio 1 for self-employed");
             rate = rate.add(BigDecimal.ONE);
         }
 
-        if (clientInfo.getEmploymentServiceDTO().getEmploymentStatus().equals(EmploymentStatus.BUSINESS_OWNER)) {
+        if (EmploymentStatus.BUSINESS_OWNER.equals(clientInfo.getEmploymentServiceDTO().getEmploymentStatus())) {
             log.info("Add ratio 3 for business owners");
             rate = rate.add(new BigDecimal("3"));
         }
 
-        if (clientInfo.getEmploymentServiceDTO().getPosition().equals(Position.MANAGER)) {
+        if (Position.MID_MANAGER.equals(clientInfo.getEmploymentServiceDTO().getPosition())) {
             log.info("Subtract ratio 2 for managers");
             rate = rate.subtract(new BigDecimal("2"));
         }
 
-        if (clientInfo.getEmploymentServiceDTO().getPosition().equals(Position.TOP_MANAGER)) {
+        if (Position.TOP_MANAGER.equals(clientInfo.getEmploymentServiceDTO().getPosition())) {
             log.info("Subtract ratio 4 for top managers");
             rate = rate.subtract(new BigDecimal("4"));
         }
 
-        if (clientInfo.getMaritalStatus().equals(MaritalStatus.MARRIED)) {
+        if (MaritalStatus.MARRIED.equals(clientInfo.getMaritalStatus())) {
             log.info("Subtract ratio 3 for married");
             rate = rate.subtract(new BigDecimal("3"));
         }
 
-        if (clientInfo.getMaritalStatus().equals(MaritalStatus.DIVORCED)) {
+        if (MaritalStatus.DIVORCED.equals(clientInfo.getMaritalStatus())) {
             log.info("Add ratio 1 for divorced applicants");
             rate = rate.add(BigDecimal.ONE);
         }
@@ -163,48 +150,27 @@ public class CreditService {
             rate = rate.add(BigDecimal.ONE);
         }
 
-        if (clientInfo.getGender().equals(Gender.FEMALE)
+        if (Gender.FEMALE.equals(clientInfo.getGender())
                 && userIsOlder(MIN_WOMAN_AGE_FOR_SPECIAL_RATE, clientInfo.getBirthdate())
                 && userIsYounger(MAX_WOMAN_AGE_FOR_SPECIAL_RATE, clientInfo.getBirthdate())) {
             log.info("Subtract ratio 3 for women from 35 to 60");
             rate = rate.subtract(new BigDecimal("3"));
-
         }
 
-        if (clientInfo.getGender().equals(Gender.MALE)
+        if (Gender.MALE.equals(clientInfo.getGender())
                 && userIsOlder(MIN_MAN_AGE_FOR_SPECIAL_RATE, clientInfo.getBirthdate())
                 && userIsYounger(MAX_MAN_AGE_FOR_SPECIAL_RATE, clientInfo.getBirthdate())) {
             log.info("Subtract ratio 3 for men from 30 to 55");
             rate = rate.subtract(new BigDecimal("3"));
-
         }
 
-        if (clientInfo.getGender().equals(Gender.NON_BINARY)) {
+        if (Gender.NON_BINARY.equals(clientInfo.getGender())) {
             log.info("Add ratio 3 for non-binary");
             rate = rate.add(new BigDecimal("3"));
-
         }
 
         return rate;
     }
-
-    private BigDecimal calculateAmount(ScoringDataServiceDTO fullInfoAboutClient) {
-        log.info("Calculate amount with parameters: requestedAmount = {}, isInsuranceEnabled = {}",
-                fullInfoAboutClient.getAmount(), fullInfoAboutClient.getIsInsuranceEnabled());
-
-        BigDecimal amount = fullInfoAboutClient.getAmount();
-        BigDecimal insuranceCost = BigDecimal.ZERO;
-
-        if (Boolean.TRUE.equals(fullInfoAboutClient.getIsInsuranceEnabled())) {
-            insuranceCost = fullInfoAboutClient.getAmount().multiply(GlobalVariables.INSURANCE_RATIO);
-            amount = amount.add(insuranceCost);
-        }
-
-        log.info("Insurance cost: {}", insuranceCost);
-        return amount;
-
-    }
-
 
     private List<PaymentScheduleServiceElement> preparePaymentSchedule(
             Integer term, BigDecimal amount, BigDecimal finalRate, BigDecimal monthlyPayment
@@ -228,13 +194,13 @@ public class CreditService {
             BigDecimal debtSum;
             BigDecimal totalPayment = monthlyPayment;
 
-            PaymentScheduleServiceElement
-                    scheduleElement = PaymentScheduleServiceElement.builder().number(id)
-                                                                   .date(date.getTime()
-                                                                             .toInstant()
-                                                                             .atZone(ZoneId.systemDefault())
-                                                                             .toLocalDate())
-                                                                   .build();
+            PaymentScheduleServiceElement scheduleElement = PaymentScheduleServiceElement.builder()
+                    .number(id)
+                    .date(date.getTime()
+                              .toInstant()
+                              .atZone(ZoneId.systemDefault())
+                              .toLocalDate())
+                    .build();
             log.debug("New payment schedule element equals: {}", scheduleElement);
 
             interestPayment = calculateInterestPayment(remainingDebt, finalRate,
@@ -272,8 +238,8 @@ public class CreditService {
 
         log.info("Remaining debt after all calculations equals: {}", remainingDebt);
         return paymentScheduleServiceElements.stream()
-                                             .sorted(Comparator.comparing(PaymentScheduleServiceElement::getNumber))
-                                             .toList();
+                .sorted(Comparator.comparing(PaymentScheduleServiceElement::getNumber))
+                .toList();
     }
 
     private BigDecimal calculateInterestPayment(
@@ -299,18 +265,17 @@ public class CreditService {
                                 5, RoundingMode.HALF_UP), 5, RoundingMode.HALF_UP)
                 .multiply(new BigDecimal(CalculationFormulaConstants.RATIO_HUNDRED.getValue()))
                 .setScale(3, RoundingMode.HALF_EVEN);
-
     }
 
     private BigDecimal getTotalAmount(List<PaymentScheduleServiceElement> paymentScheduleServiceElement) {
         return paymentScheduleServiceElement.stream()
-                                            .map(PaymentScheduleServiceElement::getTotalPayment)
-                                            .reduce(BigDecimal::add)
-                                            .orElseThrow();
+                .map(PaymentScheduleServiceElement::getTotalPayment)
+                .reduce(BigDecimal::add)
+                .orElseThrow();
     }
 
     private void checkEmploymentStatus(ScoringDataServiceDTO fullInfoAboutClient) {
-        if (fullInfoAboutClient.getEmploymentServiceDTO().getEmploymentStatus().equals(EmploymentStatus.UNEMPLOYED)) {
+        if (EmploymentStatus.UNEMPLOYED.equals(fullInfoAboutClient.getEmploymentServiceDTO().getEmploymentStatus())) {
             log.error("Client is out of work");
             throw new NotProperClientCategoryException(REJECT_APPLICATION);
         }
@@ -359,5 +324,4 @@ public class CreditService {
     protected boolean userIsYounger(Long maxAge, LocalDate clientBirthday) {
         return LocalDate.now().minusYears(maxAge).isBefore(clientBirthday);
     }
-
 }

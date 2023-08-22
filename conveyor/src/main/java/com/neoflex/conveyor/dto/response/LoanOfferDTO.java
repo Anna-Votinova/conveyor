@@ -42,5 +42,4 @@ public class LoanOfferDTO {
 
     @Schema(description = "Заемщик - зарплатный клиент банка", example = "false")
     private Boolean isSalaryClient;
-
 }

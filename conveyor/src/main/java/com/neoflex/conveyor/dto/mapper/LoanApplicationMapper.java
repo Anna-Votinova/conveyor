@@ -9,6 +9,7 @@ public class LoanApplicationMapper {
 
     public LoanApplicationServiceDTO toApplication(LoanApplicationRequestDTO dto) {
         return LoanApplicationServiceDTO.builder()
+                                        .id(dto.getId())
                                         .amount(dto.getAmount())
                                         .term(dto.getTerm())
                                         .firstName(dto.getFirstName())
@@ -20,5 +21,4 @@ public class LoanApplicationMapper {
                                         .passportNumber(dto.getPassportNumber())
                                         .build();
     }
-
 }

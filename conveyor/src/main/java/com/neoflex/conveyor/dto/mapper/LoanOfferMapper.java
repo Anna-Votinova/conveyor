@@ -19,5 +19,4 @@ public class LoanOfferMapper {
                 .isSalaryClient(loanOfferServiceDTO.getIsSalaryClient())
                 .build();
     }
-
 }

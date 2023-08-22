@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+conveyor:
+  url: ${CONVEYOR.URL}
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB.URL}
+    username: ${DB.USERNAME}
+    password: ${DB.PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        ddl-auto: validate
