@@ -33,5 +33,4 @@ public class LoanApplicationServiceDTO {
     private String passportSeries;
 
     private String passportNumber;
-
 }

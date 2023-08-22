@@ -1,8 +1,8 @@
-package com.neoflex.deal.entity.dto.request_responce;
+package com.neoflex.deal.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.deal.config.GlobalVariables;
-import com.neoflex.deal.entity.dto.validation.DateIsBeforeYears;
+import com.neoflex.deal.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,5 +78,4 @@ public class LoanApplicationRequestDTO {
     @Pattern(regexp = GlobalVariables.PASSPORT_NUMBER_FORMAT, message = "Номер паспорта должен содержать 6 цифр")
     @Schema(description = "Номер паспорта", example = "600974")
     private String passportNumber;
-
 }

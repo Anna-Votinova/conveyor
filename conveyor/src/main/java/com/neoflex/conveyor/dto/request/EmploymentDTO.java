@@ -44,5 +44,4 @@ public class EmploymentDTO {
     @PositiveOrZero
     @Schema(description = "Общий стаж работы на текущем месте (в месяцах)", example = "110")
     private Integer workExperienceCurrent;
-
 }

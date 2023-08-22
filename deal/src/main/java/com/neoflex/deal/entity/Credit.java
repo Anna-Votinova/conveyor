@@ -1,8 +1,8 @@
 package com.neoflex.deal.entity;
 
 import com.neoflex.deal.entity.enums.CreditStatus;
-import com.neoflex.deal.entity.jsonb.BaseEntity;
 import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,7 +33,8 @@ import java.util.List;
 @Getter
 @ToString
 @Builder
-public class Credit extends BaseEntity {
+@TypeDef(name = "json", typeClass = JsonType.class)
+public class Credit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,5 +83,4 @@ public class Credit extends BaseEntity {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

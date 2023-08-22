@@ -39,13 +39,10 @@ class CreditServiceTest {
 
     @Mock
     private CalculationUtils calculationUtils;
-
     @Mock
     private ApplicationConfig applicationConfig;
-
     @InjectMocks
     private CreditService creditService;
-
     private ScoringDataServiceDTO scoringDataServiceDTO;
 
     @BeforeEach
@@ -78,7 +75,6 @@ class CreditServiceTest {
                 true,
                 true
         );
-
     }
 
     @Test
@@ -129,7 +125,6 @@ class CreditServiceTest {
         }
 
         verify(calculationUtils, times(1)).calculateMonthlyPayment(any(), any(), any());
-
     }
 
     @Test
@@ -138,7 +133,6 @@ class CreditServiceTest {
         ScoringDataServiceDTO emptyScoringDataServiceDTO = new ScoringDataServiceDTO();
 
         assertThrows(NullPointerException.class, () -> creditService.calculateLoan(emptyScoringDataServiceDTO));
-
     }
 
     @Test
@@ -147,7 +141,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setEmploymentStatus(EmploymentStatus.UNEMPLOYED);
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -156,7 +149,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setEmployerINN(null);
 
         assertThrows(ValidationException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -165,7 +157,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setPosition(null);
 
         assertThrows(ValidationException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -174,7 +165,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setSalary(new BigDecimal("1000"));
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -183,7 +173,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.setBirthdate(LocalDate.now().minusYears(20).plusDays(1));
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -201,7 +190,6 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
-
     }
 
     @Test
@@ -219,7 +207,6 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
-
     }
 
     @Test
@@ -228,7 +215,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.setBirthdate(LocalDate.now().minusYears(60).minusDays(1));
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -237,7 +223,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.setBirthdate(LocalDate.now().minusYears(60));
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -255,7 +240,6 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
-
     }
 
     @Test
@@ -264,7 +248,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setWorkExperienceTotal(11);
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -282,7 +265,6 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
-
     }
 
     @Test
@@ -291,7 +273,6 @@ class CreditServiceTest {
         scoringDataServiceDTO.getEmploymentServiceDTO().setWorkExperienceCurrent(2);
 
         assertThrows(NotProperClientCategoryException.class, () -> creditService.calculateLoan(scoringDataServiceDTO));
-
     }
 
     @Test
@@ -309,7 +290,6 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
-
     }
 
     @ParameterizedTest
@@ -320,7 +300,6 @@ class CreditServiceTest {
         LocalDate birthday = LocalDate.now().minusYears(minAge).minusDays(number);
 
         assertTrue(creditService.userIsOlder(minAge, birthday));
-
     }
 
     @Test
@@ -330,7 +309,6 @@ class CreditServiceTest {
         LocalDate birthday = LocalDate.now().minusYears(minAge).plusDays(1);
 
         assertFalse(creditService.userIsOlder(minAge, birthday));
-
     }
 
     @Test
@@ -340,7 +318,6 @@ class CreditServiceTest {
         LocalDate birthday = LocalDate.now().minusYears(maxAge).plusDays(1);
 
         assertTrue(creditService.userIsYounger(maxAge, birthday));
-
     }
 
     @ParameterizedTest
@@ -351,7 +328,6 @@ class CreditServiceTest {
         LocalDate birthday = LocalDate.now().minusYears(maxAgeForSpecialRate).minusDays(number);
 
         assertFalse(creditService.userIsYounger(maxAgeForSpecialRate, birthday));
-
     }
 
     @ParameterizedTest
@@ -382,7 +358,5 @@ class CreditServiceTest {
                 scoringDataServiceDTO);
 
         assertEquals(new BigDecimal(expectedRate), creditServiceResponseDTO.getRate());
-
     }
-
 }

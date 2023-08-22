@@ -1,7 +1,7 @@
 package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.Credit;
-import com.neoflex.deal.entity.dto.request.CreditDTO;
+import com.neoflex.deal.dto.request.CreditDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,7 +10,6 @@ public class CreditMapper {
     public Credit toCredit(CreditDTO creditDTO) {
 
         Credit credit = new Credit();
-
         credit.setAmount(creditDTO.getAmount());
         credit.setTerm(creditDTO.getTerm());
         credit.setMonthlyPayment(creditDTO.getMonthlyPayment());
@@ -21,6 +20,5 @@ public class CreditMapper {
         credit.setSalaryClient(creditDTO.getIsSalaryClient());
 
         return credit;
-
     }
 }

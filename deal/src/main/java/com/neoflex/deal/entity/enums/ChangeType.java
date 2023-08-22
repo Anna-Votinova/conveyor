@@ -4,5 +4,4 @@ public enum ChangeType {
 
     AUTOMATIC,
     MANUAL
-
 }

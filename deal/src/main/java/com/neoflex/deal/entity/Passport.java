@@ -1,7 +1,6 @@
 package com.neoflex.deal.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +21,6 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @ToString
-@Builder
 public class Passport {
 
     @Id
@@ -52,5 +50,4 @@ public class Passport {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

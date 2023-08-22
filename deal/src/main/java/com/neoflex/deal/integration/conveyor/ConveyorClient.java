@@ -1,10 +1,9 @@
 package com.neoflex.deal.integration.conveyor;
 
-import com.neoflex.deal.config.ClientConfiguration;
-import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
-import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
-import com.neoflex.deal.entity.dto.request.CreditDTO;
-import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
+import com.neoflex.deal.dto.LoanOfferDTO;
+import com.neoflex.deal.dto.LoanApplicationRequestDTO;
+import com.neoflex.deal.dto.request.CreditDTO;
+import com.neoflex.deal.dto.response.ScoringDataDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,5 +18,4 @@ public interface ConveyorClient {
 
     @PostMapping(value = "/calculation")
     CreditDTO calculateLoan(@RequestBody ScoringDataDTO requestDto);
-
 }

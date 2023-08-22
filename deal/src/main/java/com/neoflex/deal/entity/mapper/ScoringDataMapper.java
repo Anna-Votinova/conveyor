@@ -1,17 +1,16 @@
 package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.Application;
-import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
+import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
+import com.neoflex.deal.dto.response.ScoringDataDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ScoringDataMapper {
 
-    public ScoringDataDTO toScoringDataDTO (Application application, FinishRegistrationRequestDTO requestDTO) {
+    public ScoringDataDTO toScoringDataDTO(Application application, FinishRegistrationRequestDTO requestDTO) {
 
         ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
-
         scoringDataDTO.setAmount(application.getAppliedOffer().getRequestedAmount());
         scoringDataDTO.setTerm(application.getAppliedOffer().getTerm());
         scoringDataDTO.setFirstName(application.getClient().getFirstName());
@@ -31,6 +30,5 @@ public class ScoringDataMapper {
         scoringDataDTO.setIsSalaryClient(application.getAppliedOffer().getIsSalaryClient());
 
         return scoringDataDTO;
-
     }
 }

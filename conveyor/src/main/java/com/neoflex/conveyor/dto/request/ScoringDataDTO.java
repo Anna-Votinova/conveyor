@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -80,7 +80,7 @@ public class ScoringDataDTO {
     private String passportNumber;
 
     @NotNull
-    @Past
+    @PastOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Schema(description = "Дата выдачи паспорта", example = "2021-01-12")
     private LocalDate passportIssueDate;
@@ -114,5 +114,4 @@ public class ScoringDataDTO {
     @NotNull
     @Schema(description = "Заемщик - зарплатный клиент банка", example = "false")
     private Boolean isSalaryClient;
-
 }

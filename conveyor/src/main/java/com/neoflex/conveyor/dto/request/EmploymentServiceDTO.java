@@ -26,5 +26,4 @@ public class EmploymentServiceDTO {
     private Integer workExperienceTotal;
 
     private Integer workExperienceCurrent;
-
 }

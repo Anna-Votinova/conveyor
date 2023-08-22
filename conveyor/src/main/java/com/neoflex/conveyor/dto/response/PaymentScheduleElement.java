@@ -37,5 +37,4 @@ public class PaymentScheduleElement {
 
     @Schema(description = "Остаток долга", example = "104297.51")
     private BigDecimal remainingDebt;
-
 }

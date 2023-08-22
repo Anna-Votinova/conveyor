@@ -49,5 +49,4 @@ public class CalculationUtils {
 
         return amount.multiply(annuityRate).setScale(2, RoundingMode.HALF_EVEN);
     }
-
 }

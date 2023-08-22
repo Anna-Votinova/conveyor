@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.request;
+package com.neoflex.deal.dto.request;
 
 import com.neoflex.deal.entity.enums.EmploymentPosition;
 import com.neoflex.deal.entity.enums.EmploymentStatus;
@@ -45,5 +45,4 @@ public class EmploymentDTO {
     @PositiveOrZero(message = "Текущий стаж не может быть отрицательным числом")
     @Schema(description = "Общий стаж работы на текущем месте (в месяцах)", example = "110")
     private Integer workExperienceCurrent;
-
 }

@@ -1,8 +1,8 @@
 package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.entity.Client;
-import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
+import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
+import com.neoflex.deal.dto.LoanApplicationRequestDTO;
 import com.neoflex.deal.entity.Employment;
 import com.neoflex.deal.entity.Passport;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ public class ClientMapper {
         passport.setNumber(requestDTO.getPassportNumber());
 
         Client client = new Client();
-
         client.setPassport(passport);
         client.setLastName(requestDTO.getLastName());
         client.setFirstName(requestDTO.getFirstName());
@@ -28,11 +27,10 @@ public class ClientMapper {
         client.setEmail(requestDTO.getEmail());
 
         return client;
-
     }
 
-    public Client toClientFull(Client client, FinishRegistrationRequestDTO requestDTO, Employment employment) {
-
+    public Client fillAdditionalClientInfo(Client client, FinishRegistrationRequestDTO requestDTO,
+                                           Employment employment) {
         client.setGender(requestDTO.getGender());
         client.setMaritalStatus(requestDTO.getMaritalStatus());
         client.setDependentAmount(requestDTO.getDependentAmount());
@@ -43,5 +41,4 @@ public class ClientMapper {
 
         return client;
     }
-
 }

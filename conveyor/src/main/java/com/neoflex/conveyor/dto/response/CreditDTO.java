@@ -43,5 +43,4 @@ public class CreditDTO {
 
     @Schema(description = "График платежей")
     private List<PaymentScheduleElement> paymentSchedule;
-
 }

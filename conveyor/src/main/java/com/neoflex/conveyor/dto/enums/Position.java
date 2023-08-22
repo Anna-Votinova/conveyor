@@ -6,5 +6,4 @@ public enum Position {
     MID_MANAGER,
     TOP_MANAGER,
     OWNER
-
 }

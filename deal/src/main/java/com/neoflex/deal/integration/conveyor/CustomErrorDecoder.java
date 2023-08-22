@@ -1,4 +1,4 @@
-package com.neoflex.deal.controller.advice;
+package com.neoflex.deal.integration.conveyor;
 
 import com.neoflex.deal.exception.BadRequestException;
 import feign.Response;

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -18,7 +18,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class StatusHistory implements Serializable {
+public class StatusHistory {
+
+    private UUID id;
 
     private ApplicationStatus status;
 
@@ -31,12 +33,11 @@ public class StatusHistory implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof StatusHistory)) return false;
-        return time != null && time.equals(((StatusHistory) o).getTime());
+        return id != null && id.equals(((StatusHistory) o).getId());
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

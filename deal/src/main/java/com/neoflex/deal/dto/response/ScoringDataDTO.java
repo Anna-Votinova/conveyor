@@ -1,6 +1,6 @@
-package com.neoflex.deal.entity.dto.response;
+package com.neoflex.deal.dto.response;
 
-import com.neoflex.deal.entity.dto.request.EmploymentDTO;
+import com.neoflex.deal.dto.request.EmploymentDTO;
 import com.neoflex.deal.entity.enums.Gender;
 import com.neoflex.deal.entity.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -74,5 +74,4 @@ public class ScoringDataDTO {
 
     @Schema(description = "Заемщик - зарплатный клиент банка", example = "false")
     private Boolean isSalaryClient;
-
 }

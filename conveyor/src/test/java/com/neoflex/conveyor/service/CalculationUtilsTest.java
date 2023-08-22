@@ -23,7 +23,6 @@ class CalculationUtilsTest {
         BigDecimal monthlyPayment = new BigDecimal("1740.30");
 
         assertEquals(monthlyPayment, calculationUtils.calculateMonthlyPayment(rate, term, requestedAmount));
-
     }
 
     @Test
@@ -35,7 +34,5 @@ class CalculationUtilsTest {
         BigDecimal wrongMonthlyPayment = new BigDecimal("1740.31");
 
         assertNotEquals(wrongMonthlyPayment, calculationUtils.calculateMonthlyPayment(rate, term, requestedAmount));
-
     }
-
 }

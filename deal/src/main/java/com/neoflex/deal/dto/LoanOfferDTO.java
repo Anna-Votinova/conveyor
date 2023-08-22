@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.request_responce;
+package com.neoflex.deal.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -59,5 +59,4 @@ public class LoanOfferDTO {
     @NotNull
     @Schema(description = "Заемщик - зарплатный клиент банка", example = "false")
     private Boolean isSalaryClient;
-
 }

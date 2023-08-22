@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.request;
+package com.neoflex.deal.dto.request;
 
 import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,5 +44,4 @@ public class CreditDTO {
 
     @Schema(description = "График платежей")
     private List<PaymentScheduleElement> paymentSchedule;
-
 }

@@ -4,11 +4,11 @@ import com.neoflex.deal.entity.Application;
 import com.neoflex.deal.entity.Client;
 import com.neoflex.deal.entity.Credit;
 import com.neoflex.deal.entity.Employment;
-import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
-import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
-import com.neoflex.deal.entity.dto.request.CreditDTO;
-import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
+import com.neoflex.deal.dto.LoanOfferDTO;
+import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
+import com.neoflex.deal.dto.LoanApplicationRequestDTO;
+import com.neoflex.deal.dto.request.CreditDTO;
+import com.neoflex.deal.dto.response.ScoringDataDTO;
 import com.neoflex.deal.entity.enums.ApplicationStatus;
 import com.neoflex.deal.entity.enums.ChangeType;
 import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
@@ -19,13 +19,16 @@ import com.neoflex.deal.entity.mapper.EmploymentMapper;
 import com.neoflex.deal.entity.mapper.OfferMapper;
 import com.neoflex.deal.entity.mapper.ScoringDataMapper;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
+import com.neoflex.deal.integration.conveyor.ConveyorClient;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.repository.ClientRepository;
-import com.neoflex.deal.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,127 +37,99 @@ import org.springframework.transaction.annotation.Transactional;
 public class DealService {
 
     private final ClientRepository clientRepository;
-
     private final ApplicationRepository applicationRepository;
-
-    private final CreditRepository creditRepository;
-
+    private final ConveyorClient conveyorClient;
     private final EmploymentMapper employmentMapper;
-
     private final ClientMapper clientMapper;
-
     private final OfferMapper offerMapper;
-
     private final ScoringDataMapper scoringDataMapper;
-
     private final CreditMapper creditMapper;
 
     /**
-     *<p>Saves short info about the client and them application
-     *</p>
+     * <p>Saves short info about the client and their application, connects to the Conveyor and receives an offers list
+     * </p>
      * @param loanApplicationRequestDTO short information about the client
-     * @return loanApplicationRequestDTO with id got from the database
+     * @return a list with four offers
+     * @throws com.neoflex.deal.exception.BadRequestException - if the LoanApplicationRequestDTO sent to the Conveyor
+     * is invalid
      */
-    public LoanApplicationRequestDTO startRegistration(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public List<LoanOfferDTO> startRegistration(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 
         Client client = clientMapper.toClientShort(loanApplicationRequestDTO);
-        log.debug("Mapped client: {}", client);
-
-        clientRepository.save(client);
-        log.debug("Saved client: {}", client);
 
         Application application = new Application();
         application.setClient(client);
         Application updatedStatusHistoryApplication = changeStatusHistory(application, ApplicationStatus.PREAPPROVAL);
-
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
         log.info("Application saved: {}", savedApplication);
 
         loanApplicationRequestDTO.setId(savedApplication.getId());
+        log.info("Got full request dto to prepare loan offers {}", loanApplicationRequestDTO);
 
-        return loanApplicationRequestDTO;
-
+        return conveyorClient.preCalculateLoan(loanApplicationRequestDTO);
     }
 
     /**
-     *<p>Saves the loan offer chosen by the client
-     *</p>
+     * <p>Saves the loan offer chosen by the client
+     * </p>
      * @param loanOfferDTO the loan offer chosen by the client
      * @throws com.neoflex.deal.exception.ApplicationNotFoundException - if the application does not exist
      */
     public void chooseOffer(LoanOfferDTO loanOfferDTO) {
 
         Application application = getApplication(loanOfferDTO.getApplicationId());
-
         AppliedOffer appliedOffer = offerMapper.toAppliedOffer(loanOfferDTO);
-        log.debug("Mapped chosen offer: {}", appliedOffer);
 
         application.setAppliedOffer(appliedOffer);
-
         Application updatedStatusHistoryApplication = changeStatusHistory(application, ApplicationStatus.APPROVED);
-
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
         log.info("Saved application: {}", savedApplication);
-
     }
 
     /**
-     *<p>Saves additional information about the client
-     *</p>
+     * <p>Saves additional information about the client, connects to the Conveyor and receives a finish loan offer,
+     * saves it in the database
+     * </p>
      * @param finishRegistrationRequestDTO additional information about the client
      * @param applicationId the application id saved in the database
-     * @return scoringDataDTO - full client information
      * @throws com.neoflex.deal.exception.ApplicationNotFoundException - if the application does not exist
+     * @throws com.neoflex.deal.exception.BadRequestException - if the ScoringDataDTO sent to the Conveyor is invalid
      */
-    public ScoringDataDTO finishRegistration(FinishRegistrationRequestDTO finishRegistrationRequestDTO,
+    public void finishRegistration(FinishRegistrationRequestDTO finishRegistrationRequestDTO,
                                              Long applicationId) {
+
         Application application = getApplication(applicationId);
-
         ScoringDataDTO scoringDataDTO = scoringDataMapper.toScoringDataDTO(application, finishRegistrationRequestDTO);
-        log.debug("Mapped scoringDataDTO: {}", scoringDataDTO);
-
         Employment employment = employmentMapper.toEmployment(finishRegistrationRequestDTO.getEmployment());
 
         Client client = application.getClient();
-        Client fullClient = clientMapper.toClientFull(client, finishRegistrationRequestDTO, employment);
-        log.debug("Mapped client: {}", fullClient);
-
+        Client fullClient = clientMapper.fillAdditionalClientInfo(client, finishRegistrationRequestDTO, employment);
         Client savedClient = clientRepository.save(fullClient);
         log.info("Saved client: {}", savedClient);
 
-        return scoringDataDTO;
+        CreditDTO creditDTO = conveyorClient.calculateLoan(scoringDataDTO);
+        log.info("Received calculated credit with parameters: amount = {}, term = {}, monthly payment = {}, rate = {}," +
+                        "psk = {}, insurance enabled = {}, salary client = {}. And payment schedule list's size = {}",
+                creditDTO.getAmount(), creditDTO.getTerm(), creditDTO.getMonthlyPayment(), creditDTO.getRate(),
+                creditDTO.getPsk(), creditDTO.getIsInsuranceEnabled(), creditDTO.getIsSalaryClient(),
+                creditDTO.getPaymentSchedule().size());
 
+        saveCredit(creditDTO, application);
     }
 
-    /**
-     *<p>Saves credit approved by the service Credit Conveyor
-     *</p>
-     * @param creditDTO credit approved by the conveyor
-     * @param applicationId the application id saved in the database
-     * @throws com.neoflex.deal.exception.ApplicationNotFoundException - if the application does not exist
-     */
-    public void saveCredit(CreditDTO creditDTO, Long applicationId) {
-
-        Application application = getApplication(applicationId);
+    private void saveCredit(CreditDTO creditDTO, Application application) {
 
         Credit credit = creditMapper.toCredit(creditDTO);
-        log.debug("Mapped credit: {}", credit);
-
-        Credit saveCredit = creditRepository.save(credit);
-        log.debug("Saved credit: {}", saveCredit);
 
         application.setCredit(credit);
-
         Application updatedStatusHistoryApplication = changeStatusHistory(application, ApplicationStatus.CC_APPROVED);
-
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
         log.info("Saved application: {}", savedApplication);
-
     }
 
     private Application getApplication(Long applicationId) {
-        Application application = applicationRepository.findById(applicationId).orElseThrow(
-                () -> new ApplicationNotFoundException("Заявка с id " + applicationId + " не существует"));
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException("Заявка с id " + applicationId + " не существует"));
         log.info("Got the application from the repository: {}", application);
 
         return application;
@@ -165,14 +140,13 @@ public class DealService {
         application.setStatus(applicationStatus);
 
         StatusHistory statusHistory = new StatusHistory();
+        statusHistory.setId(UUID.randomUUID());
         statusHistory.setStatus(applicationStatus);
         statusHistory.setChangeType(ChangeType.AUTOMATIC);
-        log.debug("Create statusHistory: {}", statusHistory);
 
         application.getStatusHistory().add(statusHistory);
         log.info("History updated: {}", application.getStatusHistory());
 
         return application;
     }
-
 }

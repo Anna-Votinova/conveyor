@@ -82,5 +82,4 @@ public class LoanApplicationRequestDTO {
     @Pattern(regexp = GlobalVariables.PASSPORT_NUMBER_FORMAT, message = "Номер паспорта должен содержать 6 цифр")
     @Schema(description = "Номер паспорта", example = "600974")
     private String passportNumber;
-
 }

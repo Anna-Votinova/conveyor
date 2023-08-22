@@ -21,5 +21,4 @@ public class LoanApplicationMapper {
                                         .passportNumber(dto.getPassportNumber())
                                         .build();
     }
-
 }

@@ -35,13 +35,10 @@ class LoanOfferServiceTest {
 
     @Mock
     private CalculationUtils calculationUtils;
-
     @Mock
     private ApplicationConfig applicationConfig;
-
     @InjectMocks
     private LoanOfferService loanOfferService;
-
     private LoanApplicationServiceDTO loanApplicationServiceDTO;
 
     @BeforeEach
@@ -89,7 +86,6 @@ class LoanOfferServiceTest {
         }
 
         verify(calculationUtils, times(4)).calculateMonthlyPayment(any(), any(), any());
-
     }
 
     @Test
@@ -118,9 +114,7 @@ class LoanOfferServiceTest {
             assertNotEquals(
                     expectedOffers.get(i).getIsInsuranceEnabled(), receivedOffers.get(i).getIsInsuranceEnabled()
             );
-
         }
-
     }
 
     private List<LoanOfferServiceDTO> getExpectedOffers() {
@@ -172,7 +166,5 @@ class LoanOfferServiceTest {
         return Stream.of(plainOffer, clientOffer, offerWithInsurance, clientOfferWithInsurance)
                      .sorted(Comparator.comparing(LoanOfferServiceDTO::getRate).reversed())
                      .toList();
-
     }
-
 }

@@ -86,5 +86,4 @@ public class Client {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

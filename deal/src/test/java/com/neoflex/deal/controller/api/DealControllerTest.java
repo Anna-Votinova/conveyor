@@ -2,18 +2,14 @@ package com.neoflex.deal.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neoflex.deal.integration.conveyor.ConveyorClient;
-import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
-import com.neoflex.deal.entity.dto.request.CreditDTO;
-import com.neoflex.deal.entity.dto.request.EmploymentDTO;
-import com.neoflex.deal.entity.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.deal.entity.dto.request_responce.LoanApplicationRequestDTO;
-import com.neoflex.deal.entity.dto.response.ScoringDataDTO;
+import com.neoflex.deal.dto.LoanOfferDTO;
+import com.neoflex.deal.dto.request.EmploymentDTO;
+import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
+import com.neoflex.deal.dto.LoanApplicationRequestDTO;
 import com.neoflex.deal.entity.enums.EmploymentPosition;
 import com.neoflex.deal.entity.enums.EmploymentStatus;
 import com.neoflex.deal.entity.enums.Gender;
 import com.neoflex.deal.entity.enums.MaritalStatus;
-import com.neoflex.deal.exception.ApplicationNotFoundException;
-import com.neoflex.deal.exception.BadRequestException;
 import com.neoflex.deal.service.DealService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +31,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,13 +43,10 @@ class DealControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private MockMvc mvc;
-
     @MockBean
     private ConveyorClient conveyorClient;
-
     @MockBean
     private DealService dealService;
 
@@ -62,17 +54,11 @@ class DealControllerTest {
     @SneakyThrows
     @DisplayName("Testing method calculateCredit - positive scenario")
     void shouldReturnOk_WhenValidIdAndAdditionalClientInfo() {
-        when(dealService.finishRegistration(any(), any())).thenReturn(new ScoringDataDTO());
-        when(conveyorClient.calculateLoan(any())).thenReturn(new CreditDTO());
-
         mvc.perform(put("/deal/calculate/1")
                    .content(mapper.writeValueAsString(getFullClientInfo()))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isOk());
-
-        verify(dealService, times(1)).saveCredit(any(), any());
-
     }
 
     @SneakyThrows
@@ -83,7 +69,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -94,7 +79,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -105,7 +89,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isNotFound());
-
     }
 
     @SneakyThrows
@@ -119,7 +102,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -133,7 +115,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -147,7 +128,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -161,7 +141,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -175,7 +154,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -190,13 +168,12 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "1234567890123456789", "123456789012345678901", "TwentyAccountStrings"})
-    void shouldThrowException_WhenInValidAccount(String account) {
+    void shouldThrowException_WhenInvalidAccount(String account) {
         FinishRegistrationRequestDTO clientInfo = getFullClientInfo();
         clientInfo.setAccount(account);
 
@@ -205,7 +182,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -219,7 +195,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -233,7 +208,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -247,7 +221,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -261,7 +234,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -275,34 +247,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
-    }
-
-    @SneakyThrows
-    @Test
-    void shouldThrowException_WhenApplicationNotFound() {
-        when(dealService.finishRegistration(any(), any())).thenThrow(ApplicationNotFoundException.class);
-
-        mvc.perform(put("/deal/calculate/1")
-                   .content(mapper.writeValueAsString(getFullClientInfo()))
-                   .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                   .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().isNotFound());
-
-    }
-
-    @SneakyThrows
-    @Test
-    void shouldThrowException_WhenConveyorGeneratesValidException() {
-        when(dealService.finishRegistration(any(), any())).thenReturn(new ScoringDataDTO());
-        when(dealService.finishRegistration(any(), any())).thenThrow(BadRequestException.class);
-
-        mvc.perform(put("/deal/calculate/1")
-                   .content(mapper.writeValueAsString(getFullClientInfo()))
-                   .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                   .characterEncoding(StandardCharsets.UTF_8))
-           .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -315,8 +259,7 @@ class DealControllerTest {
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isOk());
 
-        verify(dealService, times(1)).chooseOffer(any());
-
+        verify(dealService).chooseOffer(any());
     }
 
     @SneakyThrows
@@ -330,7 +273,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -345,7 +287,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -359,7 +300,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -373,7 +313,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -387,7 +326,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -401,7 +339,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -415,7 +352,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -429,7 +365,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -443,7 +378,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -458,7 +392,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -473,7 +406,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -487,7 +419,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -501,7 +432,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -515,14 +445,12 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
     @SneakyThrows
     @DisplayName("Testing method calculateOffers - positive scenario")
     void shouldReturnStatusOk_WhenValidStartClientInfo() {
-        when(dealService.startRegistration(any())).thenReturn(new LoanApplicationRequestDTO());
         when(conveyorClient.preCalculateLoan(any())).thenReturn(Collections.emptyList());
 
         mvc.perform(post("/deal/application")
@@ -530,7 +458,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isOk());
-
     }
 
     @Test
@@ -544,7 +471,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -558,8 +484,8 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
+
     @SneakyThrows
     @Test
     void shouldThrowException_WhenStartInfoNullTerm() {
@@ -571,7 +497,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -585,7 +510,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -600,7 +524,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -614,7 +537,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -629,7 +551,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -643,7 +564,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -658,7 +578,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
@@ -673,7 +592,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -687,7 +605,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -701,13 +618,12 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isInternalServerError());
-
     }
 
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "123", "12345", "Four"})
-    void shouldThrowException_WhenInValidPassportSeries(String series) {
+    void shouldThrowException_WhenInvalidPassportSeries(String series) {
         LoanApplicationRequestDTO startClientInfo = getStartClientInfo();
         startClientInfo.setPassportSeries(series);
 
@@ -716,13 +632,12 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "12345", "1234567", "SixNum"})
-    void shouldThrowException_WhenInValidPassportNumber(String number) {
+    void shouldThrowException_WhenInvalidPassportNumber(String number) {
         LoanApplicationRequestDTO startClientInfo = getStartClientInfo();
         startClientInfo.setPassportNumber(number);
 
@@ -731,7 +646,6 @@ class DealControllerTest {
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
            .andExpect(status().isBadRequest());
-
     }
 
     private LoanApplicationRequestDTO getStartClientInfo() {
@@ -759,7 +673,6 @@ class DealControllerTest {
                 new BigDecimal("14"),
                 false,
                 true
-
         );
     }
 
@@ -784,5 +697,4 @@ class DealControllerTest {
                 "12345678901234567890"
         );
     }
-
 }

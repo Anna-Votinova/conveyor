@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.request;
+package com.neoflex.deal.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.deal.entity.enums.Gender;
@@ -14,7 +14,7 @@ import lombok.ToString;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
@@ -41,7 +41,7 @@ public class FinishRegistrationRequestDTO {
     private Integer dependentAmount;
 
     @NotNull
-    @Past
+    @PastOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Schema(description = "Дата выдачи паспорта", example = "2021-01-12")
     private LocalDate passportIssueDate;
@@ -60,5 +60,4 @@ public class FinishRegistrationRequestDTO {
     @Pattern(regexp = "[\\d]{20}", message = "Счет должен содержать 20 цифр")
     @Schema(description = "Номер счета в банке", example = "70846273218496606511")
     private String account;
-
 }

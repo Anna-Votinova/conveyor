@@ -2,13 +2,11 @@ package com.neoflex.deal.entity.jsonb.element;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,8 +15,7 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PaymentScheduleElement implements Serializable {
+public class PaymentScheduleElement {
 
     private Integer number;
 

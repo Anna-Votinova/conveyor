@@ -1,7 +1,6 @@
 package com.neoflex.conveyor.service;
 
 import com.neoflex.conveyor.config.ApplicationConfig;
-import com.neoflex.conveyor.config.GlobalVariables;
 import com.neoflex.conveyor.dto.request.LoanApplicationServiceDTO;
 import com.neoflex.conveyor.dto.response.LoanOfferServiceDTO;
 import com.neoflex.conveyor.service.utils.CalculationUtils;
@@ -20,12 +19,12 @@ import java.util.List;
 public class LoanOfferService {
 
     private final ApplicationConfig applicationConfig;
-
     private final CalculationUtils calculationUtils;
+    public static final BigDecimal INSURANCE_RATIO = new BigDecimal("0.1");
 
     /**
-     *<p>Creates four loan offers with different rates, final amounts, monthly payments and totals
-     *</p>
+     * <p>Creates four loan offers with different rates, final amounts, monthly payments and totals
+     * </p>
      * @param loanApplicationServiceDTO an application with minimum info about the client
      * @return a list with four loan offers sorted from worst to best depending on the rate
      * */
@@ -95,7 +94,7 @@ public class LoanOfferService {
     }
 
     private BigDecimal calculateAmountWithInsurance(BigDecimal requestedAmount) {
-        return requestedAmount.add(requestedAmount.multiply(GlobalVariables.INSURANCE_RATIO));
+        return requestedAmount.add(requestedAmount.multiply(INSURANCE_RATIO));
     }
 
     private BigDecimal calculateRateWithInsurance() {
@@ -110,7 +109,6 @@ public class LoanOfferService {
         return applicationConfig.getGlobalRate()
                                 .subtract(BigDecimal.ONE)
                                 .subtract(new BigDecimal("2"));
-
     }
 
     private BigDecimal calculateTotalAmount(BigDecimal monthlyPayment, Integer term) {
@@ -118,5 +116,4 @@ public class LoanOfferService {
 
         return monthlyPayment.multiply(new BigDecimal(term)).setScale(2, RoundingMode.HALF_EVEN);
     }
-
 }

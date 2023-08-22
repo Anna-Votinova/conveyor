@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.error;
+package com.neoflex.deal.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

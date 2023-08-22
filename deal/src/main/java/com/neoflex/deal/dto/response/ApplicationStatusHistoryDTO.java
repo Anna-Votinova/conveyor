@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.response;
+package com.neoflex.deal.dto.response;
 
 import com.neoflex.deal.entity.enums.ApplicationStatus;
 import com.neoflex.deal.entity.enums.ChangeType;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -28,9 +28,8 @@ public class ApplicationStatusHistoryDTO {
     private ApplicationStatus status;
 
     @Schema(description = "Дата присваивания заявке нового статуса", example = "2023-10-12")
-    private Timestamp time;
+    private LocalDateTime time;
 
     @Schema(description = "Каким образом был изменен статус заявки", example = "AUTOMATIC")
     private ChangeType changeType;
-
 }

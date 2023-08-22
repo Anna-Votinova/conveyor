@@ -1,4 +1,4 @@
-package com.neoflex.deal.entity.dto.validation;
+package com.neoflex.deal.dto.validation;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -42,5 +42,4 @@ public @interface DateIsBeforeYears {
             return date.isBefore(startDate);
         }
     }
-
 }

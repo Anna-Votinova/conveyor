@@ -1,11 +1,11 @@
 package com.neoflex.deal.controller.advice;
 
-import com.neoflex.deal.entity.dto.error.ErrorResponse;
-import com.neoflex.deal.entity.dto.error.ValidationErrorResponse;
-import com.neoflex.deal.entity.dto.error.Violation;
+import com.neoflex.deal.dto.error.ErrorResponse;
+import com.neoflex.deal.dto.error.ValidationErrorResponse;
+import com.neoflex.deal.dto.error.Violation;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.exception.BadRequestException;
-import com.neoflex.deal.exception.NotCompletedComponentImplementation;
+import com.neoflex.deal.exception.NotCompletedImplementationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,9 +42,9 @@ public class GlobalControllerAdvice {
         return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
     }
 
-    @ExceptionHandler(NotCompletedComponentImplementation.class)
+    @ExceptionHandler(NotCompletedImplementationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse notCompletedComponentImplementation(NotCompletedComponentImplementation e) {
+    public ErrorResponse notCompletedComponentImplementation(NotCompletedImplementationException e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse("Реализация не завершена: ", e.getMessage());
     }
@@ -66,10 +66,9 @@ public class GlobalControllerAdvice {
     public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
         log.error(e.getMessage(), e);
         List<Violation> violations = e.getConstraintViolations().stream()
-                                            .map(violation -> new Violation(violation.getPropertyPath().toString(),
-                                                    violation.getMessage()))
-                                            .toList();
+                                      .map(violation -> new Violation(violation.getPropertyPath().toString(),
+                                              violation.getMessage()))
+                                      .toList();
         return new ValidationErrorResponse(violations);
     }
-
 }

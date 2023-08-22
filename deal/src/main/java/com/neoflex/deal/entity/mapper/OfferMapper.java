@@ -1,6 +1,6 @@
 package com.neoflex.deal.entity.mapper;
 
-import com.neoflex.deal.entity.dto.request_responce.LoanOfferDTO;
+import com.neoflex.deal.dto.LoanOfferDTO;
 import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,6 @@ public class OfferMapper {
     public AppliedOffer toAppliedOffer(LoanOfferDTO loanOfferDTO) {
 
         AppliedOffer appliedOffer = new AppliedOffer();
-
         appliedOffer.setApplicationId(loanOfferDTO.getApplicationId());
         appliedOffer.setRequestedAmount(loanOfferDTO.getRequestedAmount());
         appliedOffer.setTotalAmount(loanOfferDTO.getTotalAmount());
@@ -21,6 +20,5 @@ public class OfferMapper {
         appliedOffer.setIsSalaryClient(loanOfferDTO.getIsSalaryClient());
 
         return appliedOffer;
-
     }
 }

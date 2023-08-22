@@ -1,13 +1,11 @@
 package com.neoflex.deal.entity.jsonb.element;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Setter
@@ -15,8 +13,7 @@ import java.math.BigDecimal;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AppliedOffer implements Serializable {
+public class AppliedOffer {
 
     private Long applicationId;
 
