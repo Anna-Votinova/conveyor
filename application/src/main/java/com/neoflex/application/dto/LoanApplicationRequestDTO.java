@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neoflex.application.config.GlobalVariables;
 import com.neoflex.application.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Builder
 @Schema(description = "Анкета пользователя")
 public record LoanApplicationRequestDTO(
         @Schema(description = "Идентификатор анкеты")

@@ -1,0 +1,6 @@
+DEAL:
+  URL: http://localhost:8080/deal
+
+logging:
+  level:
+    com.neoflex.application.integration.deal: DEBUG

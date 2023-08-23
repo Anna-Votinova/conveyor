@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Slf4j
@@ -56,18 +55,6 @@ public class GlobalControllerAdvice {
         log.error(e.getMessage(), e);
         List<Violation> violations = e.getBindingResult().getFieldErrors().stream()
                                       .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
-                                      .toList();
-        return new ValidationErrorResponse(violations);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
-        log.error(e.getMessage(), e);
-        List<Violation> violations = e.getConstraintViolations().stream()
-                                      .map(violation -> new Violation(violation.getPropertyPath().toString(),
-                                              violation.getMessage()))
                                       .toList();
         return new ValidationErrorResponse(violations);
     }

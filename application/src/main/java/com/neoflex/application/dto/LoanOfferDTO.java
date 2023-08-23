@@ -1,12 +1,14 @@
 package com.neoflex.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
+@Builder
 @Schema(description = "Предложение от банка")
 public record LoanOfferDTO(
         @NotNull
