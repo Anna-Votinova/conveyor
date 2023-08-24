@@ -17,3 +17,5 @@ spring:
         show_sql: false
         temp:
           use_jdbc_metadata_defaults: false
+      liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.xml

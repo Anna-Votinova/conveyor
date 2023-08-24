@@ -1,7 +1,6 @@
 package com.neoflex.deal.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neoflex.deal.integration.conveyor.ConveyorClient;
 import com.neoflex.deal.dto.LoanOfferDTO;
 import com.neoflex.deal.dto.request.EmploymentDTO;
 import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
@@ -45,8 +44,6 @@ class DealControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private MockMvc mvc;
-    @MockBean
-    private ConveyorClient conveyorClient;
     @MockBean
     private DealService dealService;
 
@@ -451,7 +448,7 @@ class DealControllerTest {
     @SneakyThrows
     @DisplayName("Testing method calculateOffers - positive scenario")
     void shouldReturnStatusOk_WhenValidStartClientInfo() {
-        when(conveyorClient.preCalculateLoan(any())).thenReturn(Collections.emptyList());
+        when(dealService.startRegistration(any())).thenReturn(Collections.emptyList());
 
         mvc.perform(post("/deal/application")
                    .content(mapper.writeValueAsString(getStartClientInfo()))
