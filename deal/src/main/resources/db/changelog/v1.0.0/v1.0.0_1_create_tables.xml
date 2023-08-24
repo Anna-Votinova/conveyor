@@ -6,11 +6,13 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
   <changeSet id="create-passport" author="ponomareva" context="dev">
+
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="passport"/>
       </not>
     </preConditions>
+
     <createTable tableName="passport">
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_passport_id" nullable="false"/>
@@ -27,11 +29,13 @@
   </changeSet>
 
   <changeSet id="create-employment" author="ponomareva" context="dev">
+
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="employment"/>
       </not>
     </preConditions>
+
     <createTable tableName="employment">
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_employment_id" nullable="false"/>
@@ -54,6 +58,7 @@
   </changeSet>
 
   <changeSet id="create-client" author="ponomareva" context="dev">
+
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="client"/>
@@ -63,6 +68,7 @@
         <tableExists tableName="employment"/>
       </and>
     </preConditions>
+
     <createTable tableName="client">
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_client_id" nullable="false"/>
@@ -96,11 +102,13 @@
   </changeSet>
 
   <changeSet id="create-credit" author="ponomareva" context="dev">
+
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="credit"/>
       </not>
     </preConditions>
+
     <createTable tableName="credit">
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_credit_id" nullable="false"/>
@@ -136,6 +144,7 @@
   </changeSet>
 
   <changeSet id="create-application" author="ponomareva" context="dev">
+
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="application"/>
@@ -145,6 +154,7 @@
         <tableExists tableName="credit"/>
       </and>
     </preConditions>
+
     <createTable tableName="application">
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_application_id" nullable="false"/>

@@ -33,8 +33,8 @@ public class ApplicationController {
                        "к лучшему (с самой маленькой ставкой), и отправляет пользователю.")
     @PostMapping()
     public List<LoanOfferDTO> prepareOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
-        log.info("Got the request for preparing offers {}", requestDTO);
-        return applicationService.prepareOffers(requestDTO);
+        log.info("Got the request for preliminary scoring and preparing offers {}", requestDTO);
+        return applicationService.preScoreOffers(requestDTO);
     }
 
     @Operation(summary = "Выбор одного из четырех кредитных предложений",

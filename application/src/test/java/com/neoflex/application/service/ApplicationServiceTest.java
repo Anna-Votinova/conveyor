@@ -3,6 +3,7 @@ package com.neoflex.application.service;
 import com.neoflex.application.dto.LoanApplicationRequestDTO;
 import com.neoflex.application.dto.LoanOfferDTO;
 import com.neoflex.application.exception.BadRequestException;
+import com.neoflex.application.exception.PreScoringException;
 import com.neoflex.application.integration.deal.DealClient;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -12,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,16 +34,13 @@ class ApplicationServiceTest {
 
     @Test
     void shouldSendClientInfo_WhenValidInput() {
-        var loanApplicationRequestDTO = LoanApplicationRequestDTO.builder().build();
-        var loanOffers = List.of(
-                LoanOfferDTO.builder().build(),
-                LoanOfferDTO.builder().build(),
-                LoanOfferDTO.builder().build(),
-                LoanOfferDTO.builder().build());
+        var loanApplicationRequestDTO = getClientInfo();
+        var loanOffer = LoanOfferDTO.builder().build();
+        var loanOffers = List.of(loanOffer, loanOffer, loanOffer, loanOffer);
 
         when(dealClient.calculateOffers(loanApplicationRequestDTO)).thenReturn(loanOffers);
 
-        var response = applicationService.prepareOffers(loanApplicationRequestDTO);
+        var response = applicationService.preScoreOffers(loanApplicationRequestDTO);
 
         assertThat(response).hasSameSizeAs(loanOffers);
         verify(dealClient).calculateOffers(any());
@@ -48,11 +48,182 @@ class ApplicationServiceTest {
 
     @Test
     void shouldThrowException_WhenDealGenerateValidException() {
-        var loanApplicationRequestDTO = LoanApplicationRequestDTO.builder().build();
+        var loanApplicationRequestDTO = getClientInfo();
         when(dealClient.calculateOffers(any())).thenThrow(BadRequestException.class);
 
         assertThatExceptionOfType(BadRequestException.class)
-                .isThrownBy(() -> applicationService.prepareOffers(loanApplicationRequestDTO));
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidAmount() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("9999.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidTerm() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                5,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidFirstname() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "A",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidLastname() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Пономарева",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidMiddleName() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "ItIsAVeryLongMiddleNameForTestingConstraint",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidEmail() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidBirthday() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.now().minusYears(18).plusDays(1),
+                "1111",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidPassportSeries() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "11112",
+                "111111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
+    }
+
+    @Test
+    void shouldThrowException_WhenInvalidPassportNumber() {
+        var loanApplicationRequestDTO = new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "11111"
+        );
+
+        assertThatExceptionOfType(PreScoringException.class)
+                .isThrownBy(() -> applicationService.preScoreOffers(loanApplicationRequestDTO));
     }
 
     @Test
@@ -62,5 +233,20 @@ class ApplicationServiceTest {
         applicationService.chooseOffer(loanOffer);
 
         verify(dealClient).chooseOffer(any());
+    }
+
+    private LoanApplicationRequestDTO getClientInfo() {
+        return new LoanApplicationRequestDTO(
+                null,
+                new BigDecimal("10000.0"),
+                6,
+                "Anna",
+                "Black",
+                "White",
+                "black@yandex.ru",
+                LocalDate.of(1990, 12, 13),
+                "1111",
+                "111111"
+        );
     }
 }

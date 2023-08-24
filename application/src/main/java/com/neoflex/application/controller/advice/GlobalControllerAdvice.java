@@ -6,6 +6,7 @@ import com.neoflex.application.dto.error.Violation;
 import com.neoflex.application.exception.BadRequestException;
 import com.neoflex.application.exception.NotCompletedImplementationException;
 import com.neoflex.application.exception.NotFoundException;
+import com.neoflex.application.exception.PreScoringException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +26,13 @@ public class GlobalControllerAdvice {
     public ErrorResponse handleThrowable(Throwable e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse("Непредвиденная ошибка: ", e.getMessage());
+    }
+
+    @ExceptionHandler(PreScoringException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ValidationErrorResponse handlePreScoringException(PreScoringException e) {
+        log.error(e.getMessage(), e);
+        return new ValidationErrorResponse(e.getViolations());
     }
 
     @ExceptionHandler(BadRequestException.class)

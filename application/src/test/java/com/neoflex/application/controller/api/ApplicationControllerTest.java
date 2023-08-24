@@ -41,7 +41,7 @@ class ApplicationControllerTest {
 
     @Test
     void shouldReturnStatusOk_WhenValidClientInfo() throws Exception {
-        when(applicationService.prepareOffers(any())).thenReturn(Collections.emptyList());
+        when(applicationService.preScoreOffers(any())).thenReturn(Collections.emptyList());
 
         mvc.perform(post("/application")
                    .content(mapper.writeValueAsString(getClientInfo()))
@@ -52,7 +52,7 @@ class ApplicationControllerTest {
 
     @Test
     void shouldThrowException_WhenDealThrowsValidationException() throws Exception {
-        when(applicationService.prepareOffers(any())).thenThrow(BadRequestException.class);
+        when(applicationService.preScoreOffers(any())).thenThrow(BadRequestException.class);
 
         mvc.perform(post("/application")
                    .content(mapper.writeValueAsString(getClientInfo()))
@@ -62,16 +62,16 @@ class ApplicationControllerTest {
     }
 
     @Test
-    void shouldThrowException_WhenInvalidClientBirthday() throws Exception {
+    void shouldThrowException_WhenNullAmount() throws Exception {
         var invalidClientInfo = new LoanApplicationRequestDTO(
                 null,
-                new BigDecimal("10000.0"),
+                null,
                 6,
                 "Anna",
                 "Black",
                 "White",
                 "black@yandex.ru",
-                LocalDate.now().minusYears(17),
+                LocalDate.of(1990, 12, 13),
                 "1111",
                 "111111"
         );
@@ -80,10 +80,9 @@ class ApplicationControllerTest {
                    .content(mapper.writeValueAsString(invalidClientInfo))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
+           .andDo(print())
            .andExpect(status().isBadRequest())
-           .andExpect(jsonPath("violations[0].message")
-                   .value("Заемщик должен быть совершеннолетним"))
-           .andDo(print());
+           .andExpect(jsonPath("violations[0].message").value("must not be null"));
     }
 
     @Test
@@ -123,10 +122,10 @@ class ApplicationControllerTest {
                    .content(mapper.writeValueAsString(invalidLoanOffer))
                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                    .characterEncoding(StandardCharsets.UTF_8))
+           .andDo(print())
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("violations[0].message")
-                   .value("must be greater than or equal to 10000"))
-           .andDo(print());
+                   .value("must be greater than or equal to 10000"));
     }
 
     private LoanApplicationRequestDTO getClientInfo() {
