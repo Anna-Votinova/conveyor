@@ -39,7 +39,7 @@ public @interface DateIsBeforeYears {
 
             LocalDate startDate = LocalDate.now().minusYears(years);
 
-            return date.isBefore(startDate);
+            return date.isBefore(startDate) || date.equals(startDate);
         }
     }
 }
