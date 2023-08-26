@@ -1,0 +1,5 @@
+server:
+  port: 8083
+
+deal:
+  url: ${DEAL.URL}

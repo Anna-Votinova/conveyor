@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -63,7 +62,8 @@ public class LoanApplicationRequestDTO {
     private String middleName;
 
     @NotBlank
-    @Email(message = "Название электронной почты должно соответветствовать общепринятым стандартам")
+    @Pattern(regexp = "[\\w\\.]{2,50}@[\\w\\.]{2,20}",
+             message = "Название электронной почты должно соответветствовать общепринятым стандартам")
     @Schema(description = "Электронный почтовый ящик", example = "kotova@yandex.ru")
     private String email;
 
