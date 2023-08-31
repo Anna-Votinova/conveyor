@@ -2,11 +2,13 @@ package com.neoflex.deal.dto.response;
 
 import com.neoflex.deal.dto.enums.EmailTheme;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
 @Schema(description = "ДТО для отправки писем на почту клиентам")
 public class EmailMessage {
 

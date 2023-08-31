@@ -1,5 +1,7 @@
 package com.neoflex.deal.service;
 
+import com.neoflex.deal.dto.enums.EmailTheme;
+import com.neoflex.deal.dto.response.EmailMessage;
 import com.neoflex.deal.entity.Application;
 import com.neoflex.deal.entity.Client;
 import com.neoflex.deal.entity.Credit;
@@ -20,6 +22,7 @@ import com.neoflex.deal.entity.mapper.OfferMapper;
 import com.neoflex.deal.entity.mapper.ScoringDataMapper;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.integration.dossier.kafka.EmailMessageProducer;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +47,7 @@ public class DealService {
     private final OfferMapper offerMapper;
     private final ScoringDataMapper scoringDataMapper;
     private final CreditMapper creditMapper;
+    private final EmailMessageProducer emailMessageProducer;
 
     /**
      * <p>Saves short info about the client and their application, connects to the Conveyor and receives an offers list
@@ -84,6 +88,10 @@ public class DealService {
         Application updatedStatusHistoryApplication = changeStatusHistory(application, ApplicationStatus.APPROVED);
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
         log.info("Saved application: {}", savedApplication);
+
+        EmailMessage emailMessage = new EmailMessage(
+                savedApplication.getClient().getEmail(), EmailTheme.FINISH_REGISTRATION, savedApplication.getId());
+        emailMessageProducer.sendEmail(EmailTheme.FINISH_REGISTRATION.getValue(), emailMessage);
     }
 
     /**
@@ -115,6 +123,10 @@ public class DealService {
                 creditDTO.getPaymentSchedule().size());
 
         saveCredit(creditDTO, application);
+
+        EmailMessage emailMessage = new EmailMessage(
+                savedClient.getEmail(), EmailTheme.CREATE_DOCUMENTS, application.getId());
+        emailMessageProducer.sendEmail(EmailTheme.CREATE_DOCUMENTS.getValue(), emailMessage);
     }
 
     private void saveCredit(CreditDTO creditDTO, Application application) {
