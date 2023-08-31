@@ -19,5 +19,4 @@ public class EmailMessageProducer {
                 topicName, emailMessage);
         emailMessageKafkaTemplate.send(topicName, emailMessage);
     }
-
 }

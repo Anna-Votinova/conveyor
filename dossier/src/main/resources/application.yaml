@@ -3,3 +3,4 @@ spring:
     consumer:
       group-id: "email_service"
       bootstrap-servers: "localhost:9092"
+      auto-offset-reset: earliest

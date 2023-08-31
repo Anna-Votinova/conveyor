@@ -5,10 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 @Schema(description = "ДТО для отправки писем на почту клиентам")
 public class EmailMessage {
 

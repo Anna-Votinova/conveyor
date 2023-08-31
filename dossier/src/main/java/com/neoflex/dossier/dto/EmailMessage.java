@@ -3,14 +3,16 @@ package com.neoflex.dossier.dto;
 
 import com.neoflex.dossier.dto.enums.EmailTheme;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @Schema(description = "ДТО для отправки писем на почту клиентам")
+@ToString
+@NoArgsConstructor
 public class EmailMessage {
 
     @Schema(description = "Почтовый ящик", example = "kotova@yandex.ru")
