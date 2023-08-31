@@ -1,0 +1,5 @@
+spring:
+  kafka:
+    consumer:
+      group-id: "email_service"
+      bootstrap-servers: "localhost:9092"
