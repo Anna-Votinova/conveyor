@@ -10,6 +10,7 @@ import com.neoflex.conveyor.dto.enums.Gender;
 import com.neoflex.conveyor.dto.enums.MaritalStatus;
 import com.neoflex.conveyor.dto.enums.Position;
 import com.neoflex.conveyor.service.utils.CalculationUtils;
+import com.neoflex.conveyor.service.utils.TimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -26,10 +27,11 @@ import javax.validation.ValidationException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,8 @@ class CreditServiceTest {
     private CalculationUtils calculationUtils;
     @Mock
     private ApplicationConfig applicationConfig;
+    @Mock
+    private TimeUtil timeUtil;
     @InjectMocks
     private CreditService creditService;
     private ScoringDataServiceDTO scoringDataServiceDTO;
@@ -59,7 +63,7 @@ class CreditServiceTest {
 
         scoringDataServiceDTO = new ScoringDataServiceDTO(
                 new BigDecimal("77000.0"),
-                24,
+                6,
                 "Anna",
                 "Black",
                 "White",
@@ -70,11 +74,18 @@ class CreditServiceTest {
                 LocalDate.of(2021, 4, 12),
                 "MVD",
                 MaritalStatus.MARRIED,
-                0, employmentServiceDTO,
+                0,
+                employmentServiceDTO,
                 "12345678901234567890",
                 true,
                 true
         );
+    }
+
+    private GregorianCalendar getMockDate() {
+        GregorianCalendar mockDate = new GregorianCalendar();
+        mockDate.set(Calendar.MONTH, Calendar.AUGUST);
+        return mockDate;
     }
 
     @Test
@@ -82,20 +93,21 @@ class CreditServiceTest {
 
         CreditServiceDTO creditServiceDTO = new CreditServiceDTO(
                 new BigDecimal("77000.0"),
-                24,
-                new BigDecimal("3517.36"),
+                6,
+                new BigDecimal("13172.39"),
                 new BigDecimal("9"),
-                new BigDecimal("4.819"),
+                new BigDecimal("5.282"),
                 true,
                 true,
                 new ArrayList<>()
         );
 
-        BigDecimal monthlyPayment = new BigDecimal("3517.36");
+        BigDecimal monthlyPayment = new BigDecimal("13172.39");
         BigDecimal globalRate = new BigDecimal("15");
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
@@ -104,8 +116,6 @@ class CreditServiceTest {
         assertEquals(creditServiceDTO.getTerm(), creditServiceResponseDTO.getTerm());
         assertEquals(creditServiceDTO.getMonthlyPayment(), creditServiceResponseDTO.getMonthlyPayment());
         assertEquals(creditServiceDTO.getRate(), creditServiceResponseDTO.getRate());
-
-        assertEquals(creditServiceDTO.getPsk(), creditServiceResponseDTO.getPsk());
         assertEquals(creditServiceDTO.getIsInsuranceEnabled(), creditServiceResponseDTO.getIsInsuranceEnabled());
         assertEquals(creditServiceDTO.getIsSalaryClient(), creditServiceResponseDTO.getIsSalaryClient());
 
@@ -113,18 +123,44 @@ class CreditServiceTest {
                 scoringDataServiceDTO.getTerm(), creditServiceResponseDTO.getPaymentScheduleServiceElement().size()
         );
 
-        for (int i = 0; i < 24; i++) {
+        checkPaymentScheduleNestedTest(new BigDecimal("569.59"), new BigDecimal("12602.80"),
+                new BigDecimal("64397.20"), creditServiceResponseDTO, 0);
 
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getNumber());
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getDate());
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getTotalPayment());
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getInterestPayment());
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getDebtPayment());
-            assertNotNull(creditServiceResponseDTO.getPaymentScheduleServiceElement().get(i).getRemainingDebt());
+        checkPaymentScheduleNestedTest(new BigDecimal("492.24"), new BigDecimal("12680.15"),
+                new BigDecimal("51717.05"), creditServiceResponseDTO, 1);
 
-        }
+        checkPaymentScheduleNestedTest(new BigDecimal("382.56"), new BigDecimal("12789.83"),
+                new BigDecimal("38927.22"), creditServiceResponseDTO, 2);
 
-        verify(calculationUtils, times(1)).calculateMonthlyPayment(any(), any(), any());
+        checkPaymentScheduleNestedTest(new BigDecimal("297.55"), new BigDecimal("12874.84"),
+                new BigDecimal("26052.38"), creditServiceResponseDTO, 3);
+
+        checkPaymentScheduleNestedTest(new BigDecimal("198.60"), new BigDecimal("12973.79"),
+                new BigDecimal("13078.59"), creditServiceResponseDTO, 4);
+
+        checkPaymentScheduleNestedTest(new BigDecimal("93.27"), new BigDecimal("13078.59"),
+                new BigDecimal("00.00"), creditServiceResponseDTO, 5);
+
+        assertEquals(creditServiceDTO.getPsk(), creditServiceResponseDTO.getPsk());
+
+        verify(calculationUtils).calculateMonthlyPayment(any(), any(), any());
+    }
+
+    private void checkPaymentScheduleNestedTest(BigDecimal interestPayment, BigDecimal debtPayment,
+                                                BigDecimal remainingDebt, CreditServiceDTO creditServiceResponseDTO,
+                                                int index) {
+        assertEquals(interestPayment, creditServiceResponseDTO
+                    .getPaymentScheduleServiceElement()
+                    .get(index)
+                    .getInterestPayment());
+        assertEquals(debtPayment, creditServiceResponseDTO
+                    .getPaymentScheduleServiceElement()
+                    .get(index)
+                    .getDebtPayment());
+        assertEquals(remainingDebt, creditServiceResponseDTO
+                    .getPaymentScheduleServiceElement()
+                    .get(index)
+                    .getRemainingDebt());
     }
 
     @Test
@@ -185,6 +221,7 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
@@ -202,6 +239,7 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
@@ -235,6 +273,7 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
@@ -260,6 +299,7 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
@@ -285,11 +325,31 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);
 
         assertNotNull(creditServiceResponseDTO);
+    }
+
+    @Test
+    void shouldReturnFinalRateOne_WhenGlobalRateOne() {
+
+        BigDecimal monthlyPayment = new BigDecimal("3517.36");
+        BigDecimal globalRate = new BigDecimal("1");
+        BigDecimal finalRate = new BigDecimal("1");
+
+        scoringDataServiceDTO.getEmploymentServiceDTO().setWorkExperienceCurrent(3);
+
+        when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
+        when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
+
+        CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
+                scoringDataServiceDTO);
+
+        assertEquals(finalRate, creditServiceResponseDTO.getRate());
     }
 
     @ParameterizedTest
@@ -353,6 +413,7 @@ class CreditServiceTest {
 
         when(applicationConfig.getGlobalRate()).thenReturn(globalRate);
         when(calculationUtils.calculateMonthlyPayment(any(), any(), any())).thenReturn(monthlyPayment);
+        when(timeUtil.getCurrentDate()).thenReturn(getMockDate());
 
         CreditServiceDTO creditServiceResponseDTO = creditService.calculateLoan(
                 scoringDataServiceDTO);

@@ -1,0 +1,5 @@
+server:
+  port: 8081
+
+application:
+  global-rate: ${APP_GLOBALRATE:15.00}

@@ -34,7 +34,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(NotProperClientCategoryException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse notProperClientCategoryException(NotProperClientCategoryException e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse("Введенные данные не соответствуют требованиям: ", e.getMessage());
