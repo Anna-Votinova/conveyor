@@ -1,5 +1,6 @@
 package com.neoflex.deal.controller.api;
 
+import com.neoflex.deal.dto.SesCodeDTO;
 import com.neoflex.deal.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,10 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
@@ -59,12 +61,10 @@ public class DocumentController {
     @PostMapping("/code")
     public void issueCredit(@Positive @PathVariable @Parameter(
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId,
-                             @Parameter(description = "Сес-код для подписания документов",
-                                        example = "808e1cc4630440858f5199e4c0a3e706", required = true)
-                             @RequestParam(name = "code") String sesCode
+                            @Valid @RequestBody SesCodeDTO code
     ) {
         log.info("Got the request for signing documents with code. Parameters: applicationId = {},  sesCode = {}",
-                applicationId, sesCode);
-        documentService.issueCredit(applicationId, sesCode);
+                applicationId, code);
+        documentService.issueCredit(applicationId, code);
     }
 }

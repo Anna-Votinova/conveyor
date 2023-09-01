@@ -1,10 +1,8 @@
-DB:
-  URL: jdbc:postgresql://localhost:5432/deal
-  USERNAME: root
-  PASSWORD: root
+DB_URL: jdbc:postgresql://localhost:5432/deal
+DB_USERNAME: root
+DB_PASSWORD: root
 
-CONVEYOR:
-  URL: http://localhost:8081/conveyor
+CONVEYOR_URL: http://localhost:8081/conveyor
 
 logging:
   level:

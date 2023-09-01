@@ -2,14 +2,23 @@ server:
   port: 8082
 
 conveyor:
-  url: ${CONVEYOR.URL}
+  url: ${CONVEYOR_URL}
+
+topic:
+  name:
+    finish-registration: finish-registration
+    create-documents: create-documents
+    send-documents: send-documents
+    send-ses: send-ses
+    credit-issued: credit-issued
+    application-denied: application-denied
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB.URL}
-    username: ${DB.USERNAME}
-    password: ${DB.PASSWORD}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   kafka:
     bootstrap-servers: "localhost:9092"

@@ -75,7 +75,8 @@ public class Application {
     private LocalDateTime signDate;
 
     @Column(name = "ses_code")
-    private String sesCode;
+    @ToString.Exclude
+    private Integer sesCode;
 
     @Type(type = "json")
     @Column(name = "status_history", columnDefinition = "jsonb")
