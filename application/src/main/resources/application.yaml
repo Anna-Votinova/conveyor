@@ -2,4 +2,4 @@ server:
   port: 8083
 
 deal:
-  url: ${DEAL.URL}
+  url: ${DEAL_URL}

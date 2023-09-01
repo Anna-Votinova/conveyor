@@ -35,7 +35,7 @@ public record LoanApplicationRequestDTO(
         String middleName,
 
         @NotBlank
-        @Schema(description = "Электронный почтовый ящик", example = "kotova@yandex.ru")
+        @Schema(description = "Электронный почтовый ящик", example = "anyvotinova@yandex.ru")
         String email,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
