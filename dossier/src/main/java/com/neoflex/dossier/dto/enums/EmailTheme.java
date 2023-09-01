@@ -8,12 +8,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum EmailTheme {
 
-    FINISH_REGISTRATION("finish-registration"),
-    CREATE_DOCUMENTS("create-documents"),
-    SEND_DOCUMENTS("send-documents"),
-    SEND_SES("send-ses"),
-    CREDIT_ISSUED("credit-issued"),
-    APPLICATION_DENIED("application-denied");
+    FINISH_REGISTRATION("Finish registration"),
+    CREATE_DOCUMENTS("Create documents"),
+    SEND_DOCUMENTS("Your loan documents"),
+    SEND_SES("Sign documents with SES code"),
+    CREDIT_ISSUED("Credit issued"),
+    APPLICATION_DENIED("Application denied");
 
     private final String value;
 }

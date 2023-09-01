@@ -29,7 +29,6 @@ public class KafkaConsumerConfig {
         deserializer.setUseTypeMapperForKey(true);
 
         Map<String, Object> config = new HashMap<>();
-
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);

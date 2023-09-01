@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+  <h2 th:text="#{header}"></h2>
+  <p th:text="#{recipientName(${recipientName})}"></p>
+  <p th:text="#{amount(${amount})}"></p>
+  <p th:text="#{term(${term})}"></p>
+  <p th:text="#{monthlyPayment(${monthlyPayment})}"></p>
+  <p th:text="#{rate(${rate})}"></p>
+  <p th:text="#{psk(${psk})}"></p>
+  <p th:if="${isInsuranceEnabled == true}">
+    Insurance enabled: YES,
+  </p>
+  <p th:if="${isInsuranceEnabled == false}">
+    Insurance enabled: NO,
+  </p>
+  <p th:if="${isSalaryClient == true}">
+    Salary client: YES.
+  </p>
+  <p th:if="${isSalaryClient == false}">
+    Salary client: NO.
+  </p>
+  <p>
+    <b th:text="#{paymentScheduleName}"></b> <br />
+  </p>
+  <table class="table" th:border="1" th:cellspacing="0">
+    <thead>
+    <tr th:bgcolor="grey" th:height="50px" th:align="center">
+      <th th:width="70px"> Number </th>
+      <th th:width="100px"> Date </th>
+      <th th:width="100px"> Total payment, rub </th>
+      <th th:width="100px"> Interest payment, rub </th>
+      <th th:width="100px"> Debt payment, rub </th>
+      <th th:width="100px"> Remaining debt, rub </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="schedule : ${paymentSchedule}" th:height="50px" th:align="center">
+      <td th:text="${schedule.number()}"></td>
+      <td th:text="${schedule.date()}"></td>
+      <td th:text="${schedule.totalPayment()}"></td>
+      <td th:text="${schedule.interestPayment()}"></td>
+      <td th:text="${schedule.debtPayment()}"></td>
+      <td th:text="${schedule.remainingDebt()}"></td>
+    </tr>
+    </tbody>
+  </table> <br />
+  <p>
+    Regards, <br />
+    <em>Your Reliable Bank</em>
+  </p>
+</body>
+</html>

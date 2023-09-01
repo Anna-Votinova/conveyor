@@ -1,6 +1,26 @@
+server:
+  port: 8084
+
+deal:
+  url: ${DEAL_URL}
+
 spring:
   kafka:
     consumer:
-      group-id: "email_service"
-      bootstrap-servers: "localhost:9092"
+      group-id: email_service
+      bootstrap-servers: localhost:9092
       auto-offset-reset: earliest
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        debug: true
