@@ -2,7 +2,6 @@ package com.neoflex.dossier.mail;
 
 import com.neoflex.dossier.dto.DocumentDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,16 +16,14 @@ import javax.mail.internet.MimeMessage;
 @RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${spring.mail.username}")
-    private String conveyorAddress;
-
+    private final MailProperties mailProperties;
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine thymeleafTemplateEngine;
 
     public void sendSimpleMessage(String to, String subject, String text) {
 
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(conveyorAddress);
+            message.setFrom(mailProperties.username());
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
@@ -35,7 +32,7 @@ public class EmailService {
 
     public void sendComplexMessage(String to, String subject, DocumentDTO documentDTO) throws MessagingException {
         Context context = getContext(documentDTO);
-        String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", context);
+        String htmlBody = thymeleafTemplateEngine.process("document-template.html", context);
         sendHtmlMessage(to, subject, htmlBody);
     }
 
@@ -49,16 +46,9 @@ public class EmailService {
     }
 
     private Context getContext(DocumentDTO documentDTO) {
-        String recipientName;
-
-        if (documentDTO.middleName() != null) {
-            recipientName = documentDTO.lastName() + " " + documentDTO.firstName() + " " + documentDTO.middleName();
-        } else {
-            recipientName = documentDTO.lastName() + " " + documentDTO.firstName();
-        }
 
         Context context = new Context();
-        context.setVariable("recipientName", recipientName);
+        context.setVariable("recipientName", getRecipientName(documentDTO));
         context.setVariable("amount", documentDTO.amount());
         context.setVariable("term", documentDTO.term());
         context.setVariable("monthlyPayment", documentDTO.monthlyPayment());
@@ -69,5 +59,16 @@ public class EmailService {
         context.setVariable("paymentSchedule", documentDTO.paymentSchedule());
 
         return context;
+    }
+
+    private String getRecipientName(DocumentDTO documentDTO) {
+        String recipientName;
+
+        if (documentDTO.middleName() != null) {
+            recipientName = documentDTO.lastName() + " " + documentDTO.firstName() + " " + documentDTO.middleName();
+        } else {
+            recipientName = documentDTO.lastName() + " " + documentDTO.firstName();
+        }
+        return recipientName;
     }
 }

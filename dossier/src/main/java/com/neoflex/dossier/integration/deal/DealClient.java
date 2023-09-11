@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface DealClient {
 
     @PutMapping(value = "/admin/application/{applicationId}/status")
-    void changApplicationStatus(@PathVariable Long applicationId, @RequestParam ApplicationStatus status);
+    void changeApplicationStatus(@PathVariable Long applicationId, @RequestParam ApplicationStatus status);
 }

@@ -8,19 +8,16 @@ spring:
   kafka:
     consumer:
       group-id: email_service
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: ${KAFKA_SERVER}
       auto-offset-reset: earliest
+
+application:
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        transport:
-          protocol: smtp
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-        debug: true
+    transport-protocol: smtp
+    smtp-auth-enabled: true
+    smtp-starttls-enabled: true
+    debug-enabled: true

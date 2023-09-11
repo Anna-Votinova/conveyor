@@ -23,6 +23,9 @@ public class EmailMessageListener {
             "мошенничеств никому не сообщайте его.";
     private static final String CREDIT_ISSUED_TEXT = "Поздравляем! Вам выдан кредит.";
     private static final String APPLICATION_DENIED_TEXT = "К сожалению, вам отказано в выдаче кредита.";
+    private static final String SENDING_EMAIL_SUCCESS_LOG_MESSAGE = "Email with application id {} was sent";
+    private static final String SENDING_EMAIL_ERROR_LOG_MESSAGE = "Error with sending email with application id {} " +
+            "has happened. The reason is: ";
 
     private final EmailService emailService;
     private final DealClient dealClient;
@@ -33,8 +36,13 @@ public class EmailMessageListener {
             containerFactory = "emailKafkaListenerContainerFactory")
     public void listenTopicFinishRegistration(@Payload EmailMessage emailMessage) {
         log.info("Received email message - {} - in the topic finish-registration", emailMessage);
-        emailService.sendSimpleMessage(
-                emailMessage.address(), emailMessage.theme().getValue(), FINISH_REGISTRATION_TEXT);
+        try {
+            emailService.sendSimpleMessage(
+                    emailMessage.address(), emailMessage.theme().getValue(), FINISH_REGISTRATION_TEXT);
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+        } catch (Exception e) {
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
+        }
     }
 
     @KafkaListener(
@@ -43,7 +51,13 @@ public class EmailMessageListener {
             containerFactory = "emailKafkaListenerContainerFactory")
     public void listenTopicCreateDocuments(@Payload EmailMessage emailMessage) {
         log.info("Received email message - {} - in the topic create-documents", emailMessage);
-        emailService.sendSimpleMessage(emailMessage.address(), emailMessage.theme().getValue(), CREATE_DOCUMENTS_TEXT);
+        try {
+            emailService.sendSimpleMessage(
+                    emailMessage.address(), emailMessage.theme().getValue(), CREATE_DOCUMENTS_TEXT);
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+        } catch (Exception e) {
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
+        }
     }
 
     @KafkaListener(
@@ -55,9 +69,10 @@ public class EmailMessageListener {
         try {
             emailService.sendComplexMessage(
                     emailMessage.address(), emailMessage.theme().getValue(), emailMessage.document());
-            dealClient.changApplicationStatus(emailMessage.applicationId(), ApplicationStatus.DOCUMENT_CREATED);
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+            changeApplicationStatus(emailMessage.applicationId());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
         }
     }
 
@@ -67,8 +82,13 @@ public class EmailMessageListener {
             containerFactory = "emailKafkaListenerContainerFactory")
     public void listenSendSes(@Payload EmailMessage emailMessage) {
         log.info("Received email message - {} - in the topic send-ses", emailMessage);
-        emailService.sendSimpleMessage(emailMessage.address(), emailMessage.theme().getValue(),
-                String.format(SEND_SES_TEXT, emailMessage.sesCode().code()));
+        try {
+            emailService.sendSimpleMessage(emailMessage.address(), emailMessage.theme().getValue(),
+                    String.format(SEND_SES_TEXT, emailMessage.sesCode()));
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+        } catch (Exception e) {
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
+        }        
     }
 
     @KafkaListener(
@@ -77,7 +97,12 @@ public class EmailMessageListener {
             containerFactory = "emailKafkaListenerContainerFactory")
     public void listenCreditIssued(@Payload EmailMessage emailMessage) {
         log.info("Received email message - {} - in the topic credit-issued", emailMessage);
-        emailService.sendSimpleMessage(emailMessage.address(), emailMessage.theme().getValue(), CREDIT_ISSUED_TEXT);
+        try {
+            emailService.sendSimpleMessage(emailMessage.address(), emailMessage.theme().getValue(), CREDIT_ISSUED_TEXT);
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+        } catch (Exception e) {
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
+        }
     }
 
     @KafkaListener(
@@ -86,7 +111,22 @@ public class EmailMessageListener {
             containerFactory = "emailKafkaListenerContainerFactory")
     public void listenApplicationDenied(@Payload EmailMessage emailMessage) {
         log.info("Received email message - {} - in the topic application-denied", emailMessage);
-        emailService.sendSimpleMessage(
-                emailMessage.address(), emailMessage.theme().getValue(), APPLICATION_DENIED_TEXT);
+        try {
+            emailService.sendSimpleMessage(
+                    emailMessage.address(), emailMessage.theme().getValue(), APPLICATION_DENIED_TEXT);
+            log.info(SENDING_EMAIL_SUCCESS_LOG_MESSAGE, emailMessage.applicationId());
+        } catch (Exception e) {
+            log.error(SENDING_EMAIL_ERROR_LOG_MESSAGE, emailMessage.applicationId(), e);
+        }
+    }
+
+    private void changeApplicationStatus(Long applicationId) {
+        log.info("Got the request for sending application id {} to the Deal", applicationId);
+        try {
+            dealClient.changeApplicationStatus(applicationId, ApplicationStatus.DOCUMENT_CREATED);
+            log.info("Application id {} was sent to the Deal", applicationId);
+        } catch (Exception e) {
+            log.error("Error with sending application id {} has happened. The reason is: ", applicationId, e);
+        }
     }
 }
