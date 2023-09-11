@@ -2,11 +2,9 @@ package com.neoflex.deal.entity.mapper;
 
 import com.neoflex.deal.dto.response.DocumentDTO;
 import com.neoflex.deal.entity.Application;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class DocumentMapper {
 
     public DocumentDTO toDocumentDto(Application application) {

@@ -2,6 +2,8 @@ DB_URL: jdbc:postgresql://localhost:5432/deal
 DB_USERNAME: root
 DB_PASSWORD: root
 
+KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+
 CONVEYOR_URL: http://localhost:8081/conveyor
 
 logging:
@@ -15,3 +17,5 @@ spring:
         show_sql: false
         temp:
           use_jdbc_metadata_defaults: false
+
+

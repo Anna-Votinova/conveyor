@@ -22,8 +22,8 @@ import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.exception.BadRequestConveyorException;
 import com.neoflex.deal.exception.ScoringConveyorException;
 import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.integration.dossier.kafka.DossierKafkaConfig;
 import com.neoflex.deal.integration.dossier.kafka.EmailMessageProducer;
-import com.neoflex.deal.integration.dossier.kafka.KafkaTopicConfig;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +39,9 @@ import java.util.List;
 @Transactional
 public class DealService {
 
-    private static final String LOG_MESSAGE = "Saved application: {}";
+    private static final String SAVED_APPLICATION_LOG_MESSAGE = "Saved application: {}";
 
-    private final KafkaTopicConfig topicConfig;
+    private final DossierKafkaConfig dossierKafkaConfig;
     private final ClientRepository clientRepository;
     private final ApplicationRepository applicationRepository;
     private final ChangeStatusHistoryService changeStatusHistoryService;
@@ -70,7 +70,7 @@ public class DealService {
         Application updatedStatusHistoryApplication = changeStatusHistoryService
                 .changeStatusHistory(application, ApplicationStatus.PREAPPROVAL);
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
-        log.info(LOG_MESSAGE, savedApplication);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplication);
 
         loanApplicationRequestDTO.setId(savedApplication.getId());
         log.info("Got full request dto to prepare loan offers {}", loanApplicationRequestDTO);
@@ -93,14 +93,14 @@ public class DealService {
         Application updatedStatusHistoryApplication = changeStatusHistoryService
                 .changeStatusHistory(application, ApplicationStatus.APPROVED);
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
-        log.info(LOG_MESSAGE, savedApplication);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplication);
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .address(savedApplication.getClient().getEmail())
                 .theme(EmailTheme.FINISH_REGISTRATION)
                 .applicationId(savedApplication.getId())
                 .build();
-        emailMessageProducer.sendEmail(topicConfig.getFinishRegistrationTopic(), emailMessage);
+        emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getFinishRegistrationTopic(), emailMessage);
     }
 
     /**
@@ -126,8 +126,9 @@ public class DealService {
 
         try {
             CreditDTO creditDTO = conveyorClient.calculateLoan(scoringDataDTO);
-            log.info("Received calculated credit with parameters: amount = {}, term = {}, monthly payment = {}, rate = {}," +
-                            "psk = {}, insurance enabled = {}, salary client = {}. And payment schedule list's size = {}",
+            log.info("Received calculated credit with parameters: amount = {}, term = {}, monthly payment = {}, " +
+                            "rate = {}, psk = {}, insurance enabled = {}, salary client = {}. And payment schedule " +
+                            "list's size = {}",
                     creditDTO.getAmount(), creditDTO.getTerm(), creditDTO.getMonthlyPayment(), creditDTO.getRate(),
                     creditDTO.getPsk(), creditDTO.getIsInsuranceEnabled(), creditDTO.getIsSalaryClient(),
                     creditDTO.getPaymentSchedule().size());
@@ -139,21 +140,21 @@ public class DealService {
                     .theme(EmailTheme.CREATE_DOCUMENTS)
                     .applicationId(application.getId())
                     .build();
-            emailMessageProducer.sendEmail(topicConfig.getCreateDocumentsTopic(), emailMessage);
+            emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getCreateDocumentsTopic(), emailMessage);
 
         } catch (ScoringConveyorException e) {
-            log.error("Got the exception from the Conveyor with the message: {}", e.getMessage());
+            log.info("Got the exception from the Conveyor with the message: {}", e.getMessage());
             Application updatedStatusHistoryApplication = changeStatusHistoryService
                     .changeStatusHistory(application, ApplicationStatus.CC_DENIED);
             Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
-            log.info(LOG_MESSAGE, savedApplication);
+            log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplication);
 
             EmailMessage emailMessage = EmailMessage.builder()
                     .address(savedClient.getEmail())
                     .theme(EmailTheme.APPLICATION_DENIED)
                     .applicationId(application.getId())
                     .build();
-            emailMessageProducer.sendEmail(topicConfig.getApplicationDeniedTopic(), emailMessage);
+            emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getApplicationDeniedTopic(), emailMessage);
         }
     }
 
@@ -165,7 +166,7 @@ public class DealService {
         Application updatedStatusHistoryApplication = changeStatusHistoryService
                 .changeStatusHistory(application, ApplicationStatus.CC_APPROVED);
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
-        log.info(LOG_MESSAGE, savedApplication);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplication);
     }
 
     private Application getApplication(Long applicationId) {

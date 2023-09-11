@@ -4,18 +4,16 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
-import java.util.stream.IntStream;
+import java.util.Random;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SesCodeGeneratorUtil {
 
-    private static final int STREAM_SIZE = 1;
     private static final int START_RANDOM_NUMBER = 1000;
     private static final int FINISH_RANDOM_NUMBER = 10000;
+    private static final Random RANDOM_GENERATOR = new SecureRandom();
 
     public static Integer generateSesCode() {
-        SecureRandom secureRandom = new SecureRandom();
-        IntStream intStream = secureRandom.ints(STREAM_SIZE, START_RANDOM_NUMBER, FINISH_RANDOM_NUMBER);
-        return intStream.findFirst().orElseThrow();
+        return RANDOM_GENERATOR.nextInt(START_RANDOM_NUMBER, FINISH_RANDOM_NUMBER);
     }
 }

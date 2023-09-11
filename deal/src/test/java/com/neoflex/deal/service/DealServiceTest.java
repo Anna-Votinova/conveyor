@@ -21,8 +21,8 @@ import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.exception.BadRequestConveyorException;
 import com.neoflex.deal.exception.ScoringConveyorException;
 import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.integration.dossier.kafka.DossierKafkaConfig;
 import com.neoflex.deal.integration.dossier.kafka.EmailMessageProducer;
-import com.neoflex.deal.integration.dossier.kafka.KafkaTopicConfig;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.repository.ClientRepository;
 import com.neoflex.deal.repository.CreditRepository;
@@ -53,7 +53,7 @@ class DealServiceTest {
     @Mock
     private EmailMessageProducer emailMessageProducer;
     @Mock
-    private KafkaTopicConfig topicConfig;
+    private DossierKafkaConfig dossierKafkaConfig;
     @Mock
     private ConveyorClient conveyorClient;
     @Mock
@@ -134,13 +134,13 @@ class DealServiceTest {
         when(offerMapper.toAppliedOffer(requestDto)).thenReturn(appliedOffer);
         when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(applicationRepository.save(any())).thenReturn(application);
-        when(topicConfig.getFinishRegistrationTopic()).thenReturn(any());
+        when(dossierKafkaConfig.getFinishRegistrationTopic()).thenReturn(any());
 
         dealService.chooseOffer(requestDto);
 
         verify(applicationRepository).findById(anyLong());
         verify(applicationRepository).save(any());
-        verify(emailMessageProducer).sendEmail(any(), any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
     }
 
     @Test
@@ -174,7 +174,7 @@ class DealServiceTest {
         when(creditMapper.toCredit(creditDTO)).thenReturn(credit);
         when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(applicationRepository.save(any())).thenReturn(application);
-        when(topicConfig.getCreateDocumentsTopic()).thenReturn(any());
+        when(dossierKafkaConfig.getCreateDocumentsTopic()).thenReturn(any());
 
         dealService.finishRegistration(clientInfo, applicationId);
 
@@ -182,7 +182,7 @@ class DealServiceTest {
         verify(clientRepository).save(any());
         verify(conveyorClient).calculateLoan(any());
         verify(applicationRepository).save(any());
-        verify(emailMessageProducer).sendEmail(any(), any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
     }
 
     @Test
@@ -205,7 +205,7 @@ class DealServiceTest {
         when(conveyorClient.calculateLoan(any())).thenThrow(ScoringConveyorException.class);
         when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(applicationRepository.save(any())).thenReturn(application);
-        when(topicConfig.getApplicationDeniedTopic()).thenReturn(any());
+        when(dossierKafkaConfig.getApplicationDeniedTopic()).thenReturn(any());
 
         dealService.finishRegistration(clientInfo, applicationId);
 
@@ -213,7 +213,7 @@ class DealServiceTest {
         verify(clientRepository).save(any());
         verify(conveyorClient).calculateLoan(any());
         verify(applicationRepository).save(any());
-        verify(emailMessageProducer).sendEmail(any(), any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
     }
 
     @Test

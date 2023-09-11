@@ -1,6 +1,5 @@
 package com.neoflex.deal.service;
 
-import com.neoflex.deal.dto.SesCodeDTO;
 import com.neoflex.deal.dto.enums.EmailTheme;
 import com.neoflex.deal.dto.response.DocumentDTO;
 import com.neoflex.deal.dto.response.EmailMessage;
@@ -10,8 +9,8 @@ import com.neoflex.deal.entity.enums.CreditStatus;
 import com.neoflex.deal.entity.mapper.DocumentMapper;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
 import com.neoflex.deal.exception.InvalidSesCodeException;
+import com.neoflex.deal.integration.dossier.kafka.DossierKafkaConfig;
 import com.neoflex.deal.integration.dossier.kafka.EmailMessageProducer;
-import com.neoflex.deal.integration.dossier.kafka.KafkaTopicConfig;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.service.utils.SesCodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +26,9 @@ import java.time.LocalDateTime;
 @Transactional
 public class DocumentService {
 
-    private static final String LOG_MESSAGE = "Saved application: {}";
+    private static final String SAVED_APPLICATION_LOG_MESSAGE = "Saved application: {}";
 
-    private final KafkaTopicConfig topicConfig;
+    private final DossierKafkaConfig dossierKafkaConfig;
     private final ApplicationRepository applicationRepository;
     private final ChangeStatusHistoryService changeStatusHistoryService;
     private final EmailMessageProducer emailMessageProducer;
@@ -46,7 +45,7 @@ public class DocumentService {
         Application updatedStatusHistoryApplication = changeStatusHistoryService
                 .changeStatusHistory(application, ApplicationStatus.PREPARE_DOCUMENTS);
         Application savedApplication = applicationRepository.save(updatedStatusHistoryApplication);
-        log.info(LOG_MESSAGE, savedApplication);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplication);
 
         DocumentDTO document = documentMapper.toDocumentDto(savedApplication);
 
@@ -56,7 +55,7 @@ public class DocumentService {
                 .applicationId(savedApplication.getId())
                 .document(document)
                 .build();
-        emailMessageProducer.sendEmail(topicConfig.getSendDocumentsTopic(), emailMessage);
+        emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getSendDocumentsTopic(), emailMessage);
     }
 
     /**
@@ -71,15 +70,15 @@ public class DocumentService {
 
         application.setSesCode(sesCode);
         Application updatedApplication = applicationRepository.save(application);
-        log.info(LOG_MESSAGE, updatedApplication);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, updatedApplication);
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .address(updatedApplication.getClient().getEmail())
                 .theme(EmailTheme.SEND_SES)
                 .applicationId(updatedApplication.getId())
-                .sesCode(new SesCodeDTO(sesCode))
+                .sesCode(sesCode)
                 .build();
-        emailMessageProducer.sendEmail(topicConfig.getSendSesCodeTopic(), emailMessage);
+        emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getSendSesCodeTopic(), emailMessage);
     }
 
     /**
@@ -91,10 +90,10 @@ public class DocumentService {
      * @throws com.neoflex.deal.exception.ApplicationNotFoundException - if the application does not exist
      * @throws com.neoflex.deal.exception.InvalidSesCodeException - if the ses code invalid
      */
-    public void issueCredit(Long applicationId, SesCodeDTO sesCode) {
+    public void issueCredit(Long applicationId, Integer sesCode) {
         Application application = getApplication(applicationId);
 
-        if (!application.getSesCode().equals(sesCode.getCode())) {
+        if (!application.getSesCode().equals(sesCode)) {
             throw new InvalidSesCodeException("Введенная электронная подпись невалидна");
         }
 
@@ -102,20 +101,20 @@ public class DocumentService {
         Application applicationDocumentSigned = changeStatusHistoryService
                 .changeStatusHistory(application, ApplicationStatus.DOCUMENT_SIGNED);
         Application savedApplicationDocumentSigned = applicationRepository.save(applicationDocumentSigned);
-        log.info(LOG_MESSAGE, savedApplicationDocumentSigned);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplicationDocumentSigned);
 
         savedApplicationDocumentSigned.getCredit().setCreditStatus(CreditStatus.ISSUED);
         Application applicationCreditIssued = changeStatusHistoryService
                 .changeStatusHistory(savedApplicationDocumentSigned, ApplicationStatus.CREDIT_ISSUED);
         Application savedApplicationCreditIssued = applicationRepository.save(applicationCreditIssued);
-        log.info(LOG_MESSAGE, savedApplicationCreditIssued);
+        log.info(SAVED_APPLICATION_LOG_MESSAGE, savedApplicationCreditIssued);
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .address(savedApplicationCreditIssued.getClient().getEmail())
                 .theme(EmailTheme.CREDIT_ISSUED)
                 .applicationId(savedApplicationCreditIssued.getId())
                 .build();
-        emailMessageProducer.sendEmail(topicConfig.getCreditIssuedTopic(), emailMessage);
+        emailMessageProducer.sendEmailMessage(dossierKafkaConfig.getCreditIssuedTopic(), emailMessage);
     }
 
     private Application getApplication(Long applicationId) {

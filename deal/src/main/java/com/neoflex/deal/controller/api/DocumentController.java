@@ -1,6 +1,5 @@
 package com.neoflex.deal.controller.api;
 
-import com.neoflex.deal.dto.SesCodeDTO;
 import com.neoflex.deal.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
@@ -30,8 +28,8 @@ public class DocumentController {
 
     @Operation(summary = "Запрос на отправку документов",
                description = "Принимает от пользователя запрос на отправку документов, которые нужно подписать, " +
-                       "чтобы получить кредит, помогает связаться с сервисом Dossier через Kafka, где будут " +
-                       "подготовлены документы для отправки на почту пользователю")
+                       "чтобы получить кредит, помогает связаться с сервисом Dossier, где будут подготовлены документы " +
+                       "для отправки на почту пользователю")
     @PostMapping("/send")
     public void sendDocument(@Positive @PathVariable @Parameter(
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId
@@ -43,8 +41,8 @@ public class DocumentController {
 
     @Operation(summary = "Запрос на подписание документов",
                description = "Принимает от пользователя запрос на подписание документов, помогает подготовить " +
-                       "специальный код для подписи документов и связаться с сервисом Dossier через Kafka, " +
-                       "где произойдет передача кода на почту клиента для дальнейшего подписания документов")
+                       "специальный код для подписи документов и связаться с сервисом Dossier, где произойдет передача " +
+                       "кода на почту клиента для дальнейшего подписания документов")
     @PostMapping("/sign")
     public void signDocument(@Positive @PathVariable @Parameter(
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId
@@ -56,12 +54,12 @@ public class DocumentController {
 
     @Operation(summary = "Подписание документов",
                description = "Принимает код для подписания документов, помогает провалидировать его и, если он верный," +
-                       "завершить выдачу кредита. Позволяет связаться с сервисом Dossier через Kafka для отправки " +
-                       "финального письма пользователю с подтверждением выдачи кредита")
+                       "завершить выдачу кредита. Позволяет связаться с сервисом Dossier для отправки финального " +
+                       "письма пользователю с подтверждением выдачи кредита")
     @PostMapping("/code")
     public void issueCredit(@Positive @PathVariable @Parameter(
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId,
-                            @Valid @RequestBody SesCodeDTO code
+                            @RequestBody Integer code
     ) {
         log.info("Got the request for signing documents with code. Parameters: applicationId = {},  sesCode = {}",
                 applicationId, code);

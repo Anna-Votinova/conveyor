@@ -4,27 +4,24 @@ server:
 conveyor:
   url: ${CONVEYOR_URL}
 
-topic:
-  name:
-    finish-registration: finish-registration
-    create-documents: create-documents
-    send-documents: send-documents
-    send-ses: send-ses
-    credit-issued: credit-issued
-    application-denied: application-denied
-
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
-  kafka:
-    bootstrap-servers: "localhost:9092"
-
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         ddl-auto: validate
+
+dossier:
+  kafka:
+    bootstrap-address: ${KAFKA_BOOTSTRAP_SERVERS}
+    finish-registration-topic: finish-registration
+    create-documents-topic: create-documents
+    send-documents-topic: send-documents
+    send-ses-code-topic: send-ses
+    credit-issued-topic: credit-issued
+    application-denied-topic: application-denied
