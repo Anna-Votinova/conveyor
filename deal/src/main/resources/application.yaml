@@ -2,17 +2,26 @@ server:
   port: 8082
 
 conveyor:
-  url: ${CONVEYOR.URL}
+  url: ${CONVEYOR_URL}
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB.URL}
-    username: ${DB.USERNAME}
-    password: ${DB.PASSWORD}
-
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         ddl-auto: validate
+
+dossier:
+  kafka:
+    bootstrap-address: ${KAFKA_BOOTSTRAP_SERVERS}
+    finish-registration-topic: finish-registration
+    create-documents-topic: create-documents
+    send-documents-topic: send-documents
+    send-ses-code-topic: send-ses
+    credit-issued-topic: credit-issued
+    application-denied-topic: application-denied

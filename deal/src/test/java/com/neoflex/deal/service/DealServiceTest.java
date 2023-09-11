@@ -18,8 +18,11 @@ import com.neoflex.deal.entity.mapper.EmploymentMapper;
 import com.neoflex.deal.entity.mapper.OfferMapper;
 import com.neoflex.deal.entity.mapper.ScoringDataMapper;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
-import com.neoflex.deal.exception.BadRequestException;
+import com.neoflex.deal.exception.BadRequestConveyorException;
+import com.neoflex.deal.exception.ScoringConveyorException;
 import com.neoflex.deal.integration.conveyor.ConveyorClient;
+import com.neoflex.deal.integration.dossier.kafka.DossierKafkaConfig;
+import com.neoflex.deal.integration.dossier.kafka.EmailMessageProducer;
 import com.neoflex.deal.repository.ApplicationRepository;
 import com.neoflex.deal.repository.ClientRepository;
 import com.neoflex.deal.repository.CreditRepository;
@@ -48,13 +51,19 @@ import static org.mockito.Mockito.when;
 class DealServiceTest {
 
     @Mock
+    private EmailMessageProducer emailMessageProducer;
+    @Mock
+    private DossierKafkaConfig dossierKafkaConfig;
+    @Mock
+    private ConveyorClient conveyorClient;
+    @Mock
+    private ChangeStatusHistoryService changeStatusHistoryService;
+    @Mock
     private ClientRepository clientRepository;
     @Mock
     private ApplicationRepository applicationRepository;
     @Mock
     private CreditRepository creditRepository;
-    @Mock
-    private ConveyorClient conveyorClient;
     @Mock
     private EmploymentMapper employmentMapper;
     @Mock
@@ -86,6 +95,7 @@ class DealServiceTest {
 
         when(clientMapper.toClientShort(requestDTO)).thenReturn(client);
         when(applicationRepository.save(any())).thenReturn(application);
+        when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(conveyorClient.preCalculateLoan(any())).thenReturn(Collections.emptyList());
 
         dealService.startRegistration(requestDTO);
@@ -103,9 +113,10 @@ class DealServiceTest {
 
         when(clientMapper.toClientShort(requestDTO)).thenReturn(client);
         when(applicationRepository.save(any())).thenReturn(application);
-        when(conveyorClient.preCalculateLoan(any())).thenThrow(BadRequestException.class);
+        when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
+        when(conveyorClient.preCalculateLoan(any())).thenThrow(BadRequestConveyorException.class);
 
-        assertThrows(BadRequestException.class,
+        assertThrows(BadRequestConveyorException.class,
                 () -> dealService.startRegistration(requestDTO));
     }
 
@@ -113,17 +124,23 @@ class DealServiceTest {
     void shouldSaveOffer_WhenValidApplicationId() {
         LoanOfferDTO requestDto = LoanOfferDTO.builder()
                  .applicationId(1L).build();
-        Application application = new Application();
+        Client client = Client.builder()
+                .email("email@email.com").build();
+        Application application = Application.builder()
+                .client(client).build();
         AppliedOffer appliedOffer = new AppliedOffer();
 
         when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
         when(offerMapper.toAppliedOffer(requestDto)).thenReturn(appliedOffer);
+        when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(applicationRepository.save(any())).thenReturn(application);
+        when(dossierKafkaConfig.getFinishRegistrationTopic()).thenReturn(any());
 
         dealService.chooseOffer(requestDto);
 
         verify(applicationRepository).findById(anyLong());
         verify(applicationRepository).save(any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
     }
 
     @Test
@@ -155,7 +172,9 @@ class DealServiceTest {
         when(clientRepository.save(any())).thenReturn(client);
         when(conveyorClient.calculateLoan(any())).thenReturn(creditDTO);
         when(creditMapper.toCredit(creditDTO)).thenReturn(credit);
+        when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
         when(applicationRepository.save(any())).thenReturn(application);
+        when(dossierKafkaConfig.getCreateDocumentsTopic()).thenReturn(any());
 
         dealService.finishRegistration(clientInfo, applicationId);
 
@@ -163,6 +182,38 @@ class DealServiceTest {
         verify(clientRepository).save(any());
         verify(conveyorClient).calculateLoan(any());
         verify(applicationRepository).save(any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
+    }
+
+    @Test
+    void shouldApplicationDenied_WhenConveyorGeneratesScoringException() {
+        Application application = new Application();
+        FinishRegistrationRequestDTO clientInfo = FinishRegistrationRequestDTO.builder()
+                                                                              .employment(new EmploymentDTO()).build();
+        ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
+        Employment employment = new Employment();
+        Client client = new Client();
+        CreditDTO creditDTO = new CreditDTO();
+        creditDTO.setPaymentSchedule(List.of(new PaymentScheduleElement()));
+        Long applicationId = 1L;
+
+        when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
+        when(scoringDataMapper.toScoringDataDTO(application, clientInfo)).thenReturn(scoringDataDTO);
+        when(employmentMapper.toEmployment(any())).thenReturn(employment);
+        when(clientMapper.fillAdditionalClientInfo(any(), any(), any())).thenReturn(client);
+        when(clientRepository.save(any())).thenReturn(client);
+        when(conveyorClient.calculateLoan(any())).thenThrow(ScoringConveyorException.class);
+        when(changeStatusHistoryService.changeStatusHistory(any(), any())).thenReturn(application);
+        when(applicationRepository.save(any())).thenReturn(application);
+        when(dossierKafkaConfig.getApplicationDeniedTopic()).thenReturn(any());
+
+        dealService.finishRegistration(clientInfo, applicationId);
+
+        verify(applicationRepository).findById(anyLong());
+        verify(clientRepository).save(any());
+        verify(conveyorClient).calculateLoan(any());
+        verify(applicationRepository).save(any());
+        verify(emailMessageProducer).sendEmailMessage(any(), any());
     }
 
     @Test
@@ -191,9 +242,9 @@ class DealServiceTest {
         when(employmentMapper.toEmployment(any())).thenReturn(employment);
         when(clientMapper.fillAdditionalClientInfo(any(), any(), any())).thenReturn(client);
         when(clientRepository.save(any())).thenReturn(client);
-        when(conveyorClient.calculateLoan(any())).thenThrow(BadRequestException.class);
+        when(conveyorClient.calculateLoan(any())).thenThrow(BadRequestConveyorException.class);
 
-        assertThrows(BadRequestException.class,
+        assertThrows(BadRequestConveyorException.class,
                 () -> dealService.finishRegistration(clientInfo, applicationId));
     }
 }

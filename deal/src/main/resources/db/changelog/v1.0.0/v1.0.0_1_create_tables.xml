@@ -17,10 +17,10 @@
       <column name="id" type="BIGINT" autoIncrement="true">
         <constraints primaryKey="true" primaryKeyName="pk_passport_id" nullable="false"/>
       </column>
-      <column name="series" type="VARCHAR(4)">
+      <column name="series" type="VARCHAR(50)">
         <constraints nullable="false"/>
       </column>
-      <column name="number" type="VARCHAR(6)">
+      <column name="number" type="VARCHAR(50)">
         <constraints nullable="false"/>
       </column>
       <column name="issue_branch" type="VARCHAR(255)"/>
@@ -171,7 +171,7 @@
       </column>
       <column name="applied_offer" type="JSONB"/>
       <column name="sign_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
-      <column name="ses_code" type="VARCHAR(30)"/>
+      <column name="ses_code" type="INT(30)"/>
       <column name="status_history" type="JSONB"/>
     </createTable>
   </changeSet>

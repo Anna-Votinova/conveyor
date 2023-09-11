@@ -4,8 +4,10 @@ import com.neoflex.deal.dto.error.ErrorResponse;
 import com.neoflex.deal.dto.error.ValidationErrorResponse;
 import com.neoflex.deal.dto.error.Violation;
 import com.neoflex.deal.exception.ApplicationNotFoundException;
-import com.neoflex.deal.exception.BadRequestException;
+import com.neoflex.deal.exception.BadRequestConveyorException;
+import com.neoflex.deal.exception.InvalidSesCodeException;
 import com.neoflex.deal.exception.NotCompletedImplementationException;
+import com.neoflex.deal.exception.ScoringConveyorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,11 +37,25 @@ public class GlobalControllerAdvice {
         return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(BadRequestException e) {
+    @ExceptionHandler(InvalidSesCodeException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleInvalidSesCodeException(InvalidSesCodeException e) {
         log.error(e.getMessage(), e);
-        return new ErrorResponse("Ошибка введенных данных: ", e.getMessage());
+        return new ErrorResponse("Доступ запрещен: ", e.getMessage());
+    }
+
+    @ExceptionHandler(ScoringConveyorException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleScoringException(ScoringConveyorException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse("Ошибка в сервисе Конвейер: ", e.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestConveyorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(BadRequestConveyorException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse("Ошибка в сервисе Конвейер: ", e.getMessage());
     }
 
     @ExceptionHandler(NotCompletedImplementationException.class)

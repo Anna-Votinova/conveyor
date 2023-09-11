@@ -4,7 +4,6 @@ import com.neoflex.deal.entity.enums.EmploymentPosition;
 import com.neoflex.deal.entity.enums.EmploymentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
-@Builder
 @Getter
 @Setter
 @ToString

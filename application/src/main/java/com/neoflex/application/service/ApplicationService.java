@@ -19,7 +19,6 @@ import java.util.List;
 @Slf4j
 public class ApplicationService {
 
-    public final DealClient dealClient;
     private static final String EMAIL_FORMAT = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
     private static final String LATIN_LANG = "[a-zA-Z]+";
     private static final String PASSPORT_SERIES_FORMAT = "[\\d]{4}";
@@ -29,6 +28,8 @@ public class ApplicationService {
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 30;
     private static final long MIN_CLIENT_AGE = 18L;
+
+    public final DealClient dealClient;
 
     /**
      * <p>Checks short info about the client. If the check passes, sends info to the Deal and receives an offers list

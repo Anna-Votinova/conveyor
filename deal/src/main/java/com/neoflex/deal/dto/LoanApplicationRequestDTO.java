@@ -5,7 +5,6 @@ import com.neoflex.deal.config.GlobalVariables;
 import com.neoflex.deal.dto.validation.DateIsBeforeYears;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,6 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Builder
 @Getter
 @Setter
 @ToString
@@ -61,7 +59,7 @@ public class LoanApplicationRequestDTO {
     @NotBlank
     @Pattern(regexp = "[\\w\\.]{2,50}@[\\w\\.]{2,20}",
              message = "Название электронной почты должно соответветствовать общепринятым стандартам")
-    @Schema(description = "Электронный почтовый ящик", example = "kotova@yandex.ru")
+    @Schema(description = "Электронный почтовый ящик", example = "anyvotinova@yandex.ru")
     private String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

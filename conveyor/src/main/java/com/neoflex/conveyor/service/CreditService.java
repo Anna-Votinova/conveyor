@@ -11,6 +11,7 @@ import com.neoflex.conveyor.dto.enums.MaritalStatus;
 import com.neoflex.conveyor.dto.enums.Position;
 import com.neoflex.conveyor.service.enums.CalculationFormulaConstants;
 import com.neoflex.conveyor.service.utils.CalculationUtils;
+import com.neoflex.conveyor.service.utils.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,6 @@ import java.util.List;
 @Slf4j
 public class CreditService {
 
-    private final CalculationUtils calculationUtils;
-    private final ApplicationConfig applicationConfig;
     private static final long MIN_CLIENT_AGE = 20L;
     private static final long MAX_CLIENT_AGE = 60L;
     private static final Integer MIN_COMMON_WORK_EXPERIENCE = 12;
@@ -44,6 +43,10 @@ public class CreditService {
     private static final long MAX_MAN_AGE_FOR_SPECIAL_RATE = 55L;
     private static final int MONTHLY_PAYMENT_START_DAY = 12;
     private static final String REJECT_APPLICATION = "Отказ";
+
+    private final CalculationUtils calculationUtils;
+    private final ApplicationConfig applicationConfig;
+    private final TimeUtil timeUtil;
 
     /**
      * <p>Validates client info and creates a final loan offer
@@ -169,6 +172,11 @@ public class CreditService {
             rate = rate.add(new BigDecimal("3"));
         }
 
+        if (rate.compareTo(new BigDecimal("1")) < 0) {
+            log.info("Rate after calculation is: {}", rate);
+            rate = new BigDecimal("1");
+        }
+
         return rate;
     }
 
@@ -181,7 +189,8 @@ public class CreditService {
         Integer id = 1;
         List<PaymentScheduleServiceElement> paymentScheduleServiceElements = new ArrayList<>();
 
-        GregorianCalendar date = new GregorianCalendar();
+        GregorianCalendar date = timeUtil.getCurrentDate();
+        log.info("Current date: {}", date);
         date.set(Calendar.DAY_OF_MONTH, MONTHLY_PAYMENT_START_DAY);
         date.add(Calendar.MONTH, 1);
         log.info("Date of first payment: {}", date);

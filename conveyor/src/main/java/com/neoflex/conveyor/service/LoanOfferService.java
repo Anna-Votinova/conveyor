@@ -18,9 +18,10 @@ import java.util.List;
 @Slf4j
 public class LoanOfferService {
 
+    public static final BigDecimal INSURANCE_RATIO = new BigDecimal("0.1");
+
     private final ApplicationConfig applicationConfig;
     private final CalculationUtils calculationUtils;
-    public static final BigDecimal INSURANCE_RATIO = new BigDecimal("0.1");
 
     /**
      * <p>Creates four loan offers with different rates, final amounts, monthly payments and totals

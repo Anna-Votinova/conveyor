@@ -34,9 +34,9 @@ public class DealController {
 
     @Operation(summary = "Расчёт возможных условий кредита",
                description = "Помогает связаться с сервисом по подсчету предварительной стоимости кредита и " +
-                       "отдает пользователю четыре кредитных предложения, отсортированных от худшего " +
-                       "(с самой большой ставкой) к лучшему (с самой маленькой ставкой). Помогает сохранить данные о " +
-                       "клиенте и его заявке в базу")
+                       "отдает пользователю четыре кредитных предложения, отсортированных от худшего (с самой большой " +
+                       "ставкой) к лучшему (с самой маленькой ставкой). Помогает сохранить данные о клиенте и его " +
+                       "заявке в базу")
     @PostMapping("/application")
     public List<LoanOfferDTO> calculateOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
         log.info("Got the request for starting registration {}", requestDTO);
@@ -45,7 +45,8 @@ public class DealController {
 
     @Operation(summary = "Выбор одного из предложений",
                description = "Принимает одну из четырех заявок, выбранную пользователем. Помогает сохранить заявку в " +
-                       "базу")
+                       "базу, связаться с сервисом Dossier, чтобы отправить письмо пользователю с предложением " +
+                       "завершить регистрацию")
     @PutMapping("/offer")
     public void chooseOffer(@Valid @RequestBody LoanOfferDTO requestDTO) {
         log.info("Got the request to save the chosen offer {}", requestDTO);
@@ -55,7 +56,8 @@ public class DealController {
     @Operation(summary = "Завершение регистрации и полный подсчёт кредита",
                description = "Принимает дополнительные сведения о пользователе. Помогает создать полную заявку " +
                        "на кредит и связаться с сервисом по подсчету итоговой стоимости кредита. Вернувшееся " +
-                       "предложение сохраняется в базу")
+                       "предложение сохраняется в базу. Позволяет связаться с сервисом Dossier, чтобы отправить письмо " +
+                       "пользователю с предложением создать документы для выдачи кредита")
     @PutMapping("calculate/{applicationId}")
     public void calculateCredit(@Valid @RequestBody FinishRegistrationRequestDTO requestDTO, @Positive @PathVariable
     @Parameter(description = "Идентификатор заявки", example = "1", required = true) Long applicationId) {

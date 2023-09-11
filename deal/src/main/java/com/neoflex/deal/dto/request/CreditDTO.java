@@ -2,22 +2,16 @@ package com.neoflex.deal.dto.request;
 
 import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "Одобренная заявка на кредит")
 public class CreditDTO {
 

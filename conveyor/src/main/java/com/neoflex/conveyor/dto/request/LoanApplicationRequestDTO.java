@@ -64,7 +64,7 @@ public class LoanApplicationRequestDTO {
     @NotBlank
     @Pattern(regexp = "[\\w\\.]{2,50}@[\\w\\.]{2,20}",
              message = "Название электронной почты должно соответветствовать общепринятым стандартам")
-    @Schema(description = "Электронный почтовый ящик", example = "kotova@yandex.ru")
+    @Schema(description = "Электронный почтовый ящик", example = "anyvotinova@yandex.ru")
     private String email;
 
     @NotNull
