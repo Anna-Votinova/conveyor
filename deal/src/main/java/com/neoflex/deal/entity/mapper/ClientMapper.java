@@ -1,15 +1,18 @@
 package com.neoflex.deal.entity.mapper;
 
+import com.neoflex.deal.dto.response.element.ClientInfo;
+import com.neoflex.deal.dto.response.element.EmploymentInfo;
+import com.neoflex.deal.dto.response.element.PassportInfo;
 import com.neoflex.deal.entity.Client;
 import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
 import com.neoflex.deal.dto.LoanApplicationRequestDTO;
 import com.neoflex.deal.entity.Employment;
 import com.neoflex.deal.entity.Passport;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
-@RequiredArgsConstructor
 public class ClientMapper {
 
     public Client toClientShort(LoanApplicationRequestDTO requestDTO) {
@@ -40,5 +43,26 @@ public class ClientMapper {
         client.setAccount(requestDTO.getAccount());
 
         return client;
+    }
+
+    public ClientInfo toClientInfo(Client client, PassportInfo passportInfo, EmploymentInfo employmentInfo) {
+
+        ClientInfo clientInfo = new ClientInfo();
+
+        if (Objects.nonNull(client)) {
+            clientInfo.setId(client.getId());
+            clientInfo.setLastName(client.getLastName());
+            clientInfo.setFirstName(client.getFirstName());
+            clientInfo.setMiddleName(client.getMiddleName() != null ? client.getMiddleName() : "");
+            clientInfo.setBirthdate(client.getBirthdate());
+            clientInfo.setEmail(client.getEmail());
+            clientInfo.setGender(client.getGender());
+            clientInfo.setMaritalStatus(client.getMaritalStatus());
+            clientInfo.setDependentAmount(client.getDependentAmount());
+            clientInfo.setPassportInfo(passportInfo);
+            clientInfo.setEmploymentInfo(employmentInfo);
+            clientInfo.setAccount(client.getAccount());
+        }
+        return clientInfo;
     }
 }

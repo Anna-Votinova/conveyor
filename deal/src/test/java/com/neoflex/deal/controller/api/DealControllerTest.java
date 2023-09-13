@@ -2,7 +2,7 @@ package com.neoflex.deal.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neoflex.deal.dto.LoanOfferDTO;
-import com.neoflex.deal.dto.request.EmploymentDTO;
+import com.neoflex.deal.dto.EmploymentDTO;
 import com.neoflex.deal.dto.request.FinishRegistrationRequestDTO;
 import com.neoflex.deal.dto.LoanApplicationRequestDTO;
 import com.neoflex.deal.entity.enums.EmploymentPosition;

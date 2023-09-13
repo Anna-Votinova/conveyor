@@ -36,7 +36,6 @@ public class DocumentController {
     ) {
         log.info("Got the request for sending documents. Parameters: applicationId = {}", applicationId);
         documentService.sendDocument(applicationId);
-
     }
 
     @Operation(summary = "Запрос на подписание документов",
@@ -49,7 +48,6 @@ public class DocumentController {
     ) {
         log.info("Got the request for signing documents. Parameters: applicationId = {}", applicationId);
         documentService.signDocument(applicationId);
-
     }
 
     @Operation(summary = "Подписание документов",

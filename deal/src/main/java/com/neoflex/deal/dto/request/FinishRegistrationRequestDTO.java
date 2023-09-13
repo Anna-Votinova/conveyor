@@ -1,6 +1,7 @@
 package com.neoflex.deal.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.neoflex.deal.dto.EmploymentDTO;
 import com.neoflex.deal.entity.enums.Gender;
 import com.neoflex.deal.entity.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,9 +52,9 @@ public class FinishRegistrationRequestDTO {
             example = "The main Directorate of the MIA of the Voronezh region")
     private String passportIssueBranch;
 
+    @Valid
     @NotNull
     @Schema(description = "Сведения о работе")
-    @Valid
     private EmploymentDTO employment;
 
     @NotBlank
