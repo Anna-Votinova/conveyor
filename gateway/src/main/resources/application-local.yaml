@@ -1,0 +1,10 @@
+APPLICATION_URL: http://localhost:8083/application
+DEAL_URL: http://localhost:8082/deal
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG

@@ -1,1 +1,8 @@
+server:
+  port: 8085
 
+deal:
+  url: ${DEAL_URL}
+
+application:
+  url: ${APPLICATION_URL}
