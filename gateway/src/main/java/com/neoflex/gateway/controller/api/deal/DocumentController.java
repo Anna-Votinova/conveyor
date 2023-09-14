@@ -20,7 +20,7 @@ import javax.validation.constraints.Positive;
 @RequestMapping(path = "/document/{applicationId}")
 @Slf4j
 @Validated
-@Tag(name = "Контроллер Документы",
+@Tag(name = "Публичный контроллер Документы",
      description = "Направляет запросы в контроллер Документы сервиса Deal")
 public class DocumentController {
 

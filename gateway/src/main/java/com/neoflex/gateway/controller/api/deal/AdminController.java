@@ -41,7 +41,7 @@ public class AdminController {
     ) {
         log.info("Got the request for changing the application status. Parameters: applicationId = {}, status = {}",
                 applicationId, status);
-        adminClient.changeApplicationStatus(applicationId, status);
+        //adminClient.changeApplicationStatus(applicationId, status);
     }
 
     @Operation(summary = "Получение заявки",

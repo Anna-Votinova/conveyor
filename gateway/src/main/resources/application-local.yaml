@@ -1,4 +1,4 @@
-APPLICATION_URL: http://localhost:8083/application
+APPLICATION_URL: http://localhost:8083
 DEAL_URL: http://localhost:8082/deal
 
 logging:

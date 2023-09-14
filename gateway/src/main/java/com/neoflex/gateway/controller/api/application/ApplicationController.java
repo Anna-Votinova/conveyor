@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping(path = "/application")
 @Slf4j
 @Validated
-@Tag(name = "Публичный контроллер Документы",
+@Tag(name = "Публичный контроллер Заявка",
      description = "Направляет запросы в сервис Application")
 public class ApplicationController {
 
@@ -33,7 +33,7 @@ public class ApplicationController {
     @PostMapping
     public List<LoanOfferDTO> calculateOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
         log.info("Got the request for starting registration {}", requestDTO);
-        return null;
+        return applicationClient.prepareOffers(requestDTO);
     }
 
     @Operation(summary = "Выбор одного из предложений",
@@ -42,6 +42,6 @@ public class ApplicationController {
     @PostMapping("/apply")
     public void chooseOffer(@Valid @RequestBody LoanOfferDTO requestDTO) {
         log.info("Got the request to save the chosen offer {}", requestDTO);
-        //вызов клиента
+        applicationClient.chooseOffer(requestDTO);
     }
 }

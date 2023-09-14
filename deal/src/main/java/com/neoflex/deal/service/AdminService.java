@@ -116,13 +116,7 @@ public class AdminService {
         EmploymentInfo employmentInfo = employmentMapper.toEmploymentInfo(application.getClient());
         ClientInfo clientInfo = clientMapper.toClientInfo(application.getClient(), passportInfo, employmentInfo);
 
-        List<PaymentScheduleResponseElement> paymentSchedule = new ArrayList<>();
-
-        if (Objects.nonNull(application.getCredit()) && Objects.nonNull(application.getCredit().getPaymentSchedule())) {
-            paymentSchedule = application.getCredit().getPaymentSchedule().stream()
-                                        .map(paymentScheduleMapper::toPaymentScheduleResponseElement)
-                                        .toList();
-        }
+        List<PaymentScheduleResponseElement> paymentSchedule = mapPaymentScheduleList(application);
         CreditInfo creditInfo = creditMapper.toCreditInfo(application.getCredit(), paymentSchedule);
 
         AppliedOfferInfo appliedOfferInfo = offerMapper.toAppliedOfferInfo(application.getAppliedOffer());
@@ -133,5 +127,16 @@ public class AdminService {
                            .toList();
 
         return applicationMapper.toApplicationDTO(application, clientInfo, creditInfo, appliedOfferInfo, statusHistory);
+    }
+
+    private List<PaymentScheduleResponseElement> mapPaymentScheduleList(Application application) {
+        List<PaymentScheduleResponseElement> paymentSchedule = new ArrayList<>();
+
+        if (Objects.nonNull(application.getCredit()) && Objects.nonNull(application.getCredit().getPaymentSchedule())) {
+            paymentSchedule = application.getCredit().getPaymentSchedule().stream()
+                                         .map(paymentScheduleMapper::toPaymentScheduleResponseElement)
+                                         .toList();
+        }
+        return paymentSchedule;
     }
 }
