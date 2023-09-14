@@ -1,6 +1,6 @@
-package com.neoflex.gateway.client.deal;
+package com.neoflex.gateway.integration.deal;
 
-import com.neoflex.gateway.client.BaseClient;
+import com.neoflex.gateway.integration.BaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

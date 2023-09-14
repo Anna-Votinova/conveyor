@@ -1,6 +1,6 @@
-package com.neoflex.gateway.client.application;
+package com.neoflex.gateway.integration.application;
 
-import com.neoflex.gateway.client.BaseClient;
+import com.neoflex.gateway.integration.BaseClient;
 import org.springframework.web.client.RestTemplate;
 
 public class ApplicationClient extends BaseClient {

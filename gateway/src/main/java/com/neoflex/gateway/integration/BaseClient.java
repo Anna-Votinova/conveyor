@@ -1,4 +1,4 @@
-package com.neoflex.gateway.client;
+package com.neoflex.gateway.integration;
 
 import java.util.List;
 import java.util.Map;
