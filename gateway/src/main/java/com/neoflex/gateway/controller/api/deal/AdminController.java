@@ -41,7 +41,7 @@ public class AdminController {
     ) {
         log.info("Got the request for changing the application status. Parameters: applicationId = {}, status = {}",
                 applicationId, status);
-        //adminClient.changeApplicationStatus(applicationId, status);
+        adminClient.changeApplicationStatus(applicationId, status);
     }
 
     @Operation(summary = "Получение заявки",
@@ -51,7 +51,7 @@ public class AdminController {
             @Positive @PathVariable @Parameter(description = "Идентификатор заявки", example = "1", required = true)
             Long applicationId) {
         log.info("Got the request for finding the application by id {}", applicationId);
-        return null;
+        return adminClient.findApplicationById(applicationId);
     }
 
     @Operation(summary = "Получение всех заявок",
@@ -60,6 +60,6 @@ public class AdminController {
     @GetMapping
     public List<ApplicationDTO> findAllApplications() {
         log.info("Got the request for finding all applications");
-        return null;
+        return adminClient.findAllApplications();
     }
 }

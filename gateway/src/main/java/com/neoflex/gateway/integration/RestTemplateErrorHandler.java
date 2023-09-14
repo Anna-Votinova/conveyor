@@ -13,24 +13,22 @@ import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
-
 @Component
 public class RestTemplateErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
-        return (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR ||
-                response.getStatusCode().series() == SERVER_ERROR);
+        return (HttpStatus.Series.CLIENT_ERROR == response.getStatusCode().series()
+                || HttpStatus.Series.SERVER_ERROR == response.getStatusCode().series());
     }
 
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
 
-        if (response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
+        if (HttpStatus.Series.SERVER_ERROR == response.getStatusCode().series()) {
             throw new UnknownServerException(
                     "проблемы на стороне стороннего сервера. Мы уже в курсе проблемы и скоро ее решим.");
-        } else if (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
+        } else if (HttpStatus.Series.CLIENT_ERROR == response.getStatusCode().series()) {
             switch (response.getStatusCode()) {
                 case BAD_REQUEST ->
                         throw new BadRequestException("введенные данные невалидны. Проверьте их и повторите попытку.");

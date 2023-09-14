@@ -33,8 +33,7 @@ public class DocumentController {
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId
     ) {
         log.info("Got the request for sending documents. Parameters: applicationId = {}", applicationId);
-        //documentService.sendDocument(applicationId);
-
+        documentClient.sendDocument(applicationId);
     }
 
     @Operation(summary = "Запрос на подписание документов",
@@ -44,8 +43,7 @@ public class DocumentController {
             description = "Идентификатор заявки", example = "1", required = true) Long applicationId
     ) {
         log.info("Got the request for signing documents. Parameters: applicationId = {}", applicationId);
-        //documentService.signDocument(applicationId);
-
+        documentClient.signDocument(applicationId);
     }
 
     @Operation(summary = "Подписание документов",
@@ -57,6 +55,6 @@ public class DocumentController {
     ) {
         log.info("Got the request for signing documents with code. Parameters: applicationId = {},  sesCode = {}",
                 applicationId, code);
-        //documentService.issueCredit(applicationId, code);
+        documentClient.issueCredit(applicationId, code);
     }
 }

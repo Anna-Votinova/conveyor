@@ -35,6 +35,6 @@ public class DealController {
     @Parameter(description = "Идентификатор заявки", example = "1", required = true) Long applicationId) {
         log.info("Got the request for full registration and calculation loan. Parameters: requestDTO = {}, " +
                 "applicationId = {}", requestDTO, applicationId);
-        //вызов клиента
+        dealClient.calculateCredit(requestDTO, applicationId);
     }
 }

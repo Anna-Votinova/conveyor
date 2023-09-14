@@ -38,7 +38,7 @@ public class ApplicationClient {
 
         if (Objects.isNull(offerArray)) {
             log.error("Retrieved list is null");
-            throw new UnknownServerException("проблемы на стороне сервера.");
+            throw new UnknownServerException("проблемы на стороне удаленного сервера.");
         }
         List<LoanOfferDTO> offerList = Arrays.stream(offerArray).toList();
         log.info("List of offers size equals to: {}", offerList.size());
