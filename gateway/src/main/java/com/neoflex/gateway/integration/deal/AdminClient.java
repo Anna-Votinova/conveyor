@@ -49,7 +49,7 @@ public class AdminClient {
         ApplicationDTO[] applicationsArray = restTemplate.getForObject("", ApplicationDTO[].class);
 
         if (Objects.isNull(applicationsArray)) {
-            log.error("Retrieved applications list is null");
+            log.info("Retrieved applications list is null");
             return Collections.emptyList();
         }
         List<ApplicationDTO> applicationList = Arrays.stream(applicationsArray).toList();

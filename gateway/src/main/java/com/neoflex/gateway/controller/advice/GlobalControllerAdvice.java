@@ -6,7 +6,6 @@ import com.neoflex.gateway.dto.error.Violation;
 import com.neoflex.gateway.exception.ApplicationNotFoundException;
 import com.neoflex.gateway.exception.BadRequestException;
 import com.neoflex.gateway.exception.InvalidSesCodeException;
-import com.neoflex.gateway.exception.ScoringConveyorException;
 import com.neoflex.gateway.exception.UnknownClientException;
 import com.neoflex.gateway.exception.UnknownServerException;
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +56,6 @@ public class GlobalControllerAdvice {
     public ErrorResponse handleInvalidSesCodeException(InvalidSesCodeException e) {
         log.error(e.getMessage(), e);
         return new ErrorResponse("Доступ запрещен: ", e.getMessage());
-    }
-
-    @ExceptionHandler(ScoringConveyorException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleScoringException(ScoringConveyorException e) {
-        log.error(e.getMessage(), e);
-        return new ErrorResponse("Ошибка скоринга: ", e.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)

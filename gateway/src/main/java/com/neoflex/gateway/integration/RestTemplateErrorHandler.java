@@ -3,7 +3,6 @@ package com.neoflex.gateway.integration;
 import com.neoflex.gateway.exception.ApplicationNotFoundException;
 import com.neoflex.gateway.exception.BadRequestException;
 import com.neoflex.gateway.exception.InvalidSesCodeException;
-import com.neoflex.gateway.exception.ScoringConveyorException;
 import com.neoflex.gateway.exception.UnknownClientException;
 import com.neoflex.gateway.exception.UnknownServerException;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,6 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
                         throw new BadRequestException("введенные данные невалидны. Проверьте их и повторите попытку.");
                 case FORBIDDEN -> throw new InvalidSesCodeException("ses-код не прошел проверку.");
                 case NOT_FOUND -> throw new ApplicationNotFoundException("заявка с нужным id не существует.");
-                case CONFLICT -> throw new ScoringConveyorException("в выдаче кредита отказано.");
                 default -> throw new UnknownClientException(
                         "проблемы на стороне клиента. Проверьте данные и повторите ваш запрос позже.");
             }

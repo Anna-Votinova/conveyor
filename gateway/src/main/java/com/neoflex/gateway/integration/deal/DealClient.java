@@ -2,7 +2,6 @@ package com.neoflex.gateway.integration.deal;
 
 import com.neoflex.gateway.dto.request.FinishRegistrationRequestDTO;
 import com.neoflex.gateway.integration.RestTemplateErrorHandler;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,7 +13,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 
 @Service
-@Slf4j
 public class DealClient {
 
     private final RestTemplate restTemplate;
