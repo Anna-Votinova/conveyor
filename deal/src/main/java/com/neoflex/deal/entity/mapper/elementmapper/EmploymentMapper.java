@@ -35,15 +35,22 @@ public class EmploymentMapper {
 
         EmploymentInfo employmentInfo = new EmploymentInfo();
 
-        if (Objects.nonNull(client) && Objects.nonNull(client.getEmployment())) {
-            employmentInfo.setId(client.getEmployment().getId());
-            employmentInfo.setEmploymentStatus(client.getEmployment().getStatus());
-            employmentInfo.setEmployerINN(client.getEmployment().getEmployerINN());
-            employmentInfo.setSalary(client.getEmployment().getSalary());
-            employmentInfo.setPosition(client.getEmployment().getPosition());
-            employmentInfo.setWorkExperienceTotal(client.getEmployment().getWorkExperienceTotal());
-            employmentInfo.setWorkExperienceCurrent(client.getEmployment().getWorkExperienceCurrent());
+        if (Objects.isNull(client)) {
+            return employmentInfo;
         }
+
+        if (Objects.isNull(client.getEmployment())) {
+            return employmentInfo;
+        }
+
+        employmentInfo.setId(client.getEmployment().getId());
+        employmentInfo.setEmploymentStatus(client.getEmployment().getStatus());
+        employmentInfo.setEmployerINN(client.getEmployment().getEmployerINN());
+        employmentInfo.setSalary(client.getEmployment().getSalary());
+        employmentInfo.setPosition(client.getEmployment().getPosition());
+        employmentInfo.setWorkExperienceTotal(client.getEmployment().getWorkExperienceTotal());
+        employmentInfo.setWorkExperienceCurrent(client.getEmployment().getWorkExperienceCurrent());
+
         return employmentInfo;
     }
 }

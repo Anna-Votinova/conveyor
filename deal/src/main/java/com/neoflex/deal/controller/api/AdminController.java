@@ -44,7 +44,7 @@ public class AdminController {
         adminService.changeApplicationStatus(applicationId, status);
     }
 
-    @Operation(summary = "Получение заявки",
+    @Operation(summary = "Получение заявки по ее идентификатору",
                description = "Помогает получить заявку по ее идентификатору")
     @GetMapping("/{applicationId}")
     public ApplicationDTO findApplicationById(

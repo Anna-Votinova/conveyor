@@ -13,13 +13,20 @@ public class PassportMapper {
 
         PassportInfo passportInfo = new PassportInfo();
 
-        if (Objects.nonNull(client) && Objects.nonNull(client.getPassport())) {
-            passportInfo.setId(client.getPassport().getId());
-            passportInfo.setSeries(client.getPassport().getSeries());
-            passportInfo.setNumber(client.getPassport().getNumber());
-            passportInfo.setIssueBranch(client.getPassport().getIssueBranch());
-            passportInfo.setIssueDate(client.getPassport().getIssueDate());
+        if (Objects.isNull(client)) {
+            return passportInfo;
         }
+
+        if (Objects.isNull(client.getPassport())) {
+            return passportInfo;
+        }
+
+        passportInfo.setId(client.getPassport().getId());
+        passportInfo.setSeries(client.getPassport().getSeries());
+        passportInfo.setNumber(client.getPassport().getNumber());
+        passportInfo.setIssueBranch(client.getPassport().getIssueBranch());
+        passportInfo.setIssueDate(client.getPassport().getIssueDate());
+
         return passportInfo;
     }
 }

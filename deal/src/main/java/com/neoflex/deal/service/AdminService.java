@@ -10,6 +10,7 @@ import com.neoflex.deal.dto.response.element.PassportInfo;
 import com.neoflex.deal.dto.response.element.PaymentScheduleResponseElement;
 import com.neoflex.deal.entity.Application;
 import com.neoflex.deal.entity.enums.ApplicationStatus;
+import com.neoflex.deal.entity.jsonb.element.PaymentScheduleElement;
 import com.neoflex.deal.entity.mapper.ApplicationMapper;
 import com.neoflex.deal.entity.mapper.ClientMapper;
 import com.neoflex.deal.entity.mapper.CreditMapper;
@@ -116,7 +117,13 @@ public class AdminService {
         EmploymentInfo employmentInfo = employmentMapper.toEmploymentInfo(application.getClient());
         ClientInfo clientInfo = clientMapper.toClientInfo(application.getClient(), passportInfo, employmentInfo);
 
-        List<PaymentScheduleResponseElement> paymentSchedule = mapPaymentScheduleList(application);
+        List<PaymentScheduleResponseElement> paymentSchedule;
+        if (Objects.isNull(application.getCredit())) {
+            paymentSchedule = new ArrayList<>();
+        } else {
+            paymentSchedule = mapPaymentScheduleList(application.getCredit().getPaymentSchedule());
+        }
+
         CreditInfo creditInfo = creditMapper.toCreditInfo(application.getCredit(), paymentSchedule);
 
         AppliedOfferInfo appliedOfferInfo = offerMapper.toAppliedOfferInfo(application.getAppliedOffer());
@@ -129,14 +136,14 @@ public class AdminService {
         return applicationMapper.toApplicationDTO(application, clientInfo, creditInfo, appliedOfferInfo, statusHistory);
     }
 
-    private List<PaymentScheduleResponseElement> mapPaymentScheduleList(Application application) {
-        List<PaymentScheduleResponseElement> paymentSchedule = new ArrayList<>();
+    private List<PaymentScheduleResponseElement> mapPaymentScheduleList(
+            List<PaymentScheduleElement> paymentScheduleList) {
 
-        if (Objects.nonNull(application.getCredit()) && Objects.nonNull(application.getCredit().getPaymentSchedule())) {
-            paymentSchedule = application.getCredit().getPaymentSchedule().stream()
-                                         .map(paymentScheduleMapper::toPaymentScheduleResponseElement)
-                                         .toList();
+        if (Objects.isNull(paymentScheduleList)) {
+            return new ArrayList<>();
         }
-        return paymentSchedule;
+        return paymentScheduleList.stream()
+                .map(paymentScheduleMapper::toPaymentScheduleResponseElement)
+                .toList();
     }
 }

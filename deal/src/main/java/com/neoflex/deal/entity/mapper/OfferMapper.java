@@ -29,15 +29,18 @@ public class OfferMapper {
 
         AppliedOfferInfo appliedOfferInfo = new AppliedOfferInfo();
 
-        if (Objects.nonNull(appliedOffer)) {
-            appliedOfferInfo.setTotalAmount(appliedOffer.getTotalAmount());
-            appliedOfferInfo.setTerm(appliedOffer.getTerm());
-            appliedOfferInfo.setRequestedAmount(appliedOffer.getRequestedAmount());
-            appliedOfferInfo.setMonthlyPayment(appliedOffer.getMonthlyPayment());
-            appliedOfferInfo.setRate(appliedOffer.getRate());
-            appliedOfferInfo.setIsInsuranceEnabled(appliedOffer.getIsInsuranceEnabled());
-            appliedOfferInfo.setIsSalaryClient(appliedOffer.getIsSalaryClient());
+        if (Objects.isNull(appliedOffer)) {
+            return appliedOfferInfo;
         }
+
+        appliedOfferInfo.setTotalAmount(appliedOffer.getTotalAmount());
+        appliedOfferInfo.setTerm(appliedOffer.getTerm());
+        appliedOfferInfo.setRequestedAmount(appliedOffer.getRequestedAmount());
+        appliedOfferInfo.setMonthlyPayment(appliedOffer.getMonthlyPayment());
+        appliedOfferInfo.setRate(appliedOffer.getRate());
+        appliedOfferInfo.setIsInsuranceEnabled(appliedOffer.getIsInsuranceEnabled());
+        appliedOfferInfo.setIsSalaryClient(appliedOffer.getIsSalaryClient());
+
         return appliedOfferInfo;
     }
 }

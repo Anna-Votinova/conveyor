@@ -49,20 +49,23 @@ public class ClientMapper {
 
         ClientInfo clientInfo = new ClientInfo();
 
-        if (Objects.nonNull(client)) {
-            clientInfo.setId(client.getId());
-            clientInfo.setLastName(client.getLastName());
-            clientInfo.setFirstName(client.getFirstName());
-            clientInfo.setMiddleName(client.getMiddleName() != null ? client.getMiddleName() : "");
-            clientInfo.setBirthdate(client.getBirthdate());
-            clientInfo.setEmail(client.getEmail());
-            clientInfo.setGender(client.getGender());
-            clientInfo.setMaritalStatus(client.getMaritalStatus());
-            clientInfo.setDependentAmount(client.getDependentAmount());
-            clientInfo.setPassportInfo(passportInfo);
-            clientInfo.setEmploymentInfo(employmentInfo);
-            clientInfo.setAccount(client.getAccount());
+        if (Objects.isNull(client)) {
+            return clientInfo;
         }
+
+        clientInfo.setId(client.getId());
+        clientInfo.setLastName(client.getLastName());
+        clientInfo.setFirstName(client.getFirstName());
+        clientInfo.setMiddleName(client.getMiddleName() != null ? client.getMiddleName() : "");
+        clientInfo.setBirthdate(client.getBirthdate());
+        clientInfo.setEmail(client.getEmail());
+        clientInfo.setGender(client.getGender());
+        clientInfo.setMaritalStatus(client.getMaritalStatus());
+        clientInfo.setDependentAmount(client.getDependentAmount());
+        clientInfo.setPassportInfo(passportInfo);
+        clientInfo.setEmploymentInfo(employmentInfo);
+        clientInfo.setAccount(client.getAccount());
+
         return clientInfo;
     }
 }

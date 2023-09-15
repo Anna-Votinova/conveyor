@@ -31,18 +31,21 @@ public class CreditMapper {
 
         CreditInfo creditInfo = new CreditInfo();
 
-        if (Objects.nonNull(credit)) {
-            creditInfo.setId(credit.getId());
-            creditInfo.setAmount(credit.getAmount());
-            creditInfo.setTerm(credit.getTerm());
-            creditInfo.setMonthlyPayment(credit.getMonthlyPayment());
-            creditInfo.setRate(credit.getRate());
-            creditInfo.setPsk(credit.getPsk());
-            creditInfo.setIsInsuranceEnabled(credit.getInsuranceEnable());
-            creditInfo.setIsSalaryClient(credit.getSalaryClient());
-            creditInfo.setPaymentSchedule(paymentSchedule);
-            creditInfo.setCreditStatus(credit.getCreditStatus());
+        if (Objects.isNull(credit)) {
+            return creditInfo;
         }
+
+        creditInfo.setId(credit.getId());
+        creditInfo.setAmount(credit.getAmount());
+        creditInfo.setTerm(credit.getTerm());
+        creditInfo.setMonthlyPayment(credit.getMonthlyPayment());
+        creditInfo.setRate(credit.getRate());
+        creditInfo.setPsk(credit.getPsk());
+        creditInfo.setIsInsuranceEnabled(credit.getInsuranceEnable());
+        creditInfo.setIsSalaryClient(credit.getSalaryClient());
+        creditInfo.setPaymentSchedule(paymentSchedule);
+        creditInfo.setCreditStatus(credit.getCreditStatus());
+
         return creditInfo;
     }
 }
