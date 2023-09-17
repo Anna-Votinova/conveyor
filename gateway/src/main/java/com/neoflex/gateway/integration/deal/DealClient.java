@@ -1,32 +1,17 @@
 package com.neoflex.gateway.integration.deal;
 
 import com.neoflex.gateway.dto.request.FinishRegistrationRequestDTO;
-import com.neoflex.gateway.integration.RestTemplateErrorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
-
 
 @Service
+@RequiredArgsConstructor
 public class DealClient {
 
-    private final RestTemplate restTemplate;
-
-    @Autowired
-    public DealClient(@Value("${DEAL_URL}") String serverUrl, RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                .errorHandler(new RestTemplateErrorHandler())
-                .build();
-    }
+    private final RestTemplate restTemplateDeal;
 
     public void calculateCredit(FinishRegistrationRequestDTO requestDTO, Long applicationId) {
-        HttpEntity<FinishRegistrationRequestDTO> finishRegistrationEntity = new HttpEntity<>(requestDTO);
-        restTemplate.exchange("/calculate/" + applicationId, HttpMethod.PUT, finishRegistrationEntity, Void.class);
+        restTemplateDeal.put("/deal/calculate/" + applicationId, requestDTO);
     }
 }

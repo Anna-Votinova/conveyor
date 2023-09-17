@@ -1,5 +1,5 @@
 APPLICATION_URL: http://localhost:8083
-DEAL_URL: http://localhost:8082/deal
+DEAL_URL: http://localhost:8082
 
 logging:
   level:
