@@ -15,7 +15,7 @@ import com.neoflex.deal.entity.enums.ApplicationStatus;
 import com.neoflex.deal.entity.jsonb.element.AppliedOffer;
 import com.neoflex.deal.entity.mapper.ClientMapper;
 import com.neoflex.deal.entity.mapper.CreditMapper;
-import com.neoflex.deal.entity.mapper.EmploymentMapper;
+import com.neoflex.deal.entity.mapper.elementmapper.EmploymentMapper;
 import com.neoflex.deal.entity.mapper.OfferMapper;
 import com.neoflex.deal.entity.mapper.ScoringDataMapper;
 import com.neoflex.deal.exception.ApplicationNotFoundException;

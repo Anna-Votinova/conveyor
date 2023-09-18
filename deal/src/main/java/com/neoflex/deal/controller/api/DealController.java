@@ -58,7 +58,7 @@ public class DealController {
                        "на кредит и связаться с сервисом по подсчету итоговой стоимости кредита. Вернувшееся " +
                        "предложение сохраняется в базу. Позволяет связаться с сервисом Dossier, чтобы отправить письмо " +
                        "пользователю с предложением создать документы для выдачи кредита")
-    @PutMapping("calculate/{applicationId}")
+    @PutMapping("/calculate/{applicationId}")
     public void calculateCredit(@Valid @RequestBody FinishRegistrationRequestDTO requestDTO, @Positive @PathVariable
     @Parameter(description = "Идентификатор заявки", example = "1", required = true) Long applicationId) {
         log.info("Got the request for full registration and calculation loan. Parameters: requestDTO = {}, " +
