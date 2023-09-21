@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - master
+      - feature/docker
   pull_request:
     types: [ opened, synchronize, reopened ]
 
 jobs:
   changes:
+    name: Build, Test and Analyze Credit Conveyor
     runs-on: ubuntu-latest
     permissions:
         pull-requests: read
@@ -36,7 +38,7 @@ jobs:
                 
   application:
     needs: changes
-    if: ${{ steps.filter.outputs.application == 'true' }}
+    if: ${{ needs.changes.outputs.application == 'true' }}
     name: APPLICATION - Build, Analyze and Test
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +74,7 @@ jobs:
 
   conveyor:
     needs: changes
-    if: ${{ steps.filter.outputs.conveyor == 'true' }}
+    if: ${{ needs.changes.outputs.conveyor == 'true' }}
     name: CONVEYOR - Build, Analyze and Test
     runs-on: ubuntu-latest
     steps:
@@ -108,7 +110,7 @@ jobs:
 
   deal:
     needs: changes
-    if: ${{ steps.filter.outputs.deal == 'true' }}
+    if: ${{ needs.changes.outputs.deal == 'true' }}
     name: DEAL - Build, Analyze and Test
     runs-on: ubuntu-latest
     steps:
@@ -144,7 +146,7 @@ jobs:
 
   dossier:
     needs: changes
-    if: ${{ steps.filter.outputs.dossier == 'true' }}
+    if: ${{ needs.changes.outputs.dossier == 'true' }}
     name: DOSSIER - Build and Analyze
     runs-on: ubuntu-latest
     steps:
@@ -171,7 +173,7 @@ jobs:
 
   gateway:
     needs: changes
-    if: ${{ steps.filter.outputs.gateway == 'true' }}
+    if: ${{ needs.changes.outputs.gateway == 'true' }}
     name: GATEWAY - Build and analyze
     runs-on: ubuntu-latest
     steps:
