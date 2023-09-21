@@ -61,7 +61,6 @@ jobs:
       - name: Test Coverage Application
         uses: codecov/codecov-action@v3
         with:
-          files: ./application/coverage/coverage-final.json
           flags: application
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Analyze code with SonarCloud Scan Application
@@ -97,7 +96,6 @@ jobs:
       - name: Test Coverage Conveyor
         uses: codecov/codecov-action@v3
         with:
-          files: ./conveyor/coverage/coverage-final.json
           flags: conveyor
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Analyze code with SonarCloud Scan Conveyor
@@ -133,7 +131,6 @@ jobs:
       - name: Test Coverage Deal
         uses: codecov/codecov-action@v3
         with:
-          files: ./deal/coverage/coverage-final.json
           flags: deal
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Analyze code with SonarCloud Scan Deal
