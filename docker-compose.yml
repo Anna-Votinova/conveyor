@@ -1,0 +1,102 @@
+version: '4.23.0'
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  broker:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  deal-db:
+    image: postgres:16-alpine
+    container_name: deal-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=deal
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  conveyor:
+    build: conveyor
+    container_name: conveyor
+    ports:
+      - "8081:8081"
+      - "8087:8087"
+
+  deal:
+    build: deal
+    container_name: deal
+    ports:
+      - "8082:8082"
+      - "8088:8088"
+    depends_on:
+      - broker
+      - deal-db
+      - conveyor
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=broker:29092
+      - DB_URL=jdbc:postgresql://deal-db:5432/deal
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - CONVEYOR_URL=http://conveyor:8081/conveyor
+
+  application:
+    build: application
+    container_name: application
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+    depends_on:
+      - deal
+    environment:
+      - DEAL_URL=http://deal:8082/deal
+
+  dossier:
+    build: dossier
+    container_name: dossier
+    ports:
+      - "8084:8084"
+      - "8089:8089"
+    depends_on:
+      - broker
+      - deal
+    environment:
+      - KAFKA_SERVER=broker:29092
+      - DEAL_URL=http://deal:8082/deal
+    env_file:
+      - secret.env
+
+  gateway:
+    build: gateway
+    container_name: gateway
+    ports:
+      - "8085:8085"
+      - "8090:8090"
+    depends_on:
+      - application
+      - deal
+    environment:
+      - APPLICATION_URL=http://application:8083
+      - DEAL_URL=http://deal:8082

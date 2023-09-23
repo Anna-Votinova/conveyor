@@ -1,0 +1,195 @@
+name: Pipeline for Credit Conveyor
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  changes:
+    name: Build, Test and Analyze Credit Conveyor
+    runs-on: ubuntu-latest
+    permissions:
+        pull-requests: read
+    outputs:
+      application: ${{ steps.filter.outputs.application }}
+      conveyor: ${{ steps.filter.outputs.conveyor }}
+      deal: ${{ steps.filter.outputs.deal }}
+      dossier: ${{ steps.filter.outputs.dossier }}
+      gateway: ${{ steps.filter.outputs.gateway }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            application:
+              - 'application/**'
+            conveyor:
+              - 'conveyor/**'
+            deal:
+              - 'deal/**'
+            dossier:
+              - 'dossier/**'
+            gateway:
+              - 'gateway/**'
+                
+  application:
+    needs: changes
+    if: ${{ needs.changes.outputs.application == 'true' }}
+    name: APPLICATION - Build, Analyze and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code Application
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Install Application
+        working-directory: application
+        run: |
+          mvn clean
+          mvn -B install --file pom.xml
+      - name: Unit Tests Application
+        working-directory: application
+        run: mvn -B verify --file pom.xml
+      - name: Test Coverage Application
+        uses: codecov/codecov-action@v3
+        with:
+          flags: application
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Analyze code with SonarCloud Scan Application
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: application
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Anna-Votinova_conveyor
+
+  conveyor:
+    needs: changes
+    if: ${{ needs.changes.outputs.conveyor == 'true' }}
+    name: CONVEYOR - Build, Analyze and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code Conveyor
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Install Conveyor
+        working-directory: conveyor
+        run: |
+          mvn clean
+          mvn -B install --file pom.xml
+      - name: Unit Tests Conveyor
+        working-directory: conveyor
+        run: mvn -B verify --file pom.xml
+      - name: Test Coverage Conveyor
+        uses: codecov/codecov-action@v3
+        with:
+          flags: conveyor
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Analyze code with SonarCloud Scan Conveyor
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: conveyor
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Anna-Votinova_conveyor
+
+  deal:
+    needs: changes
+    if: ${{ needs.changes.outputs.deal == 'true' }}
+    name: DEAL - Build, Analyze and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code Deal
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Install Deal
+        working-directory: deal
+        run: |
+          mvn clean
+          mvn -B install --file pom.xml
+      - name: Unit Tests Deal
+        working-directory: deal
+        run: mvn -B verify --file pom.xml
+      - name: Test Coverage Deal
+        uses: codecov/codecov-action@v3
+        with:
+          flags: deal
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Analyze code with SonarCloud Scan Deal
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: deal
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Anna-Votinova_conveyor
+
+  dossier:
+    needs: changes
+    if: ${{ needs.changes.outputs.dossier == 'true' }}
+    name: DOSSIER - Build and Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code Dossier
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Install Dossier
+        working-directory: dossier
+        run: |
+          mvn clean
+          mvn -B install --file pom.xml
+      - name: Analyze code with SonarCloud Scan Dossier
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: dossier
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Anna-Votinova_conveyor
+
+  gateway:
+    needs: changes
+    if: ${{ needs.changes.outputs.gateway == 'true' }}
+    name: GATEWAY - Build and analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code Gateway
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Install Gateway
+        working-directory: gateway
+        run: |
+          mvn clean
+          mvn -B install --file pom.xml
+      - name: Analyze code with SonarCloud Scan Gateway
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: gateway
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Anna-Votinova_conveyor
