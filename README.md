@@ -1,8 +1,8 @@
-## «Кредитный конвейер»
+# «Кредитный конвейер»
 
 **Приложение для рассчета и выдачи кредитов**
 
-### Стек:
+## Стек:
 
 - Java 17
 - Spring Boot 2.7.14/2.7.15
@@ -23,16 +23,16 @@
 - Dorny Paths Filter
 - GitHub Actions
 
-### Запуск проекта в Docker
+## Запуск проекта в Docker
 
 1. Прописать логин и пароль для почты для отправки писем в файле secret.env;
 2. Собрать все сервисы в пакеты .jar (например, через вкладку Maven: Maven -> Lifecycle -> application -> package);
 3. Выполнить команду в терминале:
 ```shell
-docker-compose --project-name conveyor --file docker-compose.yml up
+   docker-compose --project-name conveyor --file docker-compose.yml up
 ```
 
-### Локальный запуск без Docker
+## Локальный запуск без Docker
 
 1. Прописать логин, пароль, хост и порт для почты в переменных окружения среды разработки;
 2. При необходимости заменить данные базы данных в сервисе Deal;
@@ -40,9 +40,9 @@ docker-compose --project-name conveyor --file docker-compose.yml up
 4. Запустить сервисы, где присутствует application-local.yaml, локально (например, в main-классах: 
    Application.java -> Modify Run Configuration -> Active profiles: local -> ok) вручную.
 
-### Управление
+## Управление
 
-![Swagger](http://localhost:8085/swagger-ui/index.html#/)
+После запуска программы выполните переход по ссылке: [Swagger](http://localhost:8085/swagger-ui/index.html#/)
 
 ## Архитектура
 
@@ -96,4 +96,4 @@ docker-compose --project-name conveyor --file docker-compose.yml up
 
 ## Диаграмма базы данных
 
-![Database schema](deal/DB-schema.jpg)
+![Database schema](images/database.png)
