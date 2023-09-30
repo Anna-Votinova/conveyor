@@ -1,0 +1,21 @@
+DB_URL: jdbc:postgresql://localhost:5432/deal
+DB_USERNAME: root
+DB_PASSWORD: root
+
+KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+
+CONVEYOR_URL: http://localhost:8081/conveyor
+
+logging:
+  level:
+    com.neoflex.deal.integration.conveyor: DEBUG
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        temp:
+          use_jdbc_metadata_defaults: false
+
+

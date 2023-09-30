@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+  <changeSet id="create-passport" author="ponomareva" context="dev">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="passport"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="passport">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" primaryKeyName="pk_passport_id" nullable="false"/>
+      </column>
+      <column name="series" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="number" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="issue_branch" type="VARCHAR(255)"/>
+      <column name="issue_date" type="DATE"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="create-employment" author="ponomareva" context="dev">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="employment"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="employment">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" primaryKeyName="pk_employment_id" nullable="false"/>
+      </column>
+      <column name="status" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="employer_inn" type="VARCHAR(12)"/>
+      <column name="salary" type="DECIMAL">
+        <constraints nullable="false"/>
+      </column>
+      <column name="position" type="VARCHAR(30)"/>
+      <column name="work_experience_total" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="work_experience_current" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="create-client" author="ponomareva" context="dev">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="client"/>
+      </not>
+      <and>
+        <tableExists tableName="passport"/>
+        <tableExists tableName="employment"/>
+      </and>
+    </preConditions>
+
+    <createTable tableName="client">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" primaryKeyName="pk_client_id" nullable="false"/>
+      </column>
+      <column name="last_name" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="first_name" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="middle_name" type="VARCHAR(30)"/>
+      <column name="birth_date" type="DATE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="VARCHAR(80)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="gender" type="VARCHAR(20)"/>
+      <column name="marital_status" type="VARCHAR(30)"/>
+      <column name="dependent_amount" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="passport_id" type="BIGINT">
+        <constraints foreignKeyName="fk_client_passport" references="passport(id)"/>
+      </column>
+      <column name="employment_id" type="BIGINT">
+        <constraints foreignKeyName="fk_client_employment" references="employment(id)"/>
+      </column>
+      <column name="account" type="VARCHAR(20)"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="create-credit" author="ponomareva" context="dev">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="credit"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="credit">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" primaryKeyName="pk_credit_id" nullable="false"/>
+      </column>
+      <column name="amount" type="DECIMAL">
+        <constraints nullable="false"/>
+      </column>
+      <column name="term" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="monthly_payment" type="DECIMAL">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rate" type="DECIMAL">
+        <constraints nullable="false"/>
+      </column>
+      <column name="psk" type="DECIMAL">
+        <constraints nullable="false"/>
+      </column>
+      <column name="payment_schedule" type="JSONB">
+        <constraints nullable="false"/>
+      </column>
+      <column name="insurance_enable" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="salary_client" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="credit_status" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="create-application" author="ponomareva" context="dev">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="application"/>
+      </not>
+      <and>
+        <tableExists tableName="client"/>
+        <tableExists tableName="credit"/>
+      </and>
+    </preConditions>
+
+    <createTable tableName="application">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" primaryKeyName="pk_application_id" nullable="false"/>
+      </column>
+      <column name="client_id" type="BIGINT">
+        <constraints foreignKeyName="fk_application_client" references="client(id)" nullable="false"/>
+      </column>
+      <column name="credit_id" type="BIGINT">
+        <constraints foreignKeyName="fk_application_credit" references="credit(id)"/>
+      </column>
+      <column name="status" type="VARCHAR(30)"/>
+      <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="applied_offer" type="JSONB"/>
+      <column name="sign_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+      <column name="ses_code" type="INT(30)"/>
+      <column name="status_history" type="JSONB"/>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>
