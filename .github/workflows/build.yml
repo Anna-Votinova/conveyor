@@ -20,7 +20,11 @@ jobs:
       dossier: ${{ steps.filter.outputs.dossier }}
       gateway: ${{ steps.filter.outputs.gateway }}
     steps:
-      - uses: dorny/paths-filter@v2
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Check for changes
+        uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
@@ -170,7 +174,7 @@ jobs:
   gateway:
     needs: changes
     if: ${{ needs.changes.outputs.gateway == 'true' }}
-    name: GATEWAY - Build and analyze
+    name: GATEWAY - Build and Analyze
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code Gateway
